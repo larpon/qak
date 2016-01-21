@@ -4,7 +4,7 @@ SourceEntity {
 
     id: sprite
 
-    target: image
+    //target: image
 
     Image {
         id: image

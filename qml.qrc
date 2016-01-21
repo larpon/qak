@@ -11,5 +11,6 @@
         <file>test.x-2.png</file>
         <file>qml/QageImage.qml</file>
         <file>qml/QageSprite.qml</file>
+        <file>qml/AdaptiveSource.qml</file>
     </qresource>
 </RCC>

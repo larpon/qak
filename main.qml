@@ -30,7 +30,7 @@ Core {
         y: 500
         width: 120
         height: width
-        source: "test_error.png"
+        //source: "test_error.png"
         MouseArea {
             anchors.fill: parent
             onClicked: {

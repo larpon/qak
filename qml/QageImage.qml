@@ -4,10 +4,9 @@ Image {
     id: image
 
     property alias realSource: image.source
-    property alias source: sourceEntity.source
-
-    SourceEntity {
-        id: sourceEntity
+    property alias source: adaptive.source
+    AdaptiveSource {
+        id: adaptive
         target: image
         targetSourceProperty: "realSource"
     }
