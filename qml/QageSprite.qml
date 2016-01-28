@@ -1,22 +1,13 @@
 import QtQuick 2.5
 
-SourceEntity {
-
+Sprite {
     id: sprite
 
-    //target: image
-
-    Image {
-        id: image
-        //asynchronous: true
-        anchors.fill: parent
-    }
-
-    AnimatedSprite {
-        id: animatedSprite
-    }
-
-    Sprite {
-        id: qtSprite
+    property alias realSource: sprite.source
+    property alias source: adaptive.source
+    AdaptiveSource {
+        id: adaptive
+        target: sprite
+        targetSourceProperty: "realSource"
     }
 }

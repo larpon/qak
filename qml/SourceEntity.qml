@@ -1,13 +1,12 @@
 import QtQuick 2.5
-import QtQml 2.2
-import QtQuick.Window 2.2 // Screen
 
 Entity {
 
     id: entity
 
-    //property alias realSource: entity.source
-    //property alias source: adaptive.source
+    property alias realSource: entity.source
+    property alias source: adaptive.source
+
     AdaptiveSource {
         id: adaptive
         target: entity

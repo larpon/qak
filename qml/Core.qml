@@ -33,14 +33,14 @@ ApplicationWindow {
     property string screenmode: "windowed"
     property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
 
-    property int targetWidth: 1100
-    property int targetHeight: 660
+    property int viewportWidth: 1100
+    property int viewportHeight: 660
 
-    readonly property int targetDiff: viewport.scaledWidth - core.targetWidth
+    readonly property int targetDiff: viewport.scaledWidth - core.viewportWidth
 
     property real targetChangePercent: 25.0
 
-    readonly property int assetMultiplier: (((Math.floor(((targetDiff/core.targetWidth)*100) / targetChangePercent) * targetChangePercent)+targetChangePercent)/targetChangePercent)
+    readonly property int assetMultiplier: (((Math.floor(((targetDiff/core.viewportWidth)*100) / targetChangePercent) * targetChangePercent)+targetChangePercent)/targetChangePercent)
 
     // Signals
     signal resized
@@ -186,7 +186,7 @@ ApplicationWindow {
         clip: true
 
         x: 0; y: 0
-        width: targetWidth; height: targetHeight
+        width: viewportWidth; height: viewportHeight
         property real scaledWidth: width*activeScaler.xScale
         property real scaledHeight: height*activeScaler.yScale
 
@@ -279,7 +279,9 @@ ApplicationWindow {
 
         Item {
             id: canvas
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height
+            //anchors.fill: parent
 
             //scale: 1
             //Behavior on scale { NumberAnimation { duration: 200 } }

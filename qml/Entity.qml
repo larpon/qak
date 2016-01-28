@@ -12,6 +12,15 @@ Item {
     property bool draggable: false
     property bool rotatable: false
 
+    property string adaptiveSource: ""
+    property alias source: adaptive.source
+
+    AdaptiveSource {
+        id: adaptive
+        target: entity
+        targetSourceProperty: "adaptiveSource"
+    }
+
     Item {
         id: container
         anchors.fill: parent
@@ -21,7 +30,9 @@ Item {
     // Debug visuals
     Rectangle {
         anchors.fill: parent
+
         visible: core.debug
+        enabled: visible
 
         color: "transparent"
         border.color: "red"

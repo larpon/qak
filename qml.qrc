@@ -9,8 +9,9 @@
         <file>test.x2.png</file>
         <file>qml/SourceEntity.qml</file>
         <file>test.x-2.png</file>
-        <file>qml/QageImage.qml</file>
         <file>qml/QageSprite.qml</file>
         <file>qml/AdaptiveSource.qml</file>
+        <file>qml/Image.qml</file>
+        <file>canvas_test_1400x700.png</file>
     </qresource>
 </RCC>

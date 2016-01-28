@@ -1,16 +1,21 @@
 
 import QtQuick 2.5
 
-import "qml"
+import "qml" as Qage
 
-Core {
+Qage.Core {
     id: core
 
-    //width: 781
-    //height: 518
+    width: 800
+    height: 400
 
-    targetWidth: 1100
-    targetHeight: 660
+    viewportWidth: 1100
+    viewportHeight: 660
+
+    canvas.width: 1400
+    canvas.height: 700
+    canvas.x: -(canvas.width-viewportWidth)/2
+    canvas.y: -(canvas.height-viewportHeight)/2
 
     //color: "transparent"
 
@@ -18,19 +23,38 @@ Core {
 
     //fillmode: Image.Stretch
 
-    QageImage {
+    Qage.Entity {
+        id: entity
         anchors.fill: parent
-        source: "test.png"
+
+        source: "canvas_test_1400x700.png"
+
+        Image {
+            anchors.fill: parent
+            source: entity.adaptiveSource
+        }
     }
 
+    /*
+    Qage.Entity {
+        id: entity
+        anchors.fill: parent
 
-    QageSprite {
+        source: "test.png"
+
+        Image {
+            anchors.fill: parent
+            source: entity.adaptiveSource
+        }
+    }
+
+    Qage.Image {
         id: errorTestSprite
         x: 500
         y: 500
         width: 120
         height: width
-        //source: "test_error.png"
+        source: "test_error.png"
         MouseArea {
             anchors.fill: parent
             onClicked: {
@@ -42,7 +66,30 @@ Core {
         }
     }
 
-    Entity {
+    Qage.Image {
+        id: error2TestSprite
+        x: 400
+        y: 400
+        width: 120
+        height: width
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                error2TestSprite.source = "test.png"
+            }
+        }
+    }
+
+    Qage.Image {
+        id: testSprite1
+        x: 20
+        y: 350
+        width: targetWidth*0.2
+        height: targetHeight*0.2
+        source: "test.png"
+    }
+*/
+    Qage.Entity {
         x: 600
         y: 400
         width: 70
@@ -62,10 +109,10 @@ Core {
         }
     }
 
-    Entity {
+    Qage.Entity {
 
-        x: 100
-        y: 100
+        x: 200
+        y: 200
         width: 30
         height: width
 
@@ -78,7 +125,7 @@ Core {
         }
     }
 
-    Entity {
+    Qage.Entity {
         rotatable: true
         anchors.centerIn: parent
         width: 50

@@ -7,7 +7,7 @@ QtObject {
     property bool autoMapSource: true
 
     property string source: ""
-    property string mapSource: ""
+    property string mapSource
 
     property int assetMultiplierStep: 2
     readonly property int assetMultiplier: Math.floor(core.assetMultiplier / assetMultiplierStep) * assetMultiplierStep
@@ -93,7 +93,8 @@ QtObject {
             pfx = prefix.replace(/\/+$/, "")+"/"
 
         // TODO do platform asset protocol control etc..
-        src = "qrc:///"+pfx+src
+        if(src && src != "")
+            src = "qrc:///"+pfx+src
 
         return src
     }
@@ -101,8 +102,8 @@ QtObject {
     onSourceChanged: {
         error = false
 
-        if(source == "") {
-            mapSource = ""
+        if(source == "" || !source) {
+            mapSource = undefined
             db(sourceEntity,'Empty source given')
             return
         }
@@ -122,10 +123,10 @@ QtObject {
         if(match !== false) {
             warn('Request for specific',match,'mapped source. Ignoring auto mapping')
             ignore = true
-            mapSource = path
         } else
             ignore = false
 
+        mapSource = path
     }
 
     onMapSourceChanged: {
