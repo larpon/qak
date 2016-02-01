@@ -9,19 +9,107 @@ Qage.Core {
     width: 800
     height: 400
 
-    viewportWidth: 1100
-    viewportHeight: 660
-
-    canvas.width: 1400
-    canvas.height: 700
-    canvas.x: -(canvas.width-viewportWidth)/2
-    canvas.y: -(canvas.height-viewportHeight)/2
-
     //color: "transparent"
 
     debug: true
 
     //fillmode: Image.Stretch
+
+    viewport.width: 1100
+    viewport.height: 660
+
+    canvas.width: 1400
+    canvas.height: 700
+
+    //canvas.x: -(canvas.width-viewportWidth)/2
+    //canvas.y: -(canvas.height-viewportHeight)/2
+
+    // Canvas modification examples
+    Behavior on canvas.x {
+        SmoothedAnimation { velocity: 70 }
+    }
+
+    Behavior on canvas.scale {
+        NumberAnimation { duration: 1000 }
+    }
+
+    MouseArea {
+        id: canvasExampleController
+        anchors.fill: parent
+
+        readonly property point viewportPosition: mapToItem(viewport,position.x,position.y)
+        readonly property point position: Qt.point(canvasExampleController.mouseX, canvasExampleController.mouseY)
+
+        hoverEnabled: true
+
+        onPositionChanged: {
+            //db('xy',viewportPosition.x, viewportPosition.y)
+            var xHalfDiff = (canvas.width-viewport.width)
+            var yHalfDiff = (canvas.height-viewport.height)/2
+
+            // Scroll when close to 1/4 the width of the viewport
+            if(viewportPosition.x <= (viewport.width/4)) {
+                canvas.x = 0
+            } else if(viewportPosition.x > (viewport.width/4)*3) {
+                canvas.x = -xHalfDiff
+            } else
+                canvas.x = -xHalfDiff/2
+
+            // Scroll within area
+            //var nx = clamp(remap(viewportPosition.x,0,viewportWidth,0+100,-xHalfDiff-100),-xHalfDiff,0)
+            //canvas.x = nx
+            //db(nx)
+        }
+
+        // Scale the canvas
+        onWheel: {
+            if (wheel.modifiers & Qt.ControlModifier) {
+                canvas.scale += wheel.angleDelta.y / 120 * 5;
+
+            } else {
+                canvas.scale += wheel.angleDelta.x / 120;
+
+                var scaleBefore = canvas.scale;
+                canvas.scale += canvas.scale * wheel.angleDelta.y / 120 / 10;
+            }
+        }
+    }
+
+    /*
+    Item {
+        id: canvasMover
+
+        property QtObject controller: canvasExampleController
+
+        Connections {
+            target: canvasExampleController
+
+            property alias x: canvasExampleController.position.x
+            property alias y: canvasExampleController.position.y
+
+            property alias vpx: canvasExampleController.viewportPosition.x
+            property alias vpy: canvasExampleController.viewportPosition.y
+
+            property alias canvas: core.canvas
+            property alias viewport: core.viewport
+
+            onPositionChanged: {
+                //db(x, y, vpx, vpy, viewport.scaledWidth)
+                //db(vpx, viewport.scaledWidth)
+                if(vpx > 0 && vpx <= (viewport.width/2)) {
+                    db('canvas x',canvas.x)
+                } else if(vpx > (viewport.width/2)) {
+                    db('in right part')
+                } else
+                    db('mid')
+
+            }
+        }
+
+    }
+    */
+
+    // Example engine items
 
     Qage.Entity {
         id: entity

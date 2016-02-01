@@ -33,14 +33,11 @@ ApplicationWindow {
     property string screenmode: "windowed"
     property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
 
-    property int viewportWidth: 1100
-    property int viewportHeight: 660
-
-    readonly property int targetDiff: viewport.scaledWidth - core.viewportWidth
+    readonly property int targetDiff: viewport.scaledWidth - core.viewport.width
 
     property real targetChangePercent: 25.0
 
-    readonly property int assetMultiplier: (((Math.floor(((targetDiff/core.viewportWidth)*100) / targetChangePercent) * targetChangePercent)+targetChangePercent)/targetChangePercent)
+    readonly property int assetMultiplier: (((Math.floor(((targetDiff/core.viewport.width)*100) / targetChangePercent) * targetChangePercent)+targetChangePercent)/targetChangePercent)
 
     // Signals
     signal resized
@@ -128,6 +125,10 @@ ApplicationWindow {
     }
     */
 
+    function clamp(a,b,c) {
+        return Math.max(b,Math.min(c,a))
+    }
+
     function remap(oldValue, oldMin, oldMax, newMin, newMax) {
         // Linear conversion
         // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
@@ -186,16 +187,17 @@ ApplicationWindow {
         clip: true
 
         x: 0; y: 0
-        width: viewportWidth; height: viewportHeight
-        property real scaledWidth: width*activeScaler.xScale
-        property real scaledHeight: height*activeScaler.yScale
+        width: core.width; height: core.height
 
-        property real aspectRatio: width/height
+        readonly property real scaledWidth: width*activeScaler.xScale
+        readonly property real scaledHeight: height*activeScaler.yScale
+
+        readonly property real aspectRatio: width/height
 
         property string fillmodeString: ""
         onFillmodeStringChanged: log('Fillmode',fillmodeString)
 
-        property Scale activeScaler: selectScaler(fillmode)
+        readonly property Scale activeScaler: selectScaler(fillmode)
 
         transform: activeScaler
 
@@ -279,32 +281,10 @@ ApplicationWindow {
 
         Item {
             id: canvas
-            width: parent.width
-            height: parent.height
-            //anchors.fill: parent
-
-            //scale: 1
-            //Behavior on scale { NumberAnimation { duration: 200 } }
+            width: viewport.width
+            height: viewport.height
         }
 
-        /*
-        MouseArea {
-           hoverEnabled: true
-           anchors.fill: parent
-
-           onWheel: {
-               if (wheel.modifiers & Qt.ControlModifier) {
-                   canvas.scale += wheel.angleDelta.y / 120 * 5;
-
-               } else {
-                   canvas.scale += wheel.angleDelta.x / 120;
-
-                   var scaleBefore = canvas.scale;
-                   canvas.scale += canvas.scale * wheel.angleDelta.y / 120 / 10;
-               }
-           }
-       }
-       */
     }
 
     Item {
