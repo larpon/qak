@@ -1,17 +1,18 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>qml/Core.qml</file>
-        <file>qml/Entity.qml</file>
-        <file>qml/WalkPath.qml</file>
         <file>js/easystar-0.2.3.js</file>
         <file>test.png</file>
         <file>test.x2.png</file>
-        <file>qml/SourceEntity.qml</file>
         <file>test.x-2.png</file>
-        <file>qml/QageSprite.qml</file>
-        <file>qml/AdaptiveSource.qml</file>
-        <file>qml/Image.qml</file>
         <file>canvas_test_1400x700.png</file>
+        <file>test.x-4.png</file>
+        <file>qml/qage/AdaptiveSource.qml</file>
+        <file>qml/qage/Core.qml</file>
+        <file>qml/qage/Entity.qml</file>
+        <file>qml/qage/Image.qml</file>
+        <file>qml/qage/SourceEntity.qml</file>
+        <file>qml/qage/Sprite.qml</file>
+        <file>qml/qage/WalkPath.qml</file>
     </qresource>
 </RCC>

@@ -15,8 +15,7 @@ QML_IMPORT_PATH =
 # Default rules for deployment.
 include(deployment.pri)
 
-DISTFILES += \
-    qml/Core.qml
+DISTFILES +=
 
 HEADERS += \
     src/resource.h

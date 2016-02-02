@@ -33,11 +33,11 @@ ApplicationWindow {
     property string screenmode: "windowed"
     property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
 
-    readonly property int targetDiff: viewport.scaledWidth - core.viewport.width
+    readonly property int viewportWidthDiff: viewport.scaledWidth - viewport.width
 
-    property real targetChangePercent: 25.0
+    property real thresholdPercent: 25.0
 
-    readonly property int assetMultiplier: (((Math.floor(((targetDiff/core.viewport.width)*100) / targetChangePercent) * targetChangePercent)+targetChangePercent)/targetChangePercent)
+    readonly property int assetMultiplier: (((Math.floor(((viewportWidthDiff/core.viewport.width)*100) / thresholdPercent) * thresholdPercent)+thresholdPercent)/thresholdPercent)
 
     // Signals
     signal resized
@@ -77,7 +77,7 @@ ApplicationWindow {
         // How many percent of target width are we off?
         // + = over
         // - = under
-        var pct = (targetDiff/core.targetWidth)*100
+        var pct = (viewportWidthDiff/core.viewport.width)*100
 
         // Step in percent
         var percentStep = 25.0

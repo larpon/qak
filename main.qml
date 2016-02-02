@@ -18,15 +18,18 @@ Qage.Core {
     viewport.width: 1100
     viewport.height: 660
 
-    canvas.width: 1400
-    canvas.height: 700
+    //canvas.width: 1400
+    //canvas.height: 700
+
+
+    // Canvas modification examples
+    /*
 
     //canvas.x: -(canvas.width-viewportWidth)/2
     //canvas.y: -(canvas.height-viewportHeight)/2
 
-    // Canvas modification examples
     Behavior on canvas.x {
-        SmoothedAnimation { velocity: 70 }
+        NumberAnimation { duration: 1000 }
     }
 
     Behavior on canvas.scale {
@@ -75,7 +78,6 @@ Qage.Core {
         }
     }
 
-    /*
     Item {
         id: canvasMover
 
@@ -111,6 +113,7 @@ Qage.Core {
 
     // Example engine items
 
+    /*
     Qage.Entity {
         id: entity
         anchors.fill: parent
@@ -122,8 +125,9 @@ Qage.Core {
             source: entity.adaptiveSource
         }
     }
+    */
 
-    /*
+    // Adaptive source example
     Qage.Entity {
         id: entity
         anchors.fill: parent
@@ -172,11 +176,11 @@ Qage.Core {
         id: testSprite1
         x: 20
         y: 350
-        width: targetWidth*0.2
-        height: targetHeight*0.2
+        width: viewport.width*0.2
+        height: viewport.height*0.2
         source: "test.png"
     }
-*/
+
     Qage.Entity {
         x: 600
         y: 400
