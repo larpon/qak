@@ -12,11 +12,13 @@ Item {
     property bool draggable: false
     property bool rotatable: false
 
+    property bool useAdaptiveSource: true
     property string adaptiveSource: ""
     property alias source: adaptive.source
 
     AdaptiveSource {
         id: adaptive
+        enabled: useAdaptiveSource
         target: entity
         targetSourceProperty: "adaptiveSource"
     }
@@ -28,16 +30,7 @@ Item {
     }
 
     // Debug visuals
-    Rectangle {
-        anchors.fill: parent
-
-        visible: core.debug
-        enabled: visible
-
-        color: "transparent"
-        border.color: "red"
-        border.width: 1
-    }
+    DebugVisual {}
 
     // Drag'n'Drop functionality
     property bool dragReturnOnReject: true

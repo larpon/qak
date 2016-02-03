@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.2
 import QtQuick.Window 2.2
 
-import "qrc:/qml"
+import "./"
 
 ApplicationWindow {
 
@@ -23,10 +23,10 @@ ApplicationWindow {
     // This is where children will go
     default property alias contents: canvas.data
 
-    property real aspectRatio: width/height
+    readonly property real aspectRatio: width/height
 
-    property alias viewport: viewport
-    property alias canvas: canvas
+    readonly property alias viewport: viewport
+    readonly property alias canvas: canvas
 
     property bool debug: debugBuild
 
@@ -49,6 +49,7 @@ ApplicationWindow {
         //console.log.bind(console)
         //canvas.fix()
     }
+
     Component.onDestruction: {
 
     }

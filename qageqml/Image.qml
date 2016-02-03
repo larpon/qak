@@ -10,4 +10,6 @@ Image {
         target: image
         targetSourceProperty: "realSource"
     }
+
+    DebugVisual {}
 }

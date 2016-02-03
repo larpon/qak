@@ -4,7 +4,7 @@ import QtQuick.Window 2.2 // Screen
 
 QtObject {
 
-    property bool autoMapSource: true
+    property bool enabled: true
 
     property string source: ""
     property string mapSource
@@ -99,8 +99,24 @@ QtObject {
         return src
     }
 
+    onTargetChanged: {
+        if(target) {
+            db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            target[targetSourceProperty] = mapSource
+        }
+    }
+
+    onEnabledChanged: {
+
+    }
+
     onSourceChanged: {
+
+        if(!enabled)
+            return
+
         error = false
+        ignore = false
 
         if(source == "" || !source) {
             mapSource = undefined
@@ -123,19 +139,24 @@ QtObject {
         if(match !== false) {
             warn('Request for specific',match,'mapped source. Ignoring auto mapping')
             ignore = true
-        } else
-            ignore = false
+        }
 
         mapSource = path
     }
 
     onMapSourceChanged: {
-        log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
-        target[targetSourceProperty] = mapSource
+        if(!enabled || ignore || error)
+            return
+
+        if(target) {
+            log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            target[targetSourceProperty] = mapSource
+        } else
+            warn('"target" property is not yet sat for',source)
     }
 
     onAssetMultiplierChanged: {
-        if(!autoMapSource || ignore || error)
+        if(!enabled || ignore || error)
             return
         setMapSource(assetMultiplier)
     }

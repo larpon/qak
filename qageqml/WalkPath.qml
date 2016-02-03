@@ -1,6 +1,6 @@
 import QtQuick 2.5
 
-import "qrc:/js/easystar-0.2.3.js" as EasyStar
+import "./js/easystar-0.2.3.js" as EasyStar
 
 Entity {
 

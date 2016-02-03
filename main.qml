@@ -1,7 +1,9 @@
 
 import QtQuick 2.5
 
-import "qml" as Qage
+import "qageqml" as Qage
+
+import "qml" as Test
 
 Qage.Core {
     id: core
@@ -23,6 +25,7 @@ Qage.Core {
 
 
     // Canvas modification examples
+
     /*
 
     //canvas.x: -(canvas.width-viewportWidth)/2
@@ -140,6 +143,7 @@ Qage.Core {
         }
     }
 
+    // Wrong source error examples
     Qage.Image {
         id: errorTestSprite
         x: 500
@@ -181,6 +185,7 @@ Qage.Core {
         source: "test.png"
     }
 
+    // Drag 'n' drop example
     Qage.Entity {
         x: 600
         y: 400
@@ -217,6 +222,8 @@ Qage.Core {
         }
     }
 
+    // Rotation example
+
     Qage.Entity {
         rotatable: true
         anchors.centerIn: parent
@@ -237,7 +244,21 @@ Qage.Core {
         }
     }
 
+    Test.SittingMan {
+        x: 200
+        y: 40
+        width: 128
+        height: 216
+    }
 
+    Qage.Sprite {
+        id: spriteTest
+
+        width: 128
+        height: 216
+
+        source: "sitting_man/0001.png"
+    }
 
     /*
     WalkPath {
