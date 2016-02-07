@@ -52,8 +52,8 @@ Item {
 
     MouseArea {
         id: drag
-        property int ox: entity.x
-        property int oy: entity.y
+        property int ox: draggable ? entity.x : 0
+        property int oy: draggable ? entity.y : 0
 
         enabled: parent.draggable
         visible: enabled
@@ -190,6 +190,75 @@ Item {
                 target.rotation = rotation
             //log('point',point.x,point.y,'r',rx,ry,'diff',diffX,diffY,'deg',deg,'rotation',rotation,'mouse',mouse.x,mouse.y)
             rotate(rotation)
+        }
+    }
+
+    // Movement
+    property var moveQueue: []
+
+    function pushMove(x,y) {
+        moveQueue.push(Qt.point(x,y))
+        /* Use this for binding to moveQueue changes
+        var t = moveQueue
+        t.push(Qt.point(x,y))
+        moveQueue = t
+        */
+    }
+
+    function popMove() {
+        return moveQueue.shift()
+        /* Use this for binding to moveQueue changes
+        var t = moveQueue
+        var o = t.shift()
+        moveQueue = t
+        return o
+        */
+    }
+
+    function startMoving() {
+        pathAnim.stop()
+
+        var list = []
+        var d = 0
+        var pp = Qt.point(entity.x,entity.y)
+        while(moveQueue.length > 0) {
+            var p = popMove()
+            d += distance(pp,p)
+            var temp = component.createObject(path, {"x":p.x, "y":p.y})
+            list.push(temp)
+            pp = p
+        }
+        db('Travel distance',d)
+        pathAnim.duration = d*2
+        if(list.length > 0) {
+            path.pathElements = list
+            pathAnim.start()
+        }
+    }
+
+    function distance(p1,p2) {
+        return Math.sqrt( (p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y) )
+    }
+
+    Component
+    {
+        id: component
+        PathLine
+        {
+
+        }
+    }
+
+    PathAnimation {
+        id: pathAnim
+
+        duration: 2000
+
+        target: entity
+
+        anchorPoint: Qt.point(entity.width/2, entity.height/2)
+        path: Path {
+            id: path
         }
     }
 }

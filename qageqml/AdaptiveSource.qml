@@ -107,6 +107,7 @@ QtObject {
     }
 
     onEnabledChanged: {
+        //if(enabled)
 
     }
 

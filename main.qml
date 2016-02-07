@@ -244,12 +244,14 @@ Qage.Core {
         }
     }
 
+    /*
     Test.SittingMan {
         x: 200
         y: 40
         width: 128
         height: 216
     }
+    */
 
     Qage.Sprite {
         id: spriteTest
@@ -258,6 +260,22 @@ Qage.Core {
         height: 216
 
         source: "sitting_man/0001.png"
+
+    }
+
+    Qage.Entity {
+        rotatable: true
+        anchors.centerIn: parent
+        width: 128
+        height: 216
+
+        Qage.Sprite {
+            id: spriteTest2
+
+            anchors.fill: parent
+
+            source: "sitting_man/0001.png"
+        }
     }
 
     /*
@@ -266,4 +284,19 @@ Qage.Core {
 
     }
     */
+
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: {
+
+            if (mouse.button == Qt.RightButton)
+                spriteTest.startMoving()
+            else
+                spriteTest.pushMove(mouse.x,mouse.y)
+
+        }
+    }
+
 }

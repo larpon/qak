@@ -12,7 +12,7 @@ Qage.Entity {
         anchors.fill: parent
 
         onCurrentSpriteChanged: {
-            db("sprite:",currentSprite)
+            //db("SpriteSequence",currentSprite)
         }
 
         Sprite {
