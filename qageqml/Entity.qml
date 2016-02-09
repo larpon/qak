@@ -196,6 +196,11 @@ Item {
     // Movement
     property var moveQueue: []
 
+    function moveTo(x,y) {
+        pushMove(x,y)
+        startMoving()
+    }
+
     function pushMove(x,y) {
         moveQueue.push(Qt.point(x,y))
         /* Use this for binding to moveQueue changes

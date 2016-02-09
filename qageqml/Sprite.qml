@@ -26,31 +26,44 @@ Entity {
     property int activeSequenceIndex: 0
     property var activeSequence
 
+    // TODO
+    property var sequenceNameIndex: {
+        "sit":0,
+        "sit > reach":1,
+        "reach > sit":2,
+        "sit > look_back":3,
+        "look_back > sit":4
+    }
+
     property var sequences: [
         {
             name: "sit",
-            frames: [1,2,3,4,5,6],
-            duration: 1000,
-            to: { "sit": 1, "sit > look_back": 1, "sit > reach": 1 }
+            frames: [0],
+            duration: 2000,
+            to: { "sit": 1, "sit > look_back": 2, "sit > reach": 3 }
         },
         {
             name: "sit > reach",
-            frames: [1,2,3,4,5,6],
+            duration: 100,
+            frames: [0,1,2,3,4,5],
             to: { "reach > sit": 1 }
         },
         {
             name: "reach > sit",
-            frames: [6,5,4,3,2,1],
+            duration: 100,
+            frames: [5,4,3,2,1,0],
             to: { "sit": 1 }
         },
         {
             name: "sit > look_back",
-            frames: [20,21,22,23,24],
+            duration: 100,
+            frames: [19,20,21,22,23],
             to: { "look_back > sit":1 }
         },
         {
             name: "look_back > sit",
-            frames: [24,23,22,21,20],
+            duration: 100,
+            frames: [23,22,21,20,19],
             to: { "sit":1 }
         }
     ]
@@ -75,70 +88,114 @@ Entity {
         return src
     }
 
-    SequentialAnimation {
+    Timer {
         id: animControl
+        interval: currentFrameDelay
+        repeat: true
         running: true
-        ScriptAction {
-            script: {
-                // TODO more sanity checks
-                if('length' in sequences && sequences.length > 0) {
-                    activeSequence = sequences[activeSequenceIndex]
-                    if(!activeSequence)
-                        error('ActiveSequence is bullshit')
-                } else {
-                    error('Sprite','something wrong')
-                    return
-                }
+        triggeredOnStart: true
+        onTriggered: {
 
-                // Figure our how long this frame should show
-                if('duration' in activeSequence) {
-                    // NOTE TODO once the animation is started parameters can't be changed on it
-                    // So if anything changes the animation must be restarted
-                    if(currentFrameDelay != activeSequence.duration) {
-                        currentFrameDelay = activeSequence.duration
-                        animControl.restart()
-                    }
-                } else
-                    currentFrameDelay = defaultFrameDelay
 
-                // Show the frame
-                currentFrame = repeater.itemAt(currentFrameIndex)
 
-                // Figure out next frame
-                if('frames' in activeSequence && Object.prototype.toString.call( activeSequence.frames ) === '[object Array]') {
-
-                    /* Logic
-
-                    */
-
-                    var endSequenceFrameIndex = activeSequence.frames[activeSequence.frames.length-1]
-
-                    currentSequenceFrameIndex++
-
-                    if(currentSequenceFrameIndex == endSequenceFrameIndex) {
-                        currentSequenceFrameIndex = 0
-                        //activeSequenceIndex++
-                    }
-
-                    //db(activeSequence,activeSequence.frames,currentSequenceFrameIndex,endSequenceFrameIndex,activeSequence.frames[currentSequenceFrameIndex])
-                    currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
-                } else
-                    currentFrameIndex++
-
-                if(currentFrameIndex >= repeater.count-1 || currentFrameIndex < 0) {
-                    currentFrameIndex = 0
-                    warn('Corrected currentFrameIndex')
-                }
-
-                //db('Sprite','next frame',currentFrameIndex)
+            //
+            if(!activeSequence) {
+                activeSequence = sequences[activeSequenceIndex]
             }
+
+            // Figure our how long this frame should show
+            if('duration' in activeSequence) {
+                // NOTE TODO TIMER? once the animation is started parameters can't be changed on it
+                // So if anything changes the animation must be restarted
+                if(currentFrameDelay != activeSequence.duration) {
+                    currentFrameDelay = activeSequence.duration
+                    //animControl.restart()
+                }
+            } else {
+                if(currentFrameDelay != defaultFrameDelay) {
+                    currentFrameDelay = defaultFrameDelay
+                    //animControl.restart()
+                }
+            }
+
+            // Show the frame
+            db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
+            currentFrame = repeater.itemAt(currentFrameIndex)
+
+            // Figure out next frame
+            if('frames' in activeSequence && Object.prototype.toString.call( activeSequence.frames ) === '[object Array]') {
+
+                /*
+                    Logic
+                */
+
+                var endSequenceFrameIndex = activeSequence.frames[activeSequence.frames.length-1]
+
+
+
+                if(currentFrameIndex == endSequenceFrameIndex) {
+                    db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
+                    currentSequenceFrameIndex = 0
+
+                    if('to' in activeSequence) {
+                        var seqTo = activeSequence.to
+                        var nSeq = ""
+                        var totalWeight = 0, cumWeight = 0
+                        for(var seqName in seqTo) {
+                            totalWeight += seqTo[seqName]
+                        }
+                        var randInt = Math.floor(Math.random()*totalWeight)
+
+                        for(var seqName in seqTo) {
+                            cumWeight += seqTo[seqName]
+                            if (randInt < cumWeight) {
+                                nSeq = seqName
+                                break;
+                            }
+
+                        }
+
+
+                        activeSequenceIndex = sequenceNameIndex[nSeq]
+
+
+                        // TODO more sanity checks
+                        if('length' in sequences && sequences.length > 0) {
+                            activeSequence = sequences[activeSequenceIndex]
+                            if(!activeSequence)
+                                error('ActiveSequence is bullshit')
+                        } else {
+                            error('Sprite','something wrong')
+                            return
+                        }
+
+
+                        //currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
+                        db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
+                        currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
+                        return
+
+                    }
+                } else
+                    currentSequenceFrameIndex++
+                //db(activeSequence,activeSequence.frames,currentSequenceFrameIndex,endSequenceFrameIndex,activeSequence.frames[currentSequenceFrameIndex])
+                //if(!activeSequence.frames[currentSequenceFrameIndex])
+                //    db(activeSequence,activeSequence.frames,currentSequenceFrameIndex,endSequenceFrameIndex,activeSequence.frames[currentSequenceFrameIndex])
+                currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
+                //db()
+            } else {
+                error('No frames. Skipping...')
+            }
+
+            //if(currentFrameIndex >= repeater.count-1 || currentFrameIndex < 0) {
+            //    currentFrameIndex = 0
+            //    warn('Corrected currentFrameIndex')
+            //}
+
+            //db('Sprite','next frame',currentFrameIndex)
+
         }
 
-        //PropertyAction { target: currentFrame; property: "visible"; value: false; }
-        //PropertyAction { target: currentFrame; property: "visible"; value: false; }
-        PauseAnimation { duration: currentFrameDelay }
-
-        loops: Animation.Infinite
     }
 
     function pad(number, digits) {
@@ -192,6 +249,9 @@ Entity {
        model: 24
        Qage.Image {
            id: image
+
+           asynchronous: true
+
            width: sprite.width
            height: sprite.height
            source: "sitting_man/" + pad((index+1),4) + ".png"

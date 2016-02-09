@@ -16,6 +16,9 @@ ApplicationWindow {
     width: 800
     height: 600
 
+    readonly property real halfWidth: width/2
+    readonly property real halfHeight: height/2
+
     color: "black"
 
     visible: true
@@ -190,6 +193,9 @@ ApplicationWindow {
         x: 0; y: 0
         width: core.width; height: core.height
 
+        readonly property real halfWidth: width/2
+        readonly property real halfHeight: height/2
+
         readonly property real scaledWidth: width*activeScaler.xScale
         readonly property real scaledHeight: height*activeScaler.yScale
 
@@ -282,8 +288,13 @@ ApplicationWindow {
 
         Item {
             id: canvas
+
             width: viewport.width
             height: viewport.height
+
+            readonly property real halfWidth: width/2
+            readonly property real halfHeight: height/2
+
         }
 
     }

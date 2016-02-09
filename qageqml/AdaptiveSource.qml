@@ -139,6 +139,7 @@ QtObject {
         match = match ? match[1] : false
         if(match !== false) {
             warn('Request for specific',match,'mapped source. Ignoring auto mapping')
+            mapSource = path
             ignore = true
         }
 

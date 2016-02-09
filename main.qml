@@ -143,11 +143,26 @@ Qage.Core {
         }
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: {
+
+            if (mouse.button == Qt.RightButton)
+                spriteTest.startMoving()
+            else {
+                spriteTest.pushMove(mouse.x,mouse.y)
+                spriteTest2.moveTo(mouse.x,mouse.y)
+            }
+
+        }
+    }
+
     // Wrong source error examples
     Qage.Image {
         id: errorTestSprite
-        x: 500
-        y: 500
+        x: 430
+        y: 80
         width: 120
         height: width
         source: "test_error.png"
@@ -263,20 +278,26 @@ Qage.Core {
 
     }
 
+
     Qage.Entity {
+        id: spriteTest2
+
         rotatable: true
-        anchors.centerIn: parent
+
+        x: parent.halfWidth-halfWidth; y: parent.halfHeight-halfHeight
+
         width: 128
         height: 216
 
         Qage.Sprite {
-            id: spriteTest2
+
 
             anchors.fill: parent
 
             source: "sitting_man/0001.png"
         }
     }
+
 
     /*
     WalkPath {
@@ -286,17 +307,6 @@ Qage.Core {
     */
 
 
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: {
 
-            if (mouse.button == Qt.RightButton)
-                spriteTest.startMoving()
-            else
-                spriteTest.pushMove(mouse.x,mouse.y)
-
-        }
-    }
 
 }
