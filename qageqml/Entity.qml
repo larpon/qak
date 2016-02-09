@@ -113,6 +113,7 @@ Item {
     Drag.hotSpot.y: height / 2
 
     // Mouse rotate functionality
+    // TODO fix when moved
     MouseArea {
         id: rotator
         enabled: parent.rotatable
@@ -225,7 +226,8 @@ Item {
 
         var list = []
         var d = 0
-        var pp = Qt.point(entity.x,entity.y)
+        // TODO make an anchor point option
+        var pp = Qt.point(entity.x+entity.halfWidth,entity.y+entity.halfHeight)
         while(moveQueue.length > 0) {
             var p = popMove()
             d += distance(pp,p)
@@ -261,7 +263,7 @@ Item {
 
         target: entity
 
-        anchorPoint: Qt.point(entity.width/2, entity.height/2)
+        anchorPoint: Qt.point(entity.halfWidth, entity.halfHeight)
         path: Path {
             id: path
         }

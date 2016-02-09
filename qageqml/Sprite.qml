@@ -1,6 +1,7 @@
 import QtQuick 2.5
 
 import "./" as Qage
+
 /*
  *
  */
@@ -21,7 +22,7 @@ Entity {
     property int currentFrameIndex: 0
     property int currentSequenceFrameIndex: 0
     property int currentFrameDelay: defaultFrameDelay
-    property int defaultFrameDelay: 40
+    property int defaultFrameDelay: 60
 
     property int activeSequenceIndex: 0
     property var activeSequence
@@ -44,25 +45,25 @@ Entity {
         },
         {
             name: "sit > reach",
-            duration: 100,
-            frames: [0,1,2,3,4,5],
+            //duration: 100,
+            frames: [0,1,2,3,4,5,6,7,8],
             to: { "reach > sit": 1 }
         },
         {
             name: "reach > sit",
-            duration: 100,
-            frames: [5,4,3,2,1,0],
+            //duration: 100,
+            frames: [8,7,6,5,4,3,2,1,0],
             to: { "sit": 1 }
         },
         {
             name: "sit > look_back",
-            duration: 100,
+            //duration: 100,
             frames: [19,20,21,22,23],
             to: { "look_back > sit":1 }
         },
         {
             name: "look_back > sit",
-            duration: 100,
+            //duration: 100,
             frames: [23,22,21,20,19],
             to: { "sit":1 }
         }
@@ -96,29 +97,12 @@ Entity {
         triggeredOnStart: true
         onTriggered: {
 
-
-
-            //
+            // For inital frame
             if(!activeSequence) {
                 activeSequence = sequences[activeSequenceIndex]
             }
 
-            // Figure our how long this frame should show
-            if('duration' in activeSequence) {
-                // NOTE TODO TIMER? once the animation is started parameters can't be changed on it
-                // So if anything changes the animation must be restarted
-                if(currentFrameDelay != activeSequence.duration) {
-                    currentFrameDelay = activeSequence.duration
-                    //animControl.restart()
-                }
-            } else {
-                if(currentFrameDelay != defaultFrameDelay) {
-                    currentFrameDelay = defaultFrameDelay
-                    //animControl.restart()
-                }
-            }
-
-            // Show the frame
+            // Show the active frame
             db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
             currentFrame = repeater.itemAt(currentFrameIndex)
 
@@ -130,8 +114,6 @@ Entity {
                 */
 
                 var endSequenceFrameIndex = activeSequence.frames[activeSequence.frames.length-1]
-
-
 
                 if(currentFrameIndex == endSequenceFrameIndex) {
                     db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
@@ -169,11 +151,26 @@ Entity {
                             return
                         }
 
+                        // Figure our how long this frame should show
+                        if('duration' in activeSequence) {
+                            // NOTE TODO TIMER? once the animation is started parameters can't be changed on it
+                            // So if anything changes the animation must be restarted
+                            if(currentFrameDelay != activeSequence.duration) {
+                                currentFrameDelay = activeSequence.duration
+                                //animControl.restart()
+                            }
+                        } else {
+                            if(currentFrameDelay != defaultFrameDelay) {
+                                currentFrameDelay = defaultFrameDelay
+                                //animControl.restart()
+                            }
+                        }
+
 
                         //currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
                         db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
-                        currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
-                        return
+                        //currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
+                        //return
 
                     }
                 } else
@@ -256,7 +253,13 @@ Entity {
            height: sprite.height
            source: "sitting_man/" + pad((index+1),4) + ".png"
            sourceSize: Qt.size(width,height)
-           visible: image == currentFrame
+           opacity: image == currentFrame ? 1 : 0
+
+           // Fun "motion blur"-ish effect
+           //Behavior on opacity {
+           //    NumberAnimation { duration: 100 }
+           //}
+
            //property int frame: index+1
        }
    }
