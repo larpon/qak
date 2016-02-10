@@ -1,6 +1,9 @@
 //#include "src/platform.h"
 //#include "src/store.h"
+
 #include "src/resource.h"
+#include "src/maskedmousearea.h"
+
 //#include "src/fileio.h"
 
 //#include <QtQml>
@@ -11,14 +14,15 @@
 int main(int argc, char *argv[])
 {
 
-    // Register custom QML type - this must be done before running the qml in which it's used
+    // Register custom QML types - this must be done before running the qml in which it's used
     //qmlRegisterType<Platform, 1>("Platform", 1, 0, "Platform");
     //qmlRegisterType<Store, 1>("Store", 1, 0, "Store");
     //qmlRegisterType<Resource, 1>("Resource", 1, 0, "Resource");
     //qmlRegisterType<FileIO, 1>("FileIO", 1, 0, "FileIO");
 
-    QGuiApplication app(argc, argv);
+    qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
 
+    QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
 

@@ -1,6 +1,6 @@
 import QtQuick 2.5
 
-import "./" as Qage
+import "./" as Qak
 
 /*
  *
@@ -8,7 +8,7 @@ import "./" as Qage
 Entity {
     id: sprite
 
-    useAdaptiveSource: !enabled
+    adaptSource: !enabled
 
     property bool enabled: true
 
@@ -92,12 +92,48 @@ Entity {
         return src
     }
 
+    function setActiveSequence(name) {
+        animControl.stop()
+
+        if(!name in sequenceNameIndex) {
+            error('Can\'t find sequence named',name)
+            return
+        }
+
+        activeSequenceIndex = sequenceNameIndex[name]
+        activeSequence = sequences[activeSequenceIndex]
+        currentSequenceFrameIndex = 0
+        if('frames' in activeSequence && Object.prototype.toString.call( activeSequence.frames ) === '[object Array]') {
+            currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
+        }
+
+        // Figure out frame delay
+        if('duration' in activeSequence) {
+            // NOTE TODO TIMER? once the animation is started parameters can't be changed on it
+            // So if anything changes the animation must be restarted
+            if(currentFrameDelay != activeSequence.duration)
+                currentFrameDelay = activeSequence.duration
+        } else {
+            if(currentFrameDelay != defaultFrameDelay)
+                currentFrameDelay = defaultFrameDelay
+        }
+
+        //db('New active sequence',activeSequence.name)
+
+        currentFrame = repeater.itemAt(currentFrameIndex)
+
+        animControl.restart()
+    }
+
     Timer {
         id: animControl
         interval: currentFrameDelay
         repeat: true
-        running: !sprite.pause
-        triggeredOnStart: true
+        running: !sprite.pause && !pause
+        //triggeredOnStart: true
+
+        property bool pause: false
+
         onTriggered: {
 
             // For inital frame
@@ -106,15 +142,11 @@ Entity {
             }
 
             // Show the active frame
-            db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
+            //db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
             currentFrame = repeater.itemAt(currentFrameIndex)
 
             // Figure out next frame
             if('frames' in activeSequence && Object.prototype.toString.call( activeSequence.frames ) === '[object Array]') {
-
-                /*
-                    Logic
-                */
 
                 // TODO reverse support
                 /*
@@ -128,8 +160,7 @@ Entity {
                 var endSequenceFrameIndex = activeSequence.frames[activeSequence.frames.length-1]
 
                 if(currentFrameIndex == endSequenceFrameIndex) {
-                    db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
-                    currentSequenceFrameIndex = 0
+                    //db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
 
                     if('to' in activeSequence) {
                         var seqTo = activeSequence.to
@@ -149,59 +180,19 @@ Entity {
 
                         }
 
-
-                        activeSequenceIndex = sequenceNameIndex[nSeq]
-
-
-                        // TODO more sanity checks
-                        if('length' in sequences && sequences.length > 0) {
-                            activeSequence = sequences[activeSequenceIndex]
-                            if(!activeSequence)
-                                error('ActiveSequence is bullshit')
-                        } else {
-                            error('Sprite','something wrong')
-                            return
-                        }
-
-                        // Figure our how long this frame should show
-                        if('duration' in activeSequence) {
-                            // NOTE TODO TIMER? once the animation is started parameters can't be changed on it
-                            // So if anything changes the animation must be restarted
-                            if(currentFrameDelay != activeSequence.duration) {
-                                currentFrameDelay = activeSequence.duration
-                                //animControl.restart()
-                            }
-                        } else {
-                            if(currentFrameDelay != defaultFrameDelay) {
-                                currentFrameDelay = defaultFrameDelay
-                                //animControl.restart()
-                            }
-                        }
-
-
-                        //currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
-                        db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
-                        //currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
-                        //return
+                        //db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
+                        setActiveSequence(nSeq)
 
                     }
+
                 } else
                     currentSequenceFrameIndex++
-                //db(activeSequence,activeSequence.frames,currentSequenceFrameIndex,endSequenceFrameIndex,activeSequence.frames[currentSequenceFrameIndex])
-                //if(!activeSequence.frames[currentSequenceFrameIndex])
-                //    db(activeSequence,activeSequence.frames,currentSequenceFrameIndex,endSequenceFrameIndex,activeSequence.frames[currentSequenceFrameIndex])
+
                 currentFrameIndex = activeSequence.frames[currentSequenceFrameIndex]
-                //db()
+
             } else {
                 error('No frames. Skipping...')
             }
-
-            //if(currentFrameIndex >= repeater.count-1 || currentFrameIndex < 0) {
-            //    currentFrameIndex = 0
-            //    warn('Corrected currentFrameIndex')
-            //}
-
-            //db('Sprite','next frame',currentFrameIndex)
 
         }
 
@@ -256,7 +247,7 @@ Entity {
     Repeater {
        id: repeater
        model: 24
-       Qage.Image {
+       Qak.Image {
            id: image
 
            asynchronous: true

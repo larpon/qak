@@ -8,7 +8,7 @@ ApplicationWindow {
 
     id: core
 
-    title: qsTr("QAGE")+" ("+width+"x"+height+")"
+    title: qsTr("QAK")+" ("+width+"x"+height+")"
 
     x: 2200
     y: (Screen.desktopAvailableHeight/2)-(height/2)
@@ -151,11 +151,11 @@ ApplicationWindow {
             var args = Array.prototype.slice.call(arguments);
 
             // 2. Prepend log prefix log string
-            args.unshift("QAGE");
+            args.unshift("QAK");
 
             // 3. Pass along arguments to console.log
             console.log.apply(console, args);
-            //console.log('QAGE',Array.prototype.slice.call(arguments))
+            //console.log('QAK',Array.prototype.slice.call(arguments))
         }
     }
 
@@ -164,7 +164,7 @@ ApplicationWindow {
         //log.history.push(arguments)
         if(console) {
             var args = Array.prototype.slice.call(arguments)
-            args.unshift("QAGE ERROR")
+            args.unshift("QAK ERROR")
             console.error.apply(console, args)
         }
     }
@@ -174,7 +174,7 @@ ApplicationWindow {
         //db.history.push(arguments)
         if(console && debug) {
             var args = Array.prototype.slice.call(arguments)
-            args.unshift("QAGE DEBUG")
+            args.unshift("QAK DEBUG")
             console.debug.apply(console, args)
         }
     }
@@ -184,7 +184,7 @@ ApplicationWindow {
         //db.history.push(arguments)
         if(console) {
             var args = Array.prototype.slice.call(arguments)
-            args.unshift("QAGE WARNING")
+            args.unshift("QAK WARNING")
             console.warn.apply(console, args)
         }
     }

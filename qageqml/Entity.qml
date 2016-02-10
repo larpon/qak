@@ -14,13 +14,13 @@ Item {
     property bool draggable: false
     property bool rotatable: false
 
-    property bool useAdaptiveSource: true
+    property bool adaptSource: true
     property string adaptiveSource: ""
     property alias source: adaptive.source
 
     AdaptiveSource {
         id: adaptive
-        enabled: useAdaptiveSource
+        enabled: adaptSource
         target: entity
         targetSourceProperty: "adaptiveSource"
     }

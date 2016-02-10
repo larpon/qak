@@ -1,8 +1,8 @@
 import QtQuick 2.2
 
-import "qrc:///qageqml" as Qage
+import "qrc:///qageqml" as Qak
 
-Qage.Entity {
+Qak.Entity {
     id: entity
 
     source: "sitting_man.png"

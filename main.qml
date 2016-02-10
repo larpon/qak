@@ -1,11 +1,13 @@
 
 import QtQuick 2.5
 
-import "qageqml" as Qage
+import Qak 1.0
+
+import "qageqml" as QakQuick
 
 import "qml" as Test
 
-Qage.Core {
+QakQuick.Core {
     id: core
 
     width: 800
@@ -117,7 +119,7 @@ Qage.Core {
     // Example engine items
 
     /*
-    Qage.Entity {
+    Qak.Entity {
         id: entity
         anchors.fill: parent
 
@@ -131,7 +133,7 @@ Qage.Core {
     */
 
     // Adaptive source example
-    Qage.Entity {
+    QakQuick.Entity {
         id: entity
         anchors.fill: parent
 
@@ -159,7 +161,7 @@ Qage.Core {
     }
 
     // Wrong source error examples
-    Qage.Image {
+    QakQuick.Image {
         id: errorTestSprite
         x: 430
         y: 80
@@ -177,7 +179,7 @@ Qage.Core {
         }
     }
 
-    Qage.Image {
+    QakQuick.Image {
         id: error2TestSprite
         x: 400
         y: 400
@@ -191,7 +193,7 @@ Qage.Core {
         }
     }
 
-    Qage.Image {
+    QakQuick.Image {
         id: testSprite1
         x: 20
         y: 350
@@ -201,7 +203,7 @@ Qage.Core {
     }
 
     // Drag 'n' drop example
-    Qage.Entity {
+    QakQuick.Entity {
         x: 600
         y: 400
         width: 70
@@ -221,7 +223,7 @@ Qage.Core {
         }
     }
 
-    Qage.Entity {
+    QakQuick.Entity {
 
         x: 200
         y: 200
@@ -239,7 +241,7 @@ Qage.Core {
 
     // Rotation example
 
-    Qage.Entity {
+    QakQuick.Entity {
         rotatable: true
         anchors.centerIn: parent
         width: 50
@@ -268,7 +270,7 @@ Qage.Core {
     }
     */
 
-    Qage.Sprite {
+    QakQuick.Sprite {
         id: spriteTest
 
         width: 128
@@ -279,22 +281,27 @@ Qage.Core {
     }
 
 
-    Qage.Entity {
+    QakQuick.Entity {
         id: spriteTest2
 
-        rotatable: true
+        //rotatable: true
 
         x: parent.halfWidth-halfWidth; y: parent.halfHeight-halfHeight
 
         width: 128
         height: 216
 
-        Qage.Sprite {
-
+        QakQuick.Sprite {
+            id: spriteTest2Sprite
 
             anchors.fill: parent
 
             source: "sitting_man/0001.png"
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: spriteTest2Sprite.setActiveSequence('sit')
+            }
         }
     }
 

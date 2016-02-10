@@ -5,7 +5,8 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    src/resource.cpp
+    src/resource.cpp \
+    src/maskedmousearea.cpp
 
 RESOURCES += qml.qrc \
     qageqml.qrc
@@ -19,4 +20,5 @@ include(deployment.pri)
 DISTFILES +=
 
 HEADERS += \
-    src/resource.h
+    src/resource.h \
+    src/maskedmousearea.h
