@@ -9,6 +9,8 @@ Item {
     property real halfWidth: width/2
     property real halfHeight: height/2
 
+    property bool pause: core.pause
+
     property bool draggable: false
     property bool rotatable: false
 

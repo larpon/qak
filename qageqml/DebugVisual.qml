@@ -7,6 +7,6 @@ Rectangle {
     enabled: visible
 
     color: "transparent"
-    border.color: "red"
+    border.color: core.pause ? "red" : "tomato"
     border.width: 1
 }

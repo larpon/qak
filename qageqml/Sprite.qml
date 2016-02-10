@@ -18,6 +18,7 @@ Entity {
 
     property bool error: false
 
+
     property Image currentFrame
     property int currentFrameIndex: 0
     property int currentSequenceFrameIndex: 0
@@ -52,6 +53,8 @@ Entity {
         {
             name: "reach > sit",
             //duration: 100,
+            //reverse: true,
+            //frames: [0,1,2,3,4,5,6,7,8],
             frames: [8,7,6,5,4,3,2,1,0],
             to: { "sit": 1 }
         },
@@ -93,7 +96,7 @@ Entity {
         id: animControl
         interval: currentFrameDelay
         repeat: true
-        running: true
+        running: !sprite.pause
         triggeredOnStart: true
         onTriggered: {
 
@@ -113,6 +116,15 @@ Entity {
                     Logic
                 */
 
+                // TODO reverse support
+                /*
+                if('reverse' in activeSequence && activeSequence.reverse && !('isReversed' in activeSequence)) {
+                    db('Reversing')
+                    activeSequence.frames = activeSequence.frames.reverse()
+                    activeSequence.isReversed = true
+                }
+                */
+
                 var endSequenceFrameIndex = activeSequence.frames[activeSequence.frames.length-1]
 
                 if(currentFrameIndex == endSequenceFrameIndex) {
@@ -128,7 +140,7 @@ Entity {
                         }
                         var randInt = Math.floor(Math.random()*totalWeight)
 
-                        for(var seqName in seqTo) {
+                        for(seqName in seqTo) {
                             cumWeight += seqTo[seqName]
                             if (randInt < cumWeight) {
                                 nSeq = seqName

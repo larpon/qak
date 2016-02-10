@@ -23,6 +23,8 @@ ApplicationWindow {
 
     visible: true
 
+    property bool pause: false
+
     // This is where children will go
     default property alias contents: canvas.data
 
@@ -67,6 +69,8 @@ ApplicationWindow {
         else
             core.showNormal()
     }
+
+    onPauseChanged: log(pause ? 'paused' : 'continued')
 
     // NOTE Keeping for reference calculations
     // This is the very base for calculating the suggested asset size
@@ -322,6 +326,9 @@ ApplicationWindow {
 
             if (key == Qt.Key_D)
                 core.debug = !core.debug
+
+            if (key == Qt.Key_P)
+                core.pause = !core.pause
 
             //if(key == Qt.Key_Up)
                 //settings.contrast = settings.contrast + 0.01
