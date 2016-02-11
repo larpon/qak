@@ -9,5 +9,6 @@
         <file>qageqml/js/easystar-0.2.3.js</file>
         <file>qageqml/Sprite.qml</file>
         <file>qageqml/DebugVisual.qml</file>
+        <file>qageqml/MouseRotator.qml</file>
     </qresource>
 </RCC>

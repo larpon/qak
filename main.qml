@@ -284,7 +284,7 @@ QakQuick.Core {
     QakQuick.Entity {
         id: spriteTest2
 
-        //rotatable: true
+        rotatable: true
 
         x: parent.halfWidth-halfWidth; y: parent.halfHeight-halfHeight
 
@@ -313,6 +313,21 @@ QakQuick.Core {
     }
     */
 
+
+
+
+
+    QakQuick.Image {
+
+        width: 200
+        height: width
+
+        source: "test.png"
+
+        QakQuick.MouseRotator {
+            anchors.fill: parent
+        }
+    }
 
 
 

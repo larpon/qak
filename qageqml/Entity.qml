@@ -115,85 +115,12 @@ Item {
     Drag.hotSpot.y: height / 2
 
     // Mouse rotate functionality
-    // TODO fix when moved
-    MouseArea {
+    MouseRotator {
         id: rotator
         enabled: parent.rotatable
 
-        property var container: parent.parent
-        property var target: parent
-        //property variant handle: parent
-
-        property bool stop: false
-
         anchors.fill: parent
         anchors.margins: 0 //main.grow()
-
-        property real startRotation: 0
-
-        signal rotate(real degree)
-
-        onPressed: {
-            startRotation = target.rotation
-        }
-
-        onPositionChanged: {
-            if(!enabled)
-                return
-
-            var point =  mapToItem(rotator.container, mouse.x, mouse.y)
-
-            var rx = 0
-            var ry = 0
-
-            var pto = target.transformOrigin
-            if(pto == Item.Center) {
-                rx = rotator.container.width / 2; ry = rotator.container.height / 2
-            } else if(pto == Item.TopLeft) {
-                rx = 0; ry = 0;
-            } else if(pto == Item.Left) {
-                rx = 0; ry = rotator.container.height / 2
-            } else if(pto == Item.BottomLeft) { // Untested
-                rx = 0; ry = rotator.container.height
-            } else if(pto == Item.Bottom) {
-                rx = rotator.container.width / 2; ry = rotator.container.height
-            } else if(pto == Item.BottomRight) {  // Untested
-                rx = rotator.container.width; ry = rotator.container.height
-            } else if(pto == Item.Right) {  // Untested
-                rx = rotator.container.width; ry = rotator.container.height / 2
-            } else if(pto == Item.TopRight) {  // Untested
-                rx = rotator.container.width; ry = 0
-            } else if(pto == Item.Top) {  // Untested
-                rx = rotator.container.width / 2; ry = 0
-            }
-
-            var diffX = (point.x - rx)
-            var diffY = -1 * (point.y - ry)
-            var rad = Math.atan (diffY / diffX)
-            var deg = (rad * 180 / Math.PI)
-
-            var rotation = 0
-
-            if (diffX > 0 && diffY > 0) {
-                rotation += 90 - Math.abs (deg)
-            }
-            else if (diffX > 0 && diffY < 0) {
-                rotation += 90 + Math.abs (deg)
-            }
-            else if (diffX < 0 && diffY > 0) {
-                rotation += 270 + Math.abs (deg)
-            }
-            else if (diffX < 0 && diffY < 0) {
-                rotation += 270 - Math.abs (deg)
-            }
-
-            db(rotation,rotation+startRotation)
-
-            if(!stop)
-                target.rotation = rotation
-            //log('point',point.x,point.y,'r',rx,ry,'diff',diffX,diffY,'deg',deg,'rotation',rotation,'mouse',mouse.x,mouse.y)
-            rotate(rotation)
-        }
     }
 
     // Movement
