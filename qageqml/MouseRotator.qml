@@ -3,6 +3,8 @@ import QtQuick 2.5
 MouseArea {
     id: rotator
 
+    propagateComposedEvents: true
+
     enabled: true
 
     //readonly property var container: target.parent
@@ -91,6 +93,10 @@ MouseArea {
         if(!stop)
             target.rotation = rotation
 
+        //db(rotation)
+
         rotate(rotation)
     }
+
+
 }

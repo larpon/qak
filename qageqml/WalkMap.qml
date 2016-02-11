@@ -4,11 +4,15 @@ import "./js/easystar-0.2.3.js" as EasyStar
 
 Entity {
 
-    id: walkPath
+    id: walkMap
 
-    property var pathFinder: new EasyStar.EasyStar.Js();
+    readonly property var pathFinder: new EasyStar.EasyStar.Js();
+
     property alias columns: grid.columns
     property alias rows: grid.rows
+
+    property bool edit: false
+    property bool visualize: false
 
     property int startPositionX: 0
     property int startPositionY: 0
@@ -32,9 +36,12 @@ Entity {
                 width: parent.cellWidth
                 height: parent.cellHeight
 
-                opacity: 0.32
+                opacity: 0.05
 
-                color: on ? "green" : "transparent"
+                color: on ? "green" : "red"
+
+                border.width: 1
+                border.color: "yellow"
 
                 property bool on: false
                 property bool show: false

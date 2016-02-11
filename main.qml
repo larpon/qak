@@ -145,6 +145,7 @@ QakQuick.Core {
         }
     }
 
+    // Movement example
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -159,6 +160,13 @@ QakQuick.Core {
 
         }
     }
+
+    // Walk map example
+    QakQuick.WalkMap {
+        id: walkMap
+        anchors.fill: parent
+    }
+
 
     // Wrong source error examples
     QakQuick.Image {
@@ -304,18 +312,6 @@ QakQuick.Core {
             }
         }
     }
-
-
-    /*
-    WalkPath {
-        anchors.fill: parent
-
-    }
-    */
-
-
-
-
 
     QakQuick.Image {
 

@@ -120,7 +120,6 @@ Item {
         enabled: parent.rotatable
 
         anchors.fill: parent
-        anchors.margins: 0 //main.grow()
     }
 
     // Movement
