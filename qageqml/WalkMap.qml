@@ -1,30 +1,139 @@
 import QtQuick 2.5
 
-import "./js/easystar-0.2.3.js" as EasyStar
-
 Entity {
 
     id: walkMap
 
-    readonly property var pathFinder: new EasyStar.EasyStar.Js();
-
+    property alias grid: grid
     property alias columns: grid.columns
     property alias rows: grid.rows
 
     property bool edit: false
     property bool visualize: false
 
-    property int startPositionX: 0
-    property int startPositionY: 0
-    property int endPositionX: 0
-    property int endPositionY: 0
+    property point startPosition: Qt.point(0,0)
+    property point endPosition: Qt.point(0,0)
 
+    property var solvesList: ({})
+    property int nextSolveId: 0
+    // Functionality
+    WorkerScript {
+        id: solverWorker
+        source: "./js/walkMapWorker.js"
+
+        onMessage: {
+            db('Path was found?',messageObject.found)
+            if(messageObject.found) {
+                solvesList[messageObject.solveId].onFound(pathToCoords(messageObject.path))
+            } else
+                solvesList[messageObject.solveId].onNotFound()
+            if('solveId' in messageObject) {
+                db('Removing',messageObject.solveId)
+                delete solvesList[messageObject.solveId]
+            }
+        }
+    }
+
+    function pathToCoords(path) {
+        for(var i in path) {
+            var pos = path[i]
+            //console.debug('Path x,y',pos.x,pos.y)
+        }
+        return path
+    }
+
+    function findPath(startPoint, endPoint, onFound, onNotFound) {
+
+        // Fix point extremes
+        if(startPoint.x <= 0) {
+            warn('Fixed start point.x 0')
+            startPoint.x = Number.MIN_VALUE
+        }
+        if(startPoint.y <= 0) {
+            warn('Fixed start point.y 0')
+            startPoint.y = Number.MIN_VALUE
+        }
+        if(endPoint.x <= 0) {
+            warn('Fixed end point.x 0')
+            endPoint.x = Number.MIN_VALUE
+        }
+        if(endPoint.y <= 0) {
+            warn('Fixed end point.y 0')
+            endPoint.y = Number.MIN_VALUE
+        }
+
+        if(startPoint.x >= walkMap.width) {
+            warn('Fixed start point.x',walkMap.width)
+            startPoint.x -= Number.MIN_VALUE
+        }
+        if(startPoint.y >= walkMap.height) {
+            warn('Fixed start point.y', walkMap.height)
+            startPoint.y -= Number.MIN_VALUE
+        }
+        if(endPoint.x >= walkMap.width) {
+            warn('Fixed end point.x',walkMap.width)
+            endPoint.x = Number.MIN_VALUE
+        }
+        if(endPoint.y >= walkMap.height) {
+            warn('Fixed end point.y', walkMap.height)
+            endPoint.y = Number.MIN_VALUE
+        }
+
+
+
+        var child = grid.childAt(startPoint.x,startPoint.y)
+        child.show = true
+        var idx = child.idx
+        var times = Math.floor(idx/grid.columns)
+        db('start grid box',idx, times)
+        startPosition.x = idx-(times*grid.columns)
+        startPosition.y = times
+
+        child = grid.childAt(endPoint.x, endPoint.y)
+        child.show = true
+        idx = child.idx
+        times = Math.floor(idx/grid.columns)
+        db('end grid box',idx,times)
+        endPosition.x = idx-(times*grid.columns)
+        endPosition.y = times
+
+        var cs = []
+        var rs = []
+        for(var i = 0; i < grid.children.length-1; i++) {
+            child = grid.children[i]
+
+
+
+            if(child.on) {
+                db('adding child at index',i,child.idx)
+                rs.push(0)
+            } else
+                rs.push(1)
+
+            if(rs.length % grid.columns === 0) {
+                var c = rs.slice()
+                cs.push(c)
+                rs = []
+            }
+        }
+
+        db("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y)
+
+        var startPos = { 'x':startPosition.x, 'y': startPosition.y }
+        var endPos = { 'x':endPosition.x, 'y': endPosition.y }
+
+        solvesList[nextSolveId] = { 'onFound':onFound, 'onNotFound':onNotFound }
+        solverWorker.sendMessage( { 'solveId': nextSolveId, 'grid': cs, 'startPosition': startPos, 'endPosition': endPos } )
+        nextSolveId++
+    }
+
+    // Visualization
     Grid {
         id: grid
 
         anchors.fill: parent
         columns: 10
-        rows: 5
+        rows: Math.floor(columns*(height/width))
 
         property real cellWidth: (width/columns)
         property real cellHeight: (height/rows)
@@ -36,7 +145,7 @@ Entity {
                 width: parent.cellWidth
                 height: parent.cellHeight
 
-                opacity: 0.05
+                opacity: 0.15
 
                 color: on ? "green" : "red"
 
@@ -53,7 +162,7 @@ Entity {
                     anchors.fill: parent
 
                     visible: parent.show
-                    opacity: 0.32
+                    opacity: 0.5
 
                     color: "blue"
                 }
@@ -61,95 +170,4 @@ Entity {
         }
     }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-
-        property Item current
-
-        onCurrentChanged: current.on = !current.on
-
-        onPressed: current = grid.childAt(mouse.x,mouse.y)
-        onPositionChanged: current = grid.childAt(mouse.x,mouse.y)
-
-        //focus: true
-        Keys.onPressed: {
-            db('Walk Path',"Got key event",event,event.key)
-
-            var key = event.key
-
-            if (key === Qt.Key_1) {
-                var idx = grid.childAt(mouseArea.mouseX,mouseArea.mouseY).idx
-                var times = Math.floor(idx/grid.columns)
-                startPositionX = idx-(times*grid.columns)
-                startPositionY = times
-                db("Recording start position",startPositionX,startPositionY)
-            }
-
-            if (key === Qt.Key_2) {
-                var idx = grid.childAt(mouseArea.mouseX,mouseArea.mouseY).idx
-                var times = Math.floor(idx/grid.columns)
-                endPositionX = idx-(times*grid.columns)
-                endPositionY = times
-                db("Recording end position",endPositionX,endPositionY)
-            }
-
-            if (key === Qt.Key_3) {
-                pathFinder.enableSync()
-                var cs = []
-                var rs = []
-                for(var i = 0; i < grid.children.length-1; i++) {
-                    var child = grid.children[i]
-
-                    //db(i+1,child.ix,child.iy)
-
-                    if(child.on)
-                        rs.push(0)
-                    else
-                        rs.push(1)
-
-                    if(rs.length % grid.columns === 0) {
-                        var c = rs.slice()
-                        cs.push(c)
-                        rs = []
-
-                    }
-
-
-                }
-                for(var i in cs) {
-                    var d = cs[i]
-                    db(d)
-
-                }
-                //db(cs[0])
-                /*
-                var agrid = [[0,0,1,0,0],
-                            [0,0,1,0,0],
-                            [0,0,1,0,0],
-                            [0,0,1,0,0],
-                            [0,0,0,0,0]];
-                */
-
-                pathFinder.setGrid(cs);
-
-                pathFinder.setAcceptableTiles([0]);
-
-                pathFinder.findPath(startPositionX, startPositionY, endPositionX, endPositionY, function( path ) {
-                    if (path === null) {
-                        db("Path was not found.")
-                    } else {
-                        db("Path was found.")
-                        for(var i in path) {
-                            var pos = path[i]
-                            db(pos.x,pos.y)
-                        }
-                    }
-                });
-
-                pathFinder.calculate();
-            }
-
-        }
-    }
 }

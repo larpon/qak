@@ -5,10 +5,10 @@
         <file>qageqml/Entity.qml</file>
         <file>qageqml/Image.qml</file>
         <file>qageqml/SourceEntity.qml</file>
-        <file>qageqml/js/easystar-0.2.3.js</file>
         <file>qageqml/Sprite.qml</file>
         <file>qageqml/DebugVisual.qml</file>
         <file>qageqml/MouseRotator.qml</file>
         <file>qageqml/WalkMap.qml</file>
+        <file>qageqml/js/walkMapWorker.js</file>
     </qresource>
 </RCC>

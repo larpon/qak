@@ -165,6 +165,33 @@ QakQuick.Core {
     QakQuick.WalkMap {
         id: walkMap
         anchors.fill: parent
+
+        columns: 20
+
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+
+            property Item current
+
+            onCurrentChanged: current.on = !current.on
+
+            onPressed: current = walkMap.grid.childAt(mouse.x,mouse.y)
+            onPositionChanged: current = walkMap.grid.childAt(mouse.x,mouse.y)
+
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+            onClicked: {
+                if(mouse.button & Qt.RightButton) {
+                    walkMap.findPath(Qt.point(0,0), Qt.point(walkMap.width-1,walkMap.height-1),
+                    function(path){
+                        db('callback found',path)
+                    }, function(){
+                        db('callback NOT found')
+                    })
+                }
+            }
+        }
     }
 
 
@@ -314,7 +341,8 @@ QakQuick.Core {
     }
 
     QakQuick.Image {
-
+        x: (parent.width/4)*3
+        y: 0
         width: 200
         height: width
 
