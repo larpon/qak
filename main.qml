@@ -3,11 +3,11 @@ import QtQuick 2.5
 
 import Qak 1.0
 
-import "qageqml" as QakQuick
+import "qakqml" as QuickQak
 
 import "qml" as Test
 
-QakQuick.Core {
+QuickQak.Core {
     id: core
 
     width: 800
@@ -133,7 +133,7 @@ QakQuick.Core {
     */
 
     // Adaptive source example
-    QakQuick.Entity {
+    QuickQak.Entity {
         id: entity
         anchors.fill: parent
 
@@ -162,11 +162,12 @@ QakQuick.Core {
     }
 
     // Walk map example
-    QakQuick.WalkMap {
+    QuickQak.WalkMap {
         id: walkMap
+
         anchors.fill: parent
 
-        columns: 20
+        columns: 60
 
         MouseArea {
             id: mouseArea
@@ -186,6 +187,10 @@ QakQuick.Core {
                     walkMap.findPath(Qt.point(0,0), Qt.point(walkMap.width-1,walkMap.height-1),
                     function(path){
                         db('callback found',path)
+                        for(var i in path) {
+                            spriteTest.pushMove(path[i].x,path[i].y)
+                        }
+                        spriteTest.startMoving()
                     }, function(){
                         db('callback NOT found')
                     })
@@ -196,7 +201,7 @@ QakQuick.Core {
 
 
     // Wrong source error examples
-    QakQuick.Image {
+    QuickQak.Image {
         id: errorTestSprite
         x: 430
         y: 80
@@ -214,7 +219,7 @@ QakQuick.Core {
         }
     }
 
-    QakQuick.Image {
+    QuickQak.Image {
         id: error2TestSprite
         x: 400
         y: 400
@@ -228,7 +233,7 @@ QakQuick.Core {
         }
     }
 
-    QakQuick.Image {
+    QuickQak.Image {
         id: testSprite1
         x: 20
         y: 350
@@ -238,7 +243,7 @@ QakQuick.Core {
     }
 
     // Drag 'n' drop example
-    QakQuick.Entity {
+    QuickQak.Entity {
         x: 600
         y: 400
         width: 70
@@ -258,7 +263,7 @@ QakQuick.Core {
         }
     }
 
-    QakQuick.Entity {
+    QuickQak.Entity {
 
         x: 200
         y: 200
@@ -276,7 +281,7 @@ QakQuick.Core {
 
     // Rotation example
 
-    QakQuick.Entity {
+    QuickQak.Entity {
         rotatable: true
         anchors.centerIn: parent
         width: 50
@@ -305,7 +310,7 @@ QakQuick.Core {
     }
     */
 
-    QakQuick.Sprite {
+    QuickQak.Sprite {
         id: spriteTest
 
         width: 128
@@ -316,7 +321,7 @@ QakQuick.Core {
     }
 
 
-    QakQuick.Entity {
+    QuickQak.Entity {
         id: spriteTest2
 
         rotatable: true
@@ -326,7 +331,7 @@ QakQuick.Core {
         width: 128
         height: 216
 
-        QakQuick.Sprite {
+        QuickQak.Sprite {
             id: spriteTest2Sprite
 
             anchors.fill: parent
@@ -340,7 +345,7 @@ QakQuick.Core {
         }
     }
 
-    QakQuick.Image {
+    QuickQak.Image {
         x: (parent.width/4)*3
         y: 0
         width: 200
@@ -348,7 +353,7 @@ QakQuick.Core {
 
         source: "test.png"
 
-        QakQuick.MouseRotator {
+        QuickQak.MouseRotator {
             anchors.fill: parent
         }
     }

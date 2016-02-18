@@ -682,13 +682,16 @@ WorkerScript.onMessage = function(message) {
 
     for(var i in grid) {
         var d = grid[i]
-        console.debug('Grid',d)
+        console.debug('WalkMap',d)
     }
 
     var startPosition = message.startPosition
     var endPosition = message.endPosition
 
     pathFinder.enableSync()
+
+    pathFinder.enableDiagonals()
+    pathFinder.enableCornerCutting()
 
     pathFinder.setGrid(grid)
 

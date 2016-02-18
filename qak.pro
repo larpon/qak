@@ -9,7 +9,7 @@ SOURCES += main.cpp \
     src/maskedmousearea.cpp
 
 RESOURCES += qml.qrc \
-    qageqml.qrc
+    qakqml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

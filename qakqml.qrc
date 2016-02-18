@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qakqml/AdaptiveSource.qml</file>
+        <file>qakqml/Core.qml</file>
+        <file>qakqml/Entity.qml</file>
+        <file>qakqml/Image.qml</file>
+        <file>qakqml/SourceEntity.qml</file>
+        <file>qakqml/Sprite.qml</file>
+        <file>qakqml/DebugVisual.qml</file>
+        <file>qakqml/MouseRotator.qml</file>
+        <file>qakqml/WalkMap.qml</file>
+        <file>qakqml/js/walkMapWorker.js</file>
+    </qresource>
+</RCC>
