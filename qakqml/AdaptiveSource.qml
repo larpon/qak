@@ -67,7 +67,7 @@ QtObject {
 
             src = getSourceStepURL(step)
 
-            //db('Tri',tries+1,'of',tryLimit,'to find','"x'+step+'"','resource for',source)
+            //core.db('Tri',tries+1,'of',tryLimit,'to find','"x'+step+'"','resource for',source)
 
             tries++
         }
@@ -75,7 +75,7 @@ QtObject {
         if(resource.exists(src) && mapSource != src) {
             mapSource = src
         }/* else
-            warn('Nothing found for',source,'at steps till',step)
+            core.warn('Nothing found for',source,'at steps till',step)
             */
     }
 
@@ -101,7 +101,7 @@ QtObject {
 
     onTargetChanged: {
         if(target) {
-            db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            core.db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }
     }
@@ -121,14 +121,14 @@ QtObject {
 
         if(source == "" || !source) {
             mapSource = undefined
-            db(sourceEntity,'Empty source given')
+            core.db(sourceEntity,'Empty source given')
             return
         }
 
         var path = getSourceStepURL(0)
 
         if(!resource.exists(path)) {
-            warn('No resource',path,'found. Ignoring')
+            core.warn('No resource',path,'found. Ignoring')
             error = true
             ignore = true
             return
@@ -138,7 +138,7 @@ QtObject {
         var match = source.match('\\.(x-?.+?)\\.')
         match = match ? match[1] : false
         if(match !== false) {
-            warn('Request for specific',match,'mapped source. Ignoring auto mapping')
+            core.warn('Request for specific',match,'mapped source. Ignoring auto mapping')
             mapSource = path
             ignore = true
         }
@@ -151,10 +151,10 @@ QtObject {
             return
 
         if(target) {
-            log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            core.log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         } else
-            warn('"target" property is not yet sat for',source)
+            core.warn('"target" property is not yet sat for',source)
     }
 
     onAssetMultiplierChanged: {

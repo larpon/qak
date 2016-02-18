@@ -10,5 +10,6 @@
         <file>qakqml/MouseRotator.qml</file>
         <file>qakqml/WalkMap.qml</file>
         <file>qakqml/js/walkMapWorker.js</file>
+        <file>qakqml/Application.qml</file>
     </qresource>
 </RCC>

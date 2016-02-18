@@ -233,9 +233,9 @@ Entity {
             var next = pad((digit+1),number.length)
             var nextMatch = source.replace(number, next)
             //nextMatch =
-            log('Assuming animation source based on','"'+number+'"',nextMatch)
+            core.log('Assuming animation source based on','"'+number+'"',nextMatch)
         } else {
-            log('Assuming single image source')
+            core.log('Assuming single image source')
             enabled = false
             return
         }

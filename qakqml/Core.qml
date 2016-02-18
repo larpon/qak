@@ -1,25 +1,12 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.2
-import QtQuick.Window 2.2
 
 import "./"
 
-ApplicationWindow {
-
+Item {
     id: core
-
-    title: qsTr("QAK")+" ("+width+"x"+height+")"
-
-    x: 2200
-    y: (Screen.desktopAvailableHeight/2)-(height/2)
-
-    width: 800
-    height: 600
 
     readonly property real halfWidth: width/2
     readonly property real halfHeight: height/2
-
-    color: "black"
 
     visible: true
 
@@ -47,8 +34,6 @@ ApplicationWindow {
     // Signals
     signal resized
 
-    //flags: Qt.FramelessWindowHint | Qt.CustomizeWindowHint
-
     Component.onCompleted: {
         //if(debug) console.debug.apply(console, arguments);
         //console.log.bind(console)
@@ -59,7 +44,6 @@ ApplicationWindow {
 
     }
 
-    onScreenChanged: log("Screen changed")
     onScreenmodeChanged: {
         log("Screenmode",screenmode)
         if(screenmode == "full")
