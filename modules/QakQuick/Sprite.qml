@@ -118,7 +118,7 @@ Entity {
                 currentFrameDelay = defaultFrameDelay
         }
 
-        //db('New active sequence',activeSequence.name)
+        //core.db('New active sequence',activeSequence.name)
 
         currentFrame = repeater.itemAt(currentFrameIndex)
 
@@ -142,7 +142,7 @@ Entity {
             }
 
             // Show the active frame
-            //db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
+            //core.db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
             currentFrame = repeater.itemAt(currentFrameIndex)
 
             // Figure out next frame
@@ -151,7 +151,7 @@ Entity {
                 // TODO reverse support
                 /*
                 if('reverse' in activeSequence && activeSequence.reverse && !('isReversed' in activeSequence)) {
-                    db('Reversing')
+                    core.db('Reversing')
                     activeSequence.frames = activeSequence.frames.reverse()
                     activeSequence.isReversed = true
                 }
@@ -160,7 +160,7 @@ Entity {
                 var endSequenceFrameIndex = activeSequence.frames[activeSequence.frames.length-1]
 
                 if(currentFrameIndex == endSequenceFrameIndex) {
-                    //db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
+                    //core.db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
 
                     if('to' in activeSequence) {
                         var seqTo = activeSequence.to
@@ -180,7 +180,7 @@ Entity {
 
                         }
 
-                        //db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
+                        //core.db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
                         setActiveSequence(nSeq)
 
                     }
@@ -210,14 +210,14 @@ Entity {
         ignore = false
 
         if(source == "" || !source) {
-            db(sprite,'Empty source given')
+            core.db(sprite,'Empty source given')
             return
         }
 
         var path = getSourceStepURL(0)
 
         if(!resource.exists(path)) {
-            warn('No resource',path,'found. Ignoring')
+            core.warn('No resource',path,'found. Ignoring')
             error = true
             ignore = true
             return
@@ -233,9 +233,9 @@ Entity {
             var next = pad((digit+1),number.length)
             var nextMatch = source.replace(number, next)
             //nextMatch =
-            log('Assuming animation source based on','"'+number+'"',nextMatch)
+            core.log('Assuming animation source based on','"'+number+'"',nextMatch)
         } else {
-            log('Assuming single image source')
+            core.log('Assuming single image source')
             enabled = false
             return
         }
