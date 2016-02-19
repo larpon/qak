@@ -6,7 +6,7 @@ ApplicationWindow {
 
     id: app
 
-    title: qsTr("QAK")+" ("+width+"x"+height+")"
+    title: qsTr('Qak (%1x%2)').arg(width).arg(height)
 
     x: multiMonitor ? (Screen.desktopAvailableWidth/2)+(Screen.width/2)-(width/2) : (Screen.width/2)-(width/2)
     y: (Screen.desktopAvailableHeight/2)-(height/2)
@@ -26,7 +26,7 @@ ApplicationWindow {
     property string screenmode: "windowed"
 
     onScreenmodeChanged: {
-        core.log("Screenmode",screenmode)
+        Qak.log("Screenmode",screenmode)
         if(screenmode == "full")
             app.showFullScreen()
         else if(app.screenmode == "windowed")

@@ -1,5 +1,7 @@
 import QtQuick 2.5
 
+import QakQuick 1.0
+
 Entity {
 
     id: walkMap
@@ -24,13 +26,13 @@ Entity {
         source: "./js/walkMapWorker.js"
 
         onMessage: {
-            core.db('Path was found?',messageObject.found)
+            Qak.db('Path was found?',messageObject.found)
             if(messageObject.found) {
                 solvesList[messageObject.solveId].onFound(pathToPoints(messageObject.path))
             } else
                 solvesList[messageObject.solveId].onNotFound()
             if('solveId' in messageObject) {
-                core.db('Removing',messageObject.solveId)
+                Qak.db('Removing',messageObject.solveId)
                 delete solvesList[messageObject.solveId]
             }
         }
@@ -124,9 +126,9 @@ Entity {
         }
 
         if(simplify) {
-            core.db('Simplifing walk path. Before simplify',points.length)
+            Qak.db('Simplifing walk path. Before simplify',points.length)
             points = simplifyPath(points, 2.5)
-            core.db('after simplify', points.length)
+            Qak.db('after simplify', points.length)
         }
 
         return points
@@ -136,36 +138,36 @@ Entity {
 
         // Fix point extremes
         if(startPoint.x <= 0) {
-            core.warn('Fixed start point.x 0')
+            Qak.warn('Fixed start point.x 0')
             startPoint.x = Number.MIN_VALUE
         }
         if(startPoint.y <= 0) {
-            core.warn('Fixed start point.y 0')
+            Qak.warn('Fixed start point.y 0')
             startPoint.y = Number.MIN_VALUE
         }
         if(endPoint.x <= 0) {
-            core.warn('Fixed end point.x 0')
+            Qak.warn('Fixed end point.x 0')
             endPoint.x = Number.MIN_VALUE
         }
         if(endPoint.y <= 0) {
-            core.warn('Fixed end point.y 0')
+            Qak.warn('Fixed end point.y 0')
             endPoint.y = Number.MIN_VALUE
         }
 
         if(startPoint.x >= walkMap.width) {
-            core.warn('Fixed start point.x',walkMap.width)
+            Qak.warn('Fixed start point.x',walkMap.width)
             startPoint.x -= Number.MIN_VALUE
         }
         if(startPoint.y >= walkMap.height) {
-            core.warn('Fixed start point.y', walkMap.height)
+            Qak.warn('Fixed start point.y', walkMap.height)
             startPoint.y -= Number.MIN_VALUE
         }
         if(endPoint.x >= walkMap.width) {
-            core.warn('Fixed end point.x',walkMap.width)
+            Qak.warn('Fixed end point.x',walkMap.width)
             endPoint.x = Number.MIN_VALUE
         }
         if(endPoint.y >= walkMap.height) {
-            core.warn('Fixed end point.y', walkMap.height)
+            Qak.warn('Fixed end point.y', walkMap.height)
             endPoint.y = Number.MIN_VALUE
         }
 
@@ -182,7 +184,7 @@ Entity {
         child.show = true
         var idx = child.idx
         var times = Math.floor(idx/grid.columns)
-        core.db('start grid box',idx, times)
+        Qak.db('start grid box',idx, times)
         startPosition.x = idx-(times*grid.columns)
         startPosition.y = times
 
@@ -190,7 +192,7 @@ Entity {
         child.show = true
         idx = child.idx
         times = Math.floor(idx/grid.columns)
-        core.db('end grid box',idx,times)
+        Qak.db('end grid box',idx,times)
         endPosition.x = idx-(times*grid.columns)
         endPosition.y = times
 
@@ -202,7 +204,7 @@ Entity {
 
 
             if(child.on) {
-                core.db('adding child at index',i,child.idx)
+                Qak.db('adding child at index',i,child.idx)
                 rs.push(0)
             } else
                 rs.push(1)
@@ -214,7 +216,7 @@ Entity {
             }
         }
 
-        core.db("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y)
+        Qak.db("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y)
 
         var startPos = { 'x':startPosition.x, 'y': startPosition.y }
         var endPos = { 'x':endPosition.x, 'y': endPosition.y }

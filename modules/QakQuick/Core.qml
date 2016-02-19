@@ -1,6 +1,6 @@
 import QtQuick 2.5
 
-import "./"
+import QakQuick 1.0
 
 Item {
     id: core
@@ -8,9 +8,7 @@ Item {
     readonly property real halfWidth: width/2
     readonly property real halfHeight: height/2
 
-    visible: true
-
-    property bool pause: false
+    property bool pause: Qak.pause
 
     // This is where children will go
     default property alias contents: canvas.data
@@ -20,7 +18,7 @@ Item {
     readonly property alias viewport: viewport
     readonly property alias canvas: canvas
 
-    property bool debug: debugBuild
+    property bool debug: Qak.debug
 
     property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
 
@@ -29,6 +27,7 @@ Item {
     property real thresholdPercent: 25.0
 
     readonly property int assetMultiplier: (((Math.floor(((viewportWidthDiff/core.viewport.width)*100) / thresholdPercent) * thresholdPercent)+thresholdPercent)/thresholdPercent)
+    onAssetMultiplierChanged: Qak.assetMultiplier = assetMultiplier
 
     // Signals
     signal resized
@@ -44,7 +43,7 @@ Item {
     }
 
 
-    onPauseChanged: log(pause ? 'paused' : 'continued')
+    onPauseChanged: Qak.log(pause ? 'paused' : 'continued')
 
     // NOTE Keeping for reference calculations
     // This is the very base for calculating the suggested asset size
@@ -110,52 +109,6 @@ Item {
         return (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
     }
 
-    function log() {
-        //log.history=log.history||[]
-        //log.history.push(arguments)
-        if(console) {
-            // 1. Convert args to a normal array
-            var args = Array.prototype.slice.call(arguments);
-
-            // 2. Prepend log prefix log string
-            args.unshift("QAK");
-
-            // 3. Pass along arguments to console.log
-            console.log.apply(console, args);
-            //console.log('QAK',Array.prototype.slice.call(arguments))
-        }
-    }
-
-    function error() {
-        //log.history=log.history||[]
-        //log.history.push(arguments)
-        if(console) {
-            var args = Array.prototype.slice.call(arguments)
-            args.unshift("QAK ERROR")
-            console.error.apply(console, args)
-        }
-    }
-
-    function db() {
-        //db.history=db.history||[]
-        //db.history.push(arguments)
-        if(console && debug) {
-            var args = Array.prototype.slice.call(arguments)
-            args.unshift("QAK DEBUG")
-            console.debug.apply(console, args)
-        }
-    }
-
-    function warn() {
-        //db.history=db.history||[]
-        //db.history.push(arguments)
-        if(console) {
-            var args = Array.prototype.slice.call(arguments)
-            args.unshift("QAK WARNING")
-            console.warn.apply(console, args)
-        }
-    }
-
     Item {
         id: viewport
 
@@ -173,7 +126,7 @@ Item {
         readonly property real aspectRatio: width/height
 
         property string fillmodeString: ""
-        onFillmodeStringChanged: log('Fillmode',fillmodeString)
+        onFillmodeStringChanged: Qak.log('Fillmode',fillmodeString)
 
         readonly property Scale activeScaler: selectScaler(fillmode)
 

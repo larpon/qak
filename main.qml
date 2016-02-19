@@ -1,6 +1,5 @@
 import QtQuick 2.5
 
-import Qak 1.0
 import QakQuick 1.0 as Qak
 
 import "qml" as Test
@@ -10,8 +9,8 @@ Qak.Application {
     id: app
 
     Qak.Core {
-        // TODO remove this dependency
-        id: core
+
+        id: qakcore
 
         anchors.fill: parent
 
@@ -51,7 +50,7 @@ Qak.Application {
             hoverEnabled: true
 
             onPositionChanged: {
-                //core.db('xy',viewportPosition.x, viewportPosition.y)
+                //Qak.db('xy',viewportPosition.x, viewportPosition.y)
                 var xHalfDiff = (canvas.width-viewport.width)
                 var yHalfDiff = (canvas.height-viewport.height)/2
 
@@ -66,7 +65,7 @@ Qak.Application {
                 // Scroll within area
                 //var nx = clamp(remap(viewportPosition.x,0,viewportWidth,0+100,-xHalfDiff-100),-xHalfDiff,0)
                 //canvas.x = nx
-                //core.db(nx)
+                //Qak.db(nx)
             }
 
             // Scale the canvas
@@ -101,14 +100,14 @@ Qak.Application {
                 property alias viewport: core.viewport
 
                 onPositionChanged: {
-                    //core.db(x, y, vpx, vpy, viewport.scaledWidth)
-                    //core.db(vpx, viewport.scaledWidth)
+                    //Qak.db(x, y, vpx, vpy, viewport.scaledWidth)
+                    //Qak.db(vpx, viewport.scaledWidth)
                     if(vpx > 0 && vpx <= (viewport.width/2)) {
-                        core.db('canvas x',canvas.x)
+                        Qak.db('canvas x',canvas.x)
                     } else if(vpx > (viewport.width/2)) {
-                        core.db('in right part')
+                        Qak.db('in right part')
                     } else
-                        core.db('mid')
+                        Qak.db('mid')
 
                 }
             }
@@ -186,13 +185,13 @@ Qak.Application {
                     if(mouse.button & Qt.RightButton) {
                         walkMap.findPath(Qt.point(0,0), Qt.point(walkMap.width-1,walkMap.height-1),
                         function(path){
-                            core.db('callback found',path)
+                            Qak.Qak.db('callback found',path)
                             for(var i in path) {
                                 spriteTest.pushMove(path[i].x,path[i].y)
                             }
                             spriteTest.startMoving()
                         }, function(){
-                            core.db('callback NOT found')
+                            Qak.Qak.db('callback NOT found')
                         })
                     }
                 }
@@ -237,8 +236,8 @@ Qak.Application {
             id: testSprite1
             x: 20
             y: 350
-            width: core.viewport.width*0.2
-            height: core.viewport.height*0.2
+            width: qakcore.viewport.width*0.2
+            height: qakcore.viewport.height*0.2
             source: "test.png"
         }
 
@@ -364,7 +363,7 @@ Qak.Application {
         anchors.fill: parent
         focus: true
         Keys.onReleased: {
-            core.db("Got key event",event,event.key)
+            Qak.Qak.db("Got key event",event,event.key)
 
             var key = event.key
 
@@ -379,13 +378,15 @@ Qak.Application {
                 app.toggleScreenmode()
 
             if (key == Qt.Key_G)
-                core.toggleFillmode()
+                qakcore.toggleFillmode()
 
             if (key == Qt.Key_D)
-                core.debug = !core.debug
+                Qak.Qak.debug = !Qak.Qak.debug
 
             if (key == Qt.Key_P)
-                core.pause = !core.pause
+                Qak.Qak.pause = !Qak.Qak.pause
+
+
 
             //if(key == Qt.Key_Up)
                 //settings.contrast = settings.contrast + 0.01

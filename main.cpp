@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     //qmlRegisterType<Resource, 1>("Resource", 1, 0, "Resource");
     //qmlRegisterType<FileIO, 1>("FileIO", 1, 0, "FileIO");
 
-    qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
+    qmlRegisterType<MaskedMouseArea>("QakQuick", 1, 0, "MaskedMouseArea");
 
     QGuiApplication app(argc, argv);
 

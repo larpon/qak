@@ -1,6 +1,6 @@
 import QtQuick 2.5
-import QtQml 2.2
-import QtQuick.Window 2.2 // Screen
+
+import QakQuick 1.0
 
 QtObject {
 
@@ -10,7 +10,7 @@ QtObject {
     property string mapSource
 
     property int assetMultiplierStep: 2
-    readonly property int assetMultiplier: Math.floor(core.assetMultiplier / assetMultiplierStep) * assetMultiplierStep
+    readonly property int assetMultiplier: Math.floor(Qak.assetMultiplier / assetMultiplierStep) * assetMultiplierStep
 
     property Item target
     property string targetSourceProperty: "source"
@@ -39,12 +39,12 @@ QtObject {
 
         if(!core.resource.exists(path)) {
             if(filename.indexOf("*") > -1)
-                core.warn('Wildcard asset',path)
+                Qak.warn('Wildcard asset',path)
             else
-                core.error('Invalid asset',path)
+                Qak.error('Invalid asset',path)
         }
         //else
-        //    core.info('Asset',path)
+        //    Qak.info('Asset',path)
 
         return path
     }
@@ -67,7 +67,7 @@ QtObject {
 
             src = getSourceStepURL(step)
 
-            //core.db('Tri',tries+1,'of',tryLimit,'to find','"x'+step+'"','resource for',source)
+            //Qak.db('Tri',tries+1,'of',tryLimit,'to find','"x'+step+'"','resource for',source)
 
             tries++
         }
@@ -75,7 +75,7 @@ QtObject {
         if(resource.exists(src) && mapSource != src) {
             mapSource = src
         }/* else
-            core.warn('Nothing found for',source,'at steps till',step)
+            Qak.warn('Nothing found for',source,'at steps till',step)
             */
     }
 
@@ -101,7 +101,7 @@ QtObject {
 
     onTargetChanged: {
         if(target) {
-            core.db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            Qak.db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }
     }
@@ -121,14 +121,14 @@ QtObject {
 
         if(source == "" || !source) {
             mapSource = undefined
-            core.db(sourceEntity,'Empty source given')
+            Qak.db(sourceEntity,'Empty source given')
             return
         }
 
         var path = getSourceStepURL(0)
 
         if(!resource.exists(path)) {
-            core.warn('No resource',path,'found. Ignoring')
+            Qak.warn('No resource',path,'found. Ignoring')
             error = true
             ignore = true
             return
@@ -138,7 +138,7 @@ QtObject {
         var match = source.match('\\.(x-?.+?)\\.')
         match = match ? match[1] : false
         if(match !== false) {
-            core.warn('Request for specific',match,'mapped source. Ignoring auto mapping')
+            Qak.warn('Request for specific',match,'mapped source. Ignoring auto mapping')
             mapSource = path
             ignore = true
         }
@@ -151,10 +151,10 @@ QtObject {
             return
 
         if(target) {
-            core.log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            Qak.log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         } else
-            core.warn('"target" property is not yet sat for',source)
+            Qak.warn('"target" property is not yet sat for',source)
     }
 
     onAssetMultiplierChanged: {

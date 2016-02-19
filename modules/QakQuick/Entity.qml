@@ -1,5 +1,7 @@
 import QtQuick 2.5
 
+import QakQuick 1.0
+
 Item {
 
     id: entity
@@ -9,7 +11,7 @@ Item {
     property real halfWidth: width/2
     property real halfHeight: height/2
 
-    property bool pause: core.pause
+    property bool pause: Qak.pause
 
     property bool draggable: false
     property bool rotatable: false
@@ -73,26 +75,26 @@ Item {
             var map = mapToItem(entity.parent,mouse.x,mouse.y)
             entity.x = map.x-(entity.width/2)+entity.dragDisplaceX
             entity.y = map.y-(entity.height/2)+entity.dragDisplaceY
-            core.db('drag started',entity)
+            Qak.db('drag started',entity)
             dragStarted(mouse)
         }
         onReleased: {
             if(entity.Drag.drop() !== Qt.IgnoreAction) {
-                core.db('drag accepted',entity)
+                Qak.db('drag accepted',entity)
                 dragAccepted(mouse)
             } else {
-                core.db('drag rejected',entity)
+                Qak.db('drag rejected',entity)
                 dragRejected(mouse)
                 goBack()
             }
-            core.db('drag ended',entity)
+            Qak.db('drag ended',entity)
             dragEnded(mouse)
         }
 
         function goBack() {
             if(dragReturnOnReject) {
                 dragMoveBackAnimation.running = true
-                core.db('drag return',entity)
+                Qak.db('drag return',entity)
                 dragReturn()
             }
         }
@@ -104,7 +106,7 @@ Item {
                 PropertyAnimation { target: entity; property: "y"; to: drag.oy; easing.type: Easing.InOutQuad }
             }
             ScriptAction { script: {
-                core.db('drag returned',entity)
+                Qak.db('drag returned',entity)
                 entity.dragReturned()
             }}
         }
@@ -163,7 +165,7 @@ Item {
             list.push(temp)
             pp = p
         }
-        core.db('Travel distance',d)
+        Qak.db('Travel distance',d)
         pathAnim.duration = d*2
         if(list.length > 0) {
             path.pathElements = list

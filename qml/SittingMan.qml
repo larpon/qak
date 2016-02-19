@@ -12,7 +12,7 @@ Qak.Entity {
         anchors.fill: parent
 
         onCurrentSpriteChanged: {
-            //core.db("SpriteSequence",currentSprite)
+            //Qak.db("SpriteSequence",currentSprite)
         }
 
         Sprite {

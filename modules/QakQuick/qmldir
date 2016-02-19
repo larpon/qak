@@ -1,4 +1,6 @@
 module QakQuick
+singleton Qak 1.0 Qak.qml
+
 AdaptiveSource 1.0 AdaptiveSource.qml
 Application 1.0 Application.qml
 Core 1.0 Core.qml
@@ -9,3 +11,5 @@ MouseRotator 1.0 MouseRotator.qml
 SourceEntity 1.0 SourceEntity.qml
 Sprite 1.0 Sprite.qml
 WalkMap 1.0 WalkMap.qml
+
+

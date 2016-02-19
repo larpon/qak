@@ -1,6 +1,6 @@
-import QtQuick 2.5
+import QtQuick 2.5 as QtQuick
 
-import "./" as Qak
+import QakQuick 1.0
 
 /*
  *
@@ -118,14 +118,14 @@ Entity {
                 currentFrameDelay = defaultFrameDelay
         }
 
-        //core.db('New active sequence',activeSequence.name)
+        //Qak.db('New active sequence',activeSequence.name)
 
         currentFrame = repeater.itemAt(currentFrameIndex)
 
         animControl.restart()
     }
 
-    Timer {
+    QtQuick.Timer {
         id: animControl
         interval: currentFrameDelay
         repeat: true
@@ -142,7 +142,7 @@ Entity {
             }
 
             // Show the active frame
-            //core.db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
+            //Qak.db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
             currentFrame = repeater.itemAt(currentFrameIndex)
 
             // Figure out next frame
@@ -151,7 +151,7 @@ Entity {
                 // TODO reverse support
                 /*
                 if('reverse' in activeSequence && activeSequence.reverse && !('isReversed' in activeSequence)) {
-                    core.db('Reversing')
+                    Qak.db('Reversing')
                     activeSequence.frames = activeSequence.frames.reverse()
                     activeSequence.isReversed = true
                 }
@@ -160,7 +160,7 @@ Entity {
                 var endSequenceFrameIndex = activeSequence.frames[activeSequence.frames.length-1]
 
                 if(currentFrameIndex == endSequenceFrameIndex) {
-                    //core.db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
+                    //Qak.db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
 
                     if('to' in activeSequence) {
                         var seqTo = activeSequence.to
@@ -180,7 +180,7 @@ Entity {
 
                         }
 
-                        //core.db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
+                        //Qak.db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
                         setActiveSequence(nSeq)
 
                     }
@@ -210,14 +210,14 @@ Entity {
         ignore = false
 
         if(source == "" || !source) {
-            core.db(sprite,'Empty source given')
+            Qak.db(sprite,'Empty source given')
             return
         }
 
         var path = getSourceStepURL(0)
 
         if(!resource.exists(path)) {
-            core.warn('No resource',path,'found. Ignoring')
+            Qak.warn('No resource',path,'found. Ignoring')
             error = true
             ignore = true
             return
@@ -233,9 +233,9 @@ Entity {
             var next = pad((digit+1),number.length)
             var nextMatch = source.replace(number, next)
             //nextMatch =
-            core.log('Assuming animation source based on','"'+number+'"',nextMatch)
+            Qak.log('Assuming animation source based on','"'+number+'"',nextMatch)
         } else {
-            core.log('Assuming single image source')
+            Qak.log('Assuming single image source')
             enabled = false
             return
         }
@@ -244,10 +244,10 @@ Entity {
 
     }
 
-    Repeater {
+    QtQuick.Repeater {
        id: repeater
        model: 24
-       Qak.Image {
+       Image { // <- QakQuick Image
            id: image
 
            asynchronous: true
