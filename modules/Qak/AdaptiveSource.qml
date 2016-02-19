@@ -1,6 +1,6 @@
 import QtQuick 2.5
 
-import QakQuick 1.0
+import Qak 1.0
 
 QtObject {
 
@@ -101,7 +101,7 @@ QtObject {
 
     onTargetChanged: {
         if(target) {
-            Qak.db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            //Qak.db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }
     }
@@ -153,8 +153,8 @@ QtObject {
         if(target) {
             Qak.log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
-        } else
-            Qak.warn('"target" property is not yet sat for',source)
+        }// else
+         //   Qak.warn('"target" property is not yet sat for',source)
     }
 
     onAssetMultiplierChanged: {

@@ -2,6 +2,8 @@ import QtQuick 2.5
 import QtQuick.Controls 1.2
 import QtQuick.Window 2.2
 
+import Qak 1.0
+
 ApplicationWindow {
 
     id: app

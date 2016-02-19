@@ -1,6 +1,6 @@
 import QtQuick 2.5
 
-import QakQuick 1.0
+import Qak 1.0
 
 Item {
 

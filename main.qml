@@ -1,8 +1,8 @@
 import QtQuick 2.5
 
-import QakQuick 1.0
-import QakQuick.QtQuick 1.0 as QakQtQuick
-import QakQuick.QtQuick.Controls 1.0
+import Qak 1.0
+import Qak.QtQuick 1.0 as QakQuick
+import Qak.QtQuick.Controls 1.0
 
 import "qml" as Test
 
@@ -16,7 +16,7 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        debug: true
+        //debug: true
 
         //fillmode: Image.Stretch
 
@@ -202,7 +202,7 @@ ApplicationWindow {
 
 
         // Wrong source error examples
-        QakQtQuick.Image {
+        QakQuick.Image {
             id: errorTestSprite
             x: 430
             y: 80
@@ -220,7 +220,7 @@ ApplicationWindow {
             }
         }
 
-        QakQtQuick.Image {
+        QakQuick.Image {
             id: error2TestSprite
             x: 400
             y: 400
@@ -234,7 +234,7 @@ ApplicationWindow {
             }
         }
 
-        QakQtQuick.Image {
+        QakQuick.Image {
             id: testSprite1
             x: 20
             y: 350
@@ -346,7 +346,7 @@ ApplicationWindow {
             }
         }
 
-        QakQtQuick.Image {
+        QakQuick.Image {
             x: (parent.width/4)*3
             y: 0
             width: 200

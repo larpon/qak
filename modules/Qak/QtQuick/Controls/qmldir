@@ -1,0 +1,3 @@
+module Qak.QtQuick.Controls
+ApplicationWindow 1.0 ApplicationWindow.qml
+depends Qak 1.0

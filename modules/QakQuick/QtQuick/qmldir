@@ -1,3 +1,0 @@
-module QakQuick.QtQuick
-Image 1.0 Image.qml
-depends QakQuick 1.0

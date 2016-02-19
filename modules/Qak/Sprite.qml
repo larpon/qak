@@ -1,7 +1,8 @@
 import QtQuick 2.5
 
-import QakQuick 1.0
-import QakQuick.QtQuick 1.0 as QakQt
+import Qak 1.0
+import Qak.QtQuick 1.0 as QakQuick
+
 /*
  *
  */
@@ -247,7 +248,7 @@ Entity {
     Repeater {
        id: repeater
        model: 24
-       QakQt.Image { // <- QakQuick Image
+       QakQuick.Image { // <- QakQuick Image
            id: image
 
            asynchronous: true
