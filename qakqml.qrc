@@ -1,17 +1,19 @@
 <RCC>
     <qresource prefix="/">
+        <file>modules/QakQuick/QtQuick/Image.qml</file>
+        <file>modules/QakQuick/QtQuick/qmldir</file>
         <file>modules/QakQuick/AdaptiveSource.qml</file>
         <file>modules/QakQuick/Core.qml</file>
+        <file>modules/QakQuick/DebugVisual.qml</file>
         <file>modules/QakQuick/Entity.qml</file>
-        <file>modules/QakQuick/Image.qml</file>
+        <file>modules/QakQuick/MouseRotator.qml</file>
+        <file>modules/QakQuick/Qak.qml</file>
+        <file>modules/QakQuick/qmldir</file>
         <file>modules/QakQuick/SourceEntity.qml</file>
         <file>modules/QakQuick/Sprite.qml</file>
-        <file>modules/QakQuick/DebugVisual.qml</file>
-        <file>modules/QakQuick/MouseRotator.qml</file>
         <file>modules/QakQuick/WalkMap.qml</file>
         <file>modules/QakQuick/js/walkMapWorker.js</file>
-        <file>modules/QakQuick/Application.qml</file>
-        <file>modules/QakQuick/qmldir</file>
-        <file>modules/QakQuick/Qak.qml</file>
+        <file>modules/QakQuick/QtQuick/Controls/ApplicationWindow.qml</file>
+        <file>modules/QakQuick/QtQuick/Controls/qmldir</file>
     </qresource>
 </RCC>

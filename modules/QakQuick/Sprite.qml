@@ -1,7 +1,7 @@
-import QtQuick 2.5 as QtQuick
+import QtQuick 2.5
 
 import QakQuick 1.0
-
+import QakQuick.QtQuick 1.0 as QakQt
 /*
  *
  */
@@ -125,7 +125,7 @@ Entity {
         animControl.restart()
     }
 
-    QtQuick.Timer {
+    Timer {
         id: animControl
         interval: currentFrameDelay
         repeat: true
@@ -244,10 +244,10 @@ Entity {
 
     }
 
-    QtQuick.Repeater {
+    Repeater {
        id: repeater
        model: 24
-       Image { // <- QakQuick Image
+       QakQt.Image { // <- QakQuick Image
            id: image
 
            asynchronous: true

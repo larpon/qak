@@ -1,14 +1,16 @@
 import QtQuick 2.5
 
-import QakQuick 1.0 as Qak
+import QakQuick 1.0
+import QakQuick.QtQuick 1.0 as QakQtQuick
+import QakQuick.QtQuick.Controls 1.0
 
 import "qml" as Test
 
-Qak.Application {
+ApplicationWindow {
 
     id: app
 
-    Qak.Core {
+    Core {
 
         id: qakcore
 
@@ -118,7 +120,7 @@ Qak.Application {
         // Example engine items
 
         /*
-        Qak.Entity {
+        Entity {
             id: entity
             anchors.fill: parent
 
@@ -132,7 +134,7 @@ Qak.Application {
         */
 
         // Adaptive source example
-        Qak.Entity {
+        Entity {
             id: entity
             anchors.fill: parent
 
@@ -161,7 +163,7 @@ Qak.Application {
         }
 
         // Walk map example
-        Qak.WalkMap {
+        WalkMap {
             id: walkMap
 
             anchors.fill: parent
@@ -185,13 +187,13 @@ Qak.Application {
                     if(mouse.button & Qt.RightButton) {
                         walkMap.findPath(Qt.point(0,0), Qt.point(walkMap.width-1,walkMap.height-1),
                         function(path){
-                            Qak.Qak.db('callback found',path)
+                            Qak.db('callback found',path)
                             for(var i in path) {
                                 spriteTest.pushMove(path[i].x,path[i].y)
                             }
                             spriteTest.startMoving()
                         }, function(){
-                            Qak.Qak.db('callback NOT found')
+                            Qak.db('callback NOT found')
                         })
                     }
                 }
@@ -200,7 +202,7 @@ Qak.Application {
 
 
         // Wrong source error examples
-        Qak.Image {
+        QakQtQuick.Image {
             id: errorTestSprite
             x: 430
             y: 80
@@ -218,7 +220,7 @@ Qak.Application {
             }
         }
 
-        Qak.Image {
+        QakQtQuick.Image {
             id: error2TestSprite
             x: 400
             y: 400
@@ -232,7 +234,7 @@ Qak.Application {
             }
         }
 
-        Qak.Image {
+        QakQtQuick.Image {
             id: testSprite1
             x: 20
             y: 350
@@ -242,7 +244,7 @@ Qak.Application {
         }
 
         // Drag 'n' drop example
-        Qak.Entity {
+        Entity {
             x: 600
             y: 400
             width: 70
@@ -262,7 +264,7 @@ Qak.Application {
             }
         }
 
-        Qak.Entity {
+        Entity {
 
             x: 200
             y: 200
@@ -280,7 +282,7 @@ Qak.Application {
 
         // Rotation example
 
-        Qak.Entity {
+        Entity {
             rotatable: true
             anchors.centerIn: parent
             width: 50
@@ -309,7 +311,7 @@ Qak.Application {
         }
         */
 
-        Qak.Sprite {
+        Sprite {
             id: spriteTest
 
             width: 128
@@ -320,7 +322,7 @@ Qak.Application {
         }
 
 
-        Qak.Entity {
+        Entity {
             id: spriteTest2
 
             rotatable: true
@@ -330,7 +332,7 @@ Qak.Application {
             width: 128
             height: 216
 
-            Qak.Sprite {
+            Sprite {
                 id: spriteTest2Sprite
 
                 anchors.fill: parent
@@ -344,7 +346,7 @@ Qak.Application {
             }
         }
 
-        Qak.Image {
+        QakQtQuick.Image {
             x: (parent.width/4)*3
             y: 0
             width: 200
@@ -352,7 +354,7 @@ Qak.Application {
 
             source: "test.png"
 
-            Qak.MouseRotator {
+            MouseRotator {
                 anchors.fill: parent
             }
         }
@@ -363,7 +365,7 @@ Qak.Application {
         anchors.fill: parent
         focus: true
         Keys.onReleased: {
-            Qak.Qak.db("Got key event",event,event.key)
+            Qak.db("Got key event",event,event.key)
 
             var key = event.key
 
@@ -381,10 +383,10 @@ Qak.Application {
                 qakcore.toggleFillmode()
 
             if (key == Qt.Key_D)
-                Qak.Qak.debug = !Qak.Qak.debug
+                Qak.debug = !Qak.debug
 
             if (key == Qt.Key_P)
-                Qak.Qak.pause = !Qak.Qak.pause
+                Qak.pause = !Qak.pause
 
 
 

@@ -10,5 +10,5 @@ Rectangle {
 
     color: "transparent"
     border.color: Qak.pause ? "red" : "tomato"
-    border.width: 1
+    border.width: 2
 }
