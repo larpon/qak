@@ -93,7 +93,7 @@ MouseArea {
         if(!stop)
             target.rotation = rotation
 
-        //db(rotation)
+        //core.db(rotation)
 
         rotate(rotation)
     }

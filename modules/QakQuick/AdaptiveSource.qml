@@ -39,12 +39,12 @@ QtObject {
 
         if(!core.resource.exists(path)) {
             if(filename.indexOf("*") > -1)
-                console.warn('Wildcard asset',path)
+                core.warn('Wildcard asset',path)
             else
-                console.error('Invalid asset',path)
+                core.error('Invalid asset',path)
         }
         //else
-        //    console.info('Asset',path)
+        //    core.info('Asset',path)
 
         return path
     }

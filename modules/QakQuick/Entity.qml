@@ -73,26 +73,26 @@ Item {
             var map = mapToItem(entity.parent,mouse.x,mouse.y)
             entity.x = map.x-(entity.width/2)+entity.dragDisplaceX
             entity.y = map.y-(entity.height/2)+entity.dragDisplaceY
-            db('drag started',entity)
+            core.db('drag started',entity)
             dragStarted(mouse)
         }
         onReleased: {
             if(entity.Drag.drop() !== Qt.IgnoreAction) {
-                db('drag accepted',entity)
+                core.db('drag accepted',entity)
                 dragAccepted(mouse)
             } else {
-                db('drag rejected',entity)
+                core.db('drag rejected',entity)
                 dragRejected(mouse)
                 goBack()
             }
-            db('drag ended',entity)
+            core.db('drag ended',entity)
             dragEnded(mouse)
         }
 
         function goBack() {
             if(dragReturnOnReject) {
                 dragMoveBackAnimation.running = true
-                db('drag return',entity)
+                core.db('drag return',entity)
                 dragReturn()
             }
         }
@@ -104,7 +104,7 @@ Item {
                 PropertyAnimation { target: entity; property: "y"; to: drag.oy; easing.type: Easing.InOutQuad }
             }
             ScriptAction { script: {
-                db('drag returned',entity)
+                core.db('drag returned',entity)
                 entity.dragReturned()
             }}
         }
@@ -163,7 +163,7 @@ Item {
             list.push(temp)
             pp = p
         }
-        db('Travel distance',d)
+        core.db('Travel distance',d)
         pathAnim.duration = d*2
         if(list.length > 0) {
             path.pathElements = list

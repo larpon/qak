@@ -22,7 +22,6 @@ Item {
 
     property bool debug: debugBuild
 
-    property string screenmode: "windowed"
     property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
 
     readonly property int viewportWidthDiff: viewport.scaledWidth - viewport.width
@@ -44,15 +43,6 @@ Item {
 
     }
 
-    onScreenmodeChanged: {
-        log("Screenmode",screenmode)
-        if(screenmode == "full")
-            core.showFullScreen()
-        else if(core.screenmode == "windowed")
-            core.showNormal()
-        else
-            core.showNormal()
-    }
 
     onPauseChanged: log(pause ? 'paused' : 'continued')
 
@@ -92,13 +82,6 @@ Item {
 
     function init() {
 
-    }
-
-    function toggleScreenmode() {
-        if(screenmode === "windowed")
-           screenmode = "full"
-        else
-           screenmode = "windowed"
     }
 
     function toggleFillmode() {
@@ -287,41 +270,4 @@ Item {
 
     }
 
-    Item {
-        anchors.fill: parent
-        focus: true
-        Keys.onReleased: {
-            db("Got key event",event,event.key)
-
-            var key = event.key
-
-            if (key == Qt.Key_Escape || key == Qt.Key_Q)
-                Qt.quit()
-
-            if(key == Qt.Key_Back || key == Qt.Key_Backspace) {
-                Qt.quit()
-            }
-
-            if (key == Qt.Key_F)
-                toggleScreenmode()
-
-            if (key == Qt.Key_G)
-                toggleFillmode()
-
-            if (key == Qt.Key_D)
-                core.debug = !core.debug
-
-            if (key == Qt.Key_P)
-                core.pause = !core.pause
-
-            //if(key == Qt.Key_Up)
-                //settings.contrast = settings.contrast + 0.01
-            //if(key == Qt.Key_Down)
-                //settings.contrast = settings.contrast - 0.01
-            //if(key == Qt.Key_Left)
-                //settings.brightness = settings.brightness - 0.01
-            //if(key == Qt.Key_Right)
-                //game.nextLevel() //settings.brightness = settings.brightness + 0.01
-        }
-    }
 }

@@ -35,6 +35,9 @@ int main(int argc, char *argv[])
     Resource resource;
     engine.rootContext()->setContextProperty("resource", &resource);
 
+    // Specific to this project to add QML modules from the "modules" directory
+    engine.addImportPath("qrc:///modules/");
+
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
 
     return app.exec();

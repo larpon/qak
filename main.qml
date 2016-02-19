@@ -1,15 +1,16 @@
 import QtQuick 2.5
 
 import Qak 1.0
-
-import "qakqml" as QuickQak
+import QakQuick 1.0 as Qak
 
 import "qml" as Test
 
-QuickQak.Application {
+Qak.Application {
 
+    id: app
 
-    QuickQak.Core {
+    Qak.Core {
+        // TODO remove this dependency
         id: core
 
         anchors.fill: parent
@@ -50,7 +51,7 @@ QuickQak.Application {
             hoverEnabled: true
 
             onPositionChanged: {
-                //db('xy',viewportPosition.x, viewportPosition.y)
+                //core.db('xy',viewportPosition.x, viewportPosition.y)
                 var xHalfDiff = (canvas.width-viewport.width)
                 var yHalfDiff = (canvas.height-viewport.height)/2
 
@@ -65,7 +66,7 @@ QuickQak.Application {
                 // Scroll within area
                 //var nx = clamp(remap(viewportPosition.x,0,viewportWidth,0+100,-xHalfDiff-100),-xHalfDiff,0)
                 //canvas.x = nx
-                //db(nx)
+                //core.db(nx)
             }
 
             // Scale the canvas
@@ -100,14 +101,14 @@ QuickQak.Application {
                 property alias viewport: core.viewport
 
                 onPositionChanged: {
-                    //db(x, y, vpx, vpy, viewport.scaledWidth)
-                    //db(vpx, viewport.scaledWidth)
+                    //core.db(x, y, vpx, vpy, viewport.scaledWidth)
+                    //core.db(vpx, viewport.scaledWidth)
                     if(vpx > 0 && vpx <= (viewport.width/2)) {
-                        db('canvas x',canvas.x)
+                        core.db('canvas x',canvas.x)
                     } else if(vpx > (viewport.width/2)) {
-                        db('in right part')
+                        core.db('in right part')
                     } else
-                        db('mid')
+                        core.db('mid')
 
                 }
             }
@@ -132,7 +133,7 @@ QuickQak.Application {
         */
 
         // Adaptive source example
-        QuickQak.Entity {
+        Qak.Entity {
             id: entity
             anchors.fill: parent
 
@@ -161,7 +162,7 @@ QuickQak.Application {
         }
 
         // Walk map example
-        QuickQak.WalkMap {
+        Qak.WalkMap {
             id: walkMap
 
             anchors.fill: parent
@@ -185,13 +186,13 @@ QuickQak.Application {
                     if(mouse.button & Qt.RightButton) {
                         walkMap.findPath(Qt.point(0,0), Qt.point(walkMap.width-1,walkMap.height-1),
                         function(path){
-                            db('callback found',path)
+                            core.db('callback found',path)
                             for(var i in path) {
                                 spriteTest.pushMove(path[i].x,path[i].y)
                             }
                             spriteTest.startMoving()
                         }, function(){
-                            db('callback NOT found')
+                            core.db('callback NOT found')
                         })
                     }
                 }
@@ -200,7 +201,7 @@ QuickQak.Application {
 
 
         // Wrong source error examples
-        QuickQak.Image {
+        Qak.Image {
             id: errorTestSprite
             x: 430
             y: 80
@@ -218,7 +219,7 @@ QuickQak.Application {
             }
         }
 
-        QuickQak.Image {
+        Qak.Image {
             id: error2TestSprite
             x: 400
             y: 400
@@ -232,7 +233,7 @@ QuickQak.Application {
             }
         }
 
-        QuickQak.Image {
+        Qak.Image {
             id: testSprite1
             x: 20
             y: 350
@@ -242,7 +243,7 @@ QuickQak.Application {
         }
 
         // Drag 'n' drop example
-        QuickQak.Entity {
+        Qak.Entity {
             x: 600
             y: 400
             width: 70
@@ -262,7 +263,7 @@ QuickQak.Application {
             }
         }
 
-        QuickQak.Entity {
+        Qak.Entity {
 
             x: 200
             y: 200
@@ -280,7 +281,7 @@ QuickQak.Application {
 
         // Rotation example
 
-        QuickQak.Entity {
+        Qak.Entity {
             rotatable: true
             anchors.centerIn: parent
             width: 50
@@ -309,7 +310,7 @@ QuickQak.Application {
         }
         */
 
-        QuickQak.Sprite {
+        Qak.Sprite {
             id: spriteTest
 
             width: 128
@@ -320,7 +321,7 @@ QuickQak.Application {
         }
 
 
-        QuickQak.Entity {
+        Qak.Entity {
             id: spriteTest2
 
             rotatable: true
@@ -330,7 +331,7 @@ QuickQak.Application {
             width: 128
             height: 216
 
-            QuickQak.Sprite {
+            Qak.Sprite {
                 id: spriteTest2Sprite
 
                 anchors.fill: parent
@@ -344,7 +345,7 @@ QuickQak.Application {
             }
         }
 
-        QuickQak.Image {
+        Qak.Image {
             x: (parent.width/4)*3
             y: 0
             width: 200
@@ -352,12 +353,49 @@ QuickQak.Application {
 
             source: "test.png"
 
-            QuickQak.MouseRotator {
+            Qak.MouseRotator {
                 anchors.fill: parent
             }
         }
 
     }
 
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onReleased: {
+            core.db("Got key event",event,event.key)
+
+            var key = event.key
+
+            if (key == Qt.Key_Escape || key == Qt.Key_Q)
+                Qt.quit()
+
+            if(key == Qt.Key_Back || key == Qt.Key_Backspace) {
+                Qt.quit()
+            }
+
+            if (key == Qt.Key_F)
+                app.toggleScreenmode()
+
+            if (key == Qt.Key_G)
+                core.toggleFillmode()
+
+            if (key == Qt.Key_D)
+                core.debug = !core.debug
+
+            if (key == Qt.Key_P)
+                core.pause = !core.pause
+
+            //if(key == Qt.Key_Up)
+                //settings.contrast = settings.contrast + 0.01
+            //if(key == Qt.Key_Down)
+                //settings.contrast = settings.contrast - 0.01
+            //if(key == Qt.Key_Left)
+                //settings.brightness = settings.brightness - 0.01
+            //if(key == Qt.Key_Right)
+                //game.nextLevel() //settings.brightness = settings.brightness + 0.01
+        }
+    }
 }
 

@@ -24,13 +24,13 @@ Entity {
         source: "./js/walkMapWorker.js"
 
         onMessage: {
-            db('Path was found?',messageObject.found)
+            core.db('Path was found?',messageObject.found)
             if(messageObject.found) {
                 solvesList[messageObject.solveId].onFound(pathToPoints(messageObject.path))
             } else
                 solvesList[messageObject.solveId].onNotFound()
             if('solveId' in messageObject) {
-                db('Removing',messageObject.solveId)
+                core.db('Removing',messageObject.solveId)
                 delete solvesList[messageObject.solveId]
             }
         }
@@ -124,9 +124,9 @@ Entity {
         }
 
         if(simplify) {
-            db('Simplifing walk path. Before simplify',points.length)
+            core.db('Simplifing walk path. Before simplify',points.length)
             points = simplifyPath(points, 2.5)
-            db('after simplify', points.length)
+            core.db('after simplify', points.length)
         }
 
         return points
@@ -136,36 +136,36 @@ Entity {
 
         // Fix point extremes
         if(startPoint.x <= 0) {
-            warn('Fixed start point.x 0')
+            core.warn('Fixed start point.x 0')
             startPoint.x = Number.MIN_VALUE
         }
         if(startPoint.y <= 0) {
-            warn('Fixed start point.y 0')
+            core.warn('Fixed start point.y 0')
             startPoint.y = Number.MIN_VALUE
         }
         if(endPoint.x <= 0) {
-            warn('Fixed end point.x 0')
+            core.warn('Fixed end point.x 0')
             endPoint.x = Number.MIN_VALUE
         }
         if(endPoint.y <= 0) {
-            warn('Fixed end point.y 0')
+            core.warn('Fixed end point.y 0')
             endPoint.y = Number.MIN_VALUE
         }
 
         if(startPoint.x >= walkMap.width) {
-            warn('Fixed start point.x',walkMap.width)
+            core.warn('Fixed start point.x',walkMap.width)
             startPoint.x -= Number.MIN_VALUE
         }
         if(startPoint.y >= walkMap.height) {
-            warn('Fixed start point.y', walkMap.height)
+            core.warn('Fixed start point.y', walkMap.height)
             startPoint.y -= Number.MIN_VALUE
         }
         if(endPoint.x >= walkMap.width) {
-            warn('Fixed end point.x',walkMap.width)
+            core.warn('Fixed end point.x',walkMap.width)
             endPoint.x = Number.MIN_VALUE
         }
         if(endPoint.y >= walkMap.height) {
-            warn('Fixed end point.y', walkMap.height)
+            core.warn('Fixed end point.y', walkMap.height)
             endPoint.y = Number.MIN_VALUE
         }
 
@@ -182,7 +182,7 @@ Entity {
         child.show = true
         var idx = child.idx
         var times = Math.floor(idx/grid.columns)
-        db('start grid box',idx, times)
+        core.db('start grid box',idx, times)
         startPosition.x = idx-(times*grid.columns)
         startPosition.y = times
 
@@ -190,7 +190,7 @@ Entity {
         child.show = true
         idx = child.idx
         times = Math.floor(idx/grid.columns)
-        db('end grid box',idx,times)
+        core.db('end grid box',idx,times)
         endPosition.x = idx-(times*grid.columns)
         endPosition.y = times
 
@@ -202,7 +202,7 @@ Entity {
 
 
             if(child.on) {
-                db('adding child at index',i,child.idx)
+                core.db('adding child at index',i,child.idx)
                 rs.push(0)
             } else
                 rs.push(1)
@@ -214,7 +214,7 @@ Entity {
             }
         }
 
-        db("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y)
+        core.db("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y)
 
         var startPos = { 'x':startPosition.x, 'y': startPosition.y }
         var endPos = { 'x':endPosition.x, 'y': endPosition.y }
