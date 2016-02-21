@@ -15,6 +15,10 @@ ApplicationWindow {
         id: qakcore
 
         anchors.fill: parent
+        //width: app.width/2
+        //height: app.height
+
+        //clip: true
 
         //debug: true
 
@@ -25,7 +29,6 @@ ApplicationWindow {
 
         //canvas.width: 1400
         //canvas.height: 700
-
 
         // Canvas modification examples
 
@@ -116,6 +119,9 @@ ApplicationWindow {
 
         }
         */
+
+
+
 
         // Example engine items
 
@@ -359,7 +365,104 @@ ApplicationWindow {
             }
         }
 
+        // Dialog tree example
+
+        Rectangle {
+            id: bubble
+
+
+            width: 300
+            height: 100
+            radius: height/4
+
+            color: "white"
+
+            Text {
+                id: text
+                anchors.centerIn: parent
+
+                text: nameConversation.active ? nameConversation.active.text : ""
+                font.bold: true
+            }
+        }
+
+        Row {
+            id: dialogChoices
+            anchors.top: bubble.bottom
+
+            spacing: 10
+            Repeater {
+                model: nameConversation.active ? nameConversation.active.children.length : 0
+                Rectangle {
+                    width: choice.width + 6; height: choice.height +6
+
+                    border.width: 1
+                    color: "yellow"
+
+                    Text {
+                        id: choice
+                        anchors.centerIn: parent
+
+                        text: nameConversation.active ? nameConversation.active.children[index].text : ""
+                        font.bold: true
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: nameConversation.active = nameConversation.active ? nameConversation.active.children[index].to : undefined
+                    }
+                }
+            }
+        }
+
+        Say {
+            id: nameConversation
+            text: "Hej Per, har du savnet mig?"
+
+            Say {
+                text: "Yeah"
+                to: ok
+            }
+
+            Say {
+                text: "No"
+
+                Say {
+                    text: "Fair enough, brother. But how's life anyway?"
+
+                    Say {
+                        text: "shit!"
+                        to: ok
+                    }
+
+                    Say {
+                        text: "awesome!"
+                        to: ok
+                    }
+                }
+
+            }
+
+            Say {
+                text: "Maybe - ladddie"
+                to: ok
+            }
+        }
+
+        Say {
+            id: ok
+            text: "Ok! ..."
+
+            Say {
+                text: "Ok :)"
+                to: nameConversation
+            }
+
+        }
+
     }
+
+
 
     Item {
         anchors.fill: parent

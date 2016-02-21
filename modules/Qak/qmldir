@@ -9,3 +9,4 @@ MouseRotator 1.0 MouseRotator.qml
 SourceEntity 1.0 SourceEntity.qml
 Sprite 1.0 Sprite.qml
 WalkMap 1.0 WalkMap.qml
+Say 1.0 Say.qml

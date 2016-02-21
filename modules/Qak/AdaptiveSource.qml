@@ -107,8 +107,9 @@ QtObject {
     }
 
     onEnabledChanged: {
-        //if(enabled)
-
+        if(enabled) {
+            //target[targetSourceProperty] = mapSource
+        }
     }
 
     onSourceChanged: {

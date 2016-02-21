@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>modules/Qak/AdaptiveSource.qml</file>
         <file>modules/Qak/Core.qml</file>
         <file>modules/Qak/DebugVisual.qml</file>
         <file>modules/Qak/Entity.qml</file>
@@ -15,5 +14,7 @@
         <file>modules/Qak/js/walkMapWorker.js</file>
         <file>modules/Qak/QtQuick/Controls/ApplicationWindow.qml</file>
         <file>modules/Qak/QtQuick/Controls/qmldir</file>
+        <file>modules/Qak/AdaptiveSource.qml</file>
+        <file>modules/Qak/Say.qml</file>
     </qresource>
 </RCC>

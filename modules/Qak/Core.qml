@@ -5,10 +5,13 @@ import Qak 1.0
 Item {
     id: core
 
+
     readonly property real halfWidth: width/2
     readonly property real halfHeight: height/2
 
     property bool pause: Qak.pause
+
+    property bool debug: Qak.debug
 
     // This is where children will go
     default property alias contents: canvas.data
@@ -18,7 +21,6 @@ Item {
     readonly property alias viewport: viewport
     readonly property alias canvas: canvas
 
-    property bool debug: Qak.debug
 
     property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
 

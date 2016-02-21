@@ -1,6 +1,6 @@
 import QtQuick 2.5
 
-import QakQuick 1.0
+import Qak 1.0
 
 Entity {
 
@@ -20,6 +20,7 @@ Entity {
 
     property var solvesList: ({})
     property int nextSolveId: 0
+
     // Functionality
     WorkerScript {
         id: solverWorker

@@ -8,6 +8,8 @@ QtObject {
     property bool debug: debugBuild
     property bool pause: false
 
+    property string logPrefix: "QAK"
+
     property int assetMultiplier: 1
 
     function log() {
@@ -18,7 +20,8 @@ QtObject {
             var args = Array.prototype.slice.call(arguments);
 
             // 2. Prepend log prefix log string
-            args.unshift("QAK");
+            if(logPrefix != "")
+                args.unshift(logPrefix);
 
             // 3. Pass along arguments to console.log
             console.log.apply(console, args);

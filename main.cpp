@@ -11,6 +11,23 @@
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 
+/*
+// First, define the singleton type provider function (callback).
+static QJSValue qak_global_singleton_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+
+    QJSValue object = scriptEngine->newObject();
+
+    #ifdef QT_DEBUG
+        object.setProperty("debugBuild", true);
+    #else
+        object.setProperty("debugBuild", false);
+    #endif
+
+    return object;
+}
+*/
 int main(int argc, char *argv[])
 {
 
@@ -19,6 +36,8 @@ int main(int argc, char *argv[])
     //qmlRegisterType<Store, 1>("Store", 1, 0, "Store");
     //qmlRegisterType<Resource, 1>("Resource", 1, 0, "Resource");
     //qmlRegisterType<FileIO, 1>("FileIO", 1, 0, "FileIO");
+
+    //qmlRegisterSingletonType("Qak", 1, 0, "Qak", qak_global_singleton_provider);
 
     qmlRegisterType<MaskedMouseArea>("QakQuick", 1, 0, "MaskedMouseArea");
 
