@@ -370,6 +370,7 @@ ApplicationWindow {
         Rectangle {
             id: bubble
 
+            visible: nameConversation.active
 
             width: 300
             height: 100
@@ -419,6 +420,8 @@ ApplicationWindow {
             id: nameConversation
             text: "Hej Per, har du savnet mig?"
 
+            Component.onCompleted: Qak.db('I\'m root babel',nameConversation)
+
             Say {
                 text: "Yeah"
                 to: ok
@@ -452,12 +455,9 @@ ApplicationWindow {
         Say {
             id: ok
             text: "Ok! ..."
+            to: nameConversation
 
-            Say {
-                text: "Ok :)"
-                to: nameConversation
-            }
-
+            Component.onCompleted: Qak.db('I\'m also root babel',ok)
         }
 
     }
