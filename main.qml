@@ -410,7 +410,91 @@ ApplicationWindow {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: nameConversation.active = nameConversation.active ? nameConversation.active.children[index].to : undefined
+                        onClicked: {
+                            nameConversation.active = nameConversation.active ? nameConversation.active.children[index].to : undefined
+                        }
+                    }
+                }
+            }
+        }
+
+        Dialogue {
+            id: conversation
+
+            Say {
+                text: "So.."
+            }
+
+            Ask {
+                text: "How are you doing?"
+
+                Say {
+                    text: "I'm okay..."
+                }
+
+                Say {
+                    text: "Not too good"
+
+                    Say {
+                        text: "That's horrible!"
+                    }
+
+                    Say {
+                        text: "We better get you to the doctor"
+                    }
+
+                    Ask {
+                        text: "Can you drive?"
+
+                        Say {
+                            text: "No way"
+                        }
+
+                        Say {
+                            text: "Yes!"
+                            to: carConversation
+                        }
+                    }
+                }
+
+                Say {
+                    text: "I couldn't be better!"
+                }
+
+            }
+
+            Say {
+                text: "Well fine - we got that sorted out"
+            }
+        }
+
+        Dialogue {
+            id: carConversation
+
+            Say {
+                text: "So you can drive huh?"
+            }
+
+            Say {
+                text: "That's wicked"
+            }
+
+            Ask {
+                text: "How fast can you drive?"
+
+                Say {
+                    text: "Super fast"
+                }
+
+                Ask {
+                    text: "I don't know - how fast can you drive?"
+                    //autoAnswer: true
+                    Say {
+                        text: "Fast"
+                    }
+
+                    Say {
+                        text: "Slow"
                     }
                 }
             }
@@ -419,8 +503,6 @@ ApplicationWindow {
         Say {
             id: nameConversation
             text: "Hej Per, har du savnet mig?"
-
-            Component.onCompleted: Qak.db('I\'m root babel',nameConversation)
 
             Say {
                 text: "Yeah"
@@ -431,6 +513,7 @@ ApplicationWindow {
                 text: "No"
 
                 Say {
+                    id: fairEnough
                     text: "Fair enough, brother. But how's life anyway?"
 
                     Say {
@@ -439,8 +522,8 @@ ApplicationWindow {
                     }
 
                     Say {
-                        text: "awesome!"
-                        to: ok
+                        text: "aWeSome!"
+                        to: otherConversation
                     }
                 }
 
@@ -448,7 +531,7 @@ ApplicationWindow {
 
             Say {
                 text: "Maybe - ladddie"
-                to: ok
+                to: fairEnough
             }
         }
 
@@ -456,9 +539,37 @@ ApplicationWindow {
             id: ok
             text: "Ok! ..."
             to: nameConversation
-
-            Component.onCompleted: Qak.db('I\'m also root babel',ok)
         }
+
+        Say {
+            id: otherConversation
+            text: "So where's the gem hidden?"
+
+            Say {
+                text: "I know!"
+                to: ok
+            }
+
+            Say {
+                text: "I don't know :/"
+
+
+                Say {
+                    text: "I'll tell you then!"
+                    to: tell
+                }
+
+
+            }
+
+        }
+
+        Say {
+            id: tell
+            text: "It's right here!"
+            to: ok
+        }
+
 
     }
 

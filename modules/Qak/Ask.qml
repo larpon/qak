@@ -13,7 +13,7 @@ Item {
     property Item active: say
     property Item to: children.length > 0 ? children[0] : say
 
-    readonly property Item conversation: findRoot(say)
+    property Item conversation: findRoot(say)
     readonly property bool root: (parent.objectName !== 'QakSay')
     readonly property bool leaf: (children.length <= 0)
 
