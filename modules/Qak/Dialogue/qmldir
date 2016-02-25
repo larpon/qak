@@ -1,0 +1,3 @@
+module Qak.Dialogue
+Say 1.0 Say.qml
+depends Qak 1.0

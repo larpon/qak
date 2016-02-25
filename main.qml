@@ -367,11 +367,9 @@ ApplicationWindow {
 
         // Dialog tree example
 
-        /*
+
         Rectangle {
             id: bubble
-
-            visible: conversation.active
 
             width: 300
             height: 100
@@ -391,6 +389,8 @@ ApplicationWindow {
         Row {
             id: dialogChoices
             anchors.top: bubble.bottom
+
+            visible: conversation.active.question
 
             spacing: 10
             Repeater {
@@ -412,16 +412,21 @@ ApplicationWindow {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            conversation.active = conversation.active ? conversation.active.children[index].to : undefined
+                            if(conversation.active) {
+                                //var c = conversation
+                                conversation.active = conversation.active.children[index]
+                                conversation.run = true
+                            }
                         }
                     }
                 }
             }
         }
-*/
+
 
         Entity {
-            x: 1100-width
+            id: bob
+            x: 1100-(width)
             y: 500
             width: 70
             height: width
@@ -429,70 +434,119 @@ ApplicationWindow {
             Rectangle {
                 anchors.fill: parent
                 color: "brown"
-            }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: conversation.running = true
+                Text {
+                    text: conversation.active.ref === bob ? conversation.active.text : ""
+                }
             }
         }
 
+        Entity {
+            id: ida
+            x: 1100-(width*2)
+            y: 500
+            width: 70
+            height: width
+
+            Rectangle {
+                anchors.fill: parent
+                color: "red"
+
+                Text {
+                    text: conversation.active.ref === ida ? conversation.active.text : ""
+                }
+            }
+        }
+
+
+
         Say {
             id: conversation
-
-            tag: "Master"
-
-            text: "Hello you two!"
+            run: true
 
             Say {
-                parallel: true
+                ref: bob
+                text: "Hi there"
+            }
+
+            Say {
+                ref: bob
+                text: "I'm Bob!"
+            }
+
+            Say {
+                ref: bob
+                question: true
+                text: "Who are you?"
 
                 Say {
-                    tag: "Bob"
-                    text: "Hi!"
+                    ref: ida
+                    text: "I'm Ida"
                 }
 
                 Say {
-                    tag: "Bi"
-                    text: "Hallo!"
+                    ref: ida
+                    text: "I'm Ida - the wizard!"
 
                     Say {
-                        tag: "Bi"
-                        text: "Halloooo!"
+                        ref: bob
+                        text: "really?"
+                    }
+                    Say {
+                        ref: bob
+                        text: "That sounds awesome!"
+                    }
+                    Say {
+                        ref: ida
+                        text: "YEAH!"
+                    }
 
+                }
+
+                Say {
+                    ref: ida
+                    text: "I'm Ida - the lizard!"
+
+                    Say {
+
+                        Say {
+                            ref: bob
+                            text: "A lizard?"
+                        }
+                        Say {
+                            ref: bob
+                            text: "That sounds creepy!"
+                        }
+                        Say {
+                            ref: bob
+                            text: "I'll rather speak about cars!"
+                        }
+                        Say {
+                            ref: ida
+                            text: "Okay"
+                        }
+                        Say {
+                            to: carConversation
+                        }
                     }
                 }
 
             }
 
-            Say {
-                tag: "Master"
-                text: "How's things with you?"
-            }
-
-            Say {
-                tag: "Bi"
-                text: "Fine!"
-            }
-
-            Say {
-                tag: "Bob"
-                text: "I'm ok..."
-            }
-
-            /*
-            Say {
-                text: ["the end...","the END"]
-            }
-            */
         }
 
         Say {
             id: carConversation
-            tag: "Car"
 
-
-
+            Say {
+                ref: bob
+                text: "I love cars!"
+            }
+            Say {
+                ref: ida
+                text: "Okay - I don't"
+                to: conversation
+            }
         }
 
     }
