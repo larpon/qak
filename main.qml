@@ -367,10 +367,11 @@ ApplicationWindow {
 
         // Dialog tree example
 
+        /*
         Rectangle {
             id: bubble
 
-            visible: nameConversation.active
+            visible: conversation.active
 
             width: 300
             height: 100
@@ -382,7 +383,7 @@ ApplicationWindow {
                 id: text
                 anchors.centerIn: parent
 
-                text: nameConversation.active ? nameConversation.active.text : ""
+                text: conversation.active ? conversation.active.text : ""
                 font.bold: true
             }
         }
@@ -393,7 +394,7 @@ ApplicationWindow {
 
             spacing: 10
             Repeater {
-                model: nameConversation.active ? nameConversation.active.children.length : 0
+                model: conversation.active ? conversation.active.children.length : 0
                 Rectangle {
                     width: choice.width + 6; height: choice.height +6
 
@@ -404,172 +405,95 @@ ApplicationWindow {
                         id: choice
                         anchors.centerIn: parent
 
-                        text: nameConversation.active ? nameConversation.active.children[index].text : ""
+                        text: conversation.active ? conversation.active.children[index].text : ""
                         font.bold: true
                     }
 
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            nameConversation.active = nameConversation.active ? nameConversation.active.children[index].to : undefined
+                            conversation.active = conversation.active ? conversation.active.children[index].to : undefined
                         }
                     }
                 }
             }
         }
+*/
 
-        Dialogue {
+        Entity {
+            x: 1100-width
+            y: 500
+            width: 70
+            height: width
+
+            Rectangle {
+                anchors.fill: parent
+                color: "brown"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: conversation.running = true
+            }
+        }
+
+        Say {
             id: conversation
 
+            tag: "Master"
+
+            text: "Hello you two!"
+
             Say {
-                text: "So.."
-            }
-
-            Ask {
-                text: "How are you doing?"
+                parallel: true
 
                 Say {
-                    text: "I'm okay..."
+                    tag: "Bob"
+                    text: "Hi!"
                 }
 
                 Say {
-                    text: "Not too good"
+                    tag: "Bi"
+                    text: "Hallo!"
 
                     Say {
-                        text: "That's horrible!"
+                        tag: "Bi"
+                        text: "Halloooo!"
+
                     }
-
-                    Say {
-                        text: "We better get you to the doctor"
-                    }
-
-                    Ask {
-                        text: "Can you drive?"
-
-                        Say {
-                            text: "No way"
-                        }
-
-                        Say {
-                            text: "Yes!"
-                            to: carConversation
-                        }
-                    }
-                }
-
-                Say {
-                    text: "I couldn't be better!"
                 }
 
             }
 
             Say {
-                text: "Well fine - we got that sorted out"
+                tag: "Master"
+                text: "How's things with you?"
             }
+
+            Say {
+                tag: "Bi"
+                text: "Fine!"
+            }
+
+            Say {
+                tag: "Bob"
+                text: "I'm ok..."
+            }
+
+            /*
+            Say {
+                text: ["the end...","the END"]
+            }
+            */
         }
 
-        Dialogue {
+        Say {
             id: carConversation
-
-            Say {
-                text: "So you can drive huh?"
-            }
-
-            Say {
-                text: "That's wicked"
-            }
-
-            Ask {
-                text: "How fast can you drive?"
-
-                Say {
-                    text: "Super fast"
-                }
-
-                Ask {
-                    text: "I don't know - how fast can you drive?"
-                    //autoAnswer: true
-                    Say {
-                        text: "Fast"
-                    }
-
-                    Say {
-                        text: "Slow"
-                    }
-                }
-            }
-        }
-
-        Say {
-            id: nameConversation
-            text: "Hej Per, har du savnet mig?"
-
-            Say {
-                text: "Yeah"
-                to: ok
-            }
-
-            Say {
-                text: "No"
-
-                Say {
-                    id: fairEnough
-                    text: "Fair enough, brother. But how's life anyway?"
-
-                    Say {
-                        text: "shit!"
-                        to: ok
-                    }
-
-                    Say {
-                        text: "aWeSome!"
-                        to: otherConversation
-                    }
-                }
-
-            }
-
-            Say {
-                text: "Maybe - ladddie"
-                to: fairEnough
-            }
-        }
-
-        Say {
-            id: ok
-            text: "Ok! ..."
-            to: nameConversation
-        }
-
-        Say {
-            id: otherConversation
-            text: "So where's the gem hidden?"
-
-            Say {
-                text: "I know!"
-                to: ok
-            }
-
-            Say {
-                text: "I don't know :/"
+            tag: "Car"
 
 
-                Say {
-                    text: "I'll tell you then!"
-                    to: tell
-                }
-
-
-            }
 
         }
-
-        Say {
-            id: tell
-            text: "It's right here!"
-            to: ok
-        }
-
 
     }
 
