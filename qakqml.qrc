@@ -15,8 +15,9 @@
         <file>modules/Qak/QtQuick/Controls/ApplicationWindow.qml</file>
         <file>modules/Qak/QtQuick/Controls/qmldir</file>
         <file>modules/Qak/AdaptiveSource.qml</file>
-        <file>modules/Qak/Say.qml</file>
-        <file>modules/Qak/Dialogue.qml</file>
-        <file>modules/Qak/Ask.qml</file>
+        <file>modules/Qak/Dialogue/Ask.qml</file>
+        <file>modules/Qak/Dialogue/Dialogue.qml</file>
+        <file>modules/Qak/Dialogue/qmldir</file>
+        <file>modules/Qak/Dialogue/Say.qml</file>
     </qresource>
 </RCC>

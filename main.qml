@@ -4,6 +4,8 @@ import Qak 1.0
 import Qak.QtQuick 1.0 as QakQuick
 import Qak.QtQuick.Controls 1.0
 
+import Qak.Dialogue 1.0
+
 import "qml" as Test
 
 ApplicationWindow {
@@ -413,8 +415,10 @@ ApplicationWindow {
                         anchors.fill: parent
                         onClicked: {
                             if(conversation.active) {
-                                //var c = conversation
+                                var a = conversation.active
+                                a.question = false
                                 conversation.active = conversation.active.children[index]
+                                a.question = true
                                 conversation.run = true
                             }
                         }
