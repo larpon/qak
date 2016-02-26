@@ -382,6 +382,13 @@ ApplicationWindow {
             }
         }
 
+        function backup(node,f) {
+            if(f)
+                f(node)
+            if(!node.isRoot)
+                backup(node.parent,f)
+        }
+
         function flat(node,f) {
             for(var i in node.children) {
                 var n = node.children[i]
@@ -392,17 +399,14 @@ ApplicationWindow {
 
         Component.onCompleted: {
             Qak.db('All @',root.tag)
-            var path = []
-            all(root,function(node){
-                //Qak.db('@',node.tag)
-                path.push(node.tag)
-                if(node.isLeaf) {
-                   Qak.db('Full path',path.join("/"))
-                   path.pop()
-                }
 
-                if(node.isLast) {
-                   path.pop()
+            all(root,function(node){
+                if(node.isLeaf) {
+                    var path = []
+                    backup(node,function(node){
+                        path.unshift(node.tag)
+                    })
+                    Qak.db('Full path',path.join("/"))
                 }
             })
 
