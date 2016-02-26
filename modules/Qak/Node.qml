@@ -12,6 +12,7 @@ Item {
 
     property var t
     property bool q: false
+    property Item to
 
     property Item ref
 

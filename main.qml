@@ -368,6 +368,84 @@ ApplicationWindow {
 
     // Example Tree structure
 
+    Entity {
+        id: bob
+
+        x: 400
+        y: 400
+        width: 100
+        height: width
+
+        property alias say: bobsays.text
+
+        Rectangle {
+            anchors.fill: parent
+            color: "brown"
+
+            Text {
+                id:bobsays
+                text: ""
+            }
+        }
+    }
+
+    Entity {
+        id: ida
+
+        x: 600
+        y: 400
+        width: 100
+        height: width
+
+        property alias say: idasays.text
+
+        Rectangle {
+            anchors.fill: parent
+            color: "purple"
+
+            Text {
+                id:idasays
+                text: ""
+            }
+        }
+    }
+
+    Entity {
+        id: asker
+        x: 400
+        y: 300
+        width: row.width
+        height: row.height
+
+        property var questions: []
+        property Item ref
+
+        Row {
+            id: row
+            spacing: 10
+            Repeater {
+                model: asker.questions.length
+                Rectangle {
+                    color: "white"
+                    width: asktxt.width
+                    height: asktxt.height
+                    Text {
+                        id: asktxt
+                        text: asker.questions[index].t
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            // TODO handle answer
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     Item {
         id: nodeWalker
 
@@ -397,6 +475,47 @@ ApplicationWindow {
             }
         }
 
+
+        // Sequential
+        function sequential(node,f) {
+            scheduler.root = node
+            scheduler.callback = f
+        }
+
+        Timer {
+            id: scheduler
+            triggeredOnStart: true
+            interval: 2500
+            repeat: true
+
+            property Item root
+            property Item current
+            property int cIndex: 0
+            property var callback
+
+            function reset() {
+                stop()
+                cIndex = 0
+            }
+
+            onRootChanged: {
+                reset()
+                // TODO error checking
+                current = root.children[cIndex]
+                restart()
+            }
+
+            onTriggered: {
+                callback(current,scheduler)
+
+                cIndex++
+                if(root.children[cIndex])
+                    current = root.children[cIndex]
+                else
+                    stop()
+            }
+        }
+
         Component.onCompleted: {
             Qak.db('All @',root.tag)
 
@@ -416,6 +535,33 @@ ApplicationWindow {
                 Qak.db('@',node.tag)
             })
 
+
+            Qak.db('Sequential @',root.tag)
+            sequential(root,function(node,sequencer){
+
+                setSay(node)
+                //Qak.db(node.tag, 'says', node.t)
+                if(node.q) {
+                    sequencer.stop()
+                    handleQuestion(node)
+                }
+
+            })
+
+            function handleQuestion(node) {
+                Qak.db(node.tag,'is asking a question')
+                asker.questions = node.children
+                asker.ref = node
+            }
+
+            function setSay(node) {
+                if(node.tag == 'bob') {
+                    bob.say = node.t
+                }
+                if(node.tag == 'ida') {
+                    ida.say = node.t
+                }
+            }
         }
     }
 
@@ -425,12 +571,13 @@ ApplicationWindow {
 
         Node {
             tag: "bob"
-            t: [
+            t: "Hi there!"
+            /*t: [
                 "Hi there!",
                 "I'm Bob! - I'm fun and stuff",
                 "...",
                 "ehehe"
-            ]
+            ]*/
         }
 
         Node {
@@ -456,44 +603,54 @@ ApplicationWindow {
             Node {
                 tag: "ida"
                 t: "Ehrm.. no!?"
-
-                Node {
-                    tag: "test"
-                    t: "Nah..."
-
-                    Node {
-                        tag: "urgh"
-                        t: "Nah..."
-                    }
-
-                    Node {
-                        tag: "bah"
-                        t: "Nah..."
-
-                        Node {
-                            tag: "huh"
-                            t: "Nah..."
-                        }
-                    }
-                }
-
-                Node {
-                    tag: "test2"
-                    t: "Nah..."
-                }
+                to: ending
             }
 
             Node {
                 tag: "ida"
                 t: "Not really"
+
+                Node {
+                    tag: "bob"
+                    t: "Really?"
+                }
+
+                Node {
+                    tag: "bob"
+                    t: "Why not?"
+                }
+
+                Node {
+                    tag: "ida"
+                    t: "I just don't like the name Bob"
+                }
+
+                Node {
+                    tag: "bob"
+                    q: true
+                    t: "Are you sure?"
+
+                    Node {
+                        tag: "ida"
+                        t: "Bugger off"
+                        to: ending
+                    }
+                }
             }
 
             Node {
                 tag: "ida"
                 t: "Nah..."
+                to: ending
             }
         }
 
+    }
+
+    Node {
+        id: ending
+        tag: "bob"
+        t: "Ok :/"
     }
 
 
