@@ -1,3 +1,6 @@
 module Qak.Dialogue
+Answer 1.0 Answer.qml
+Dialogue 1.0 Dialogue.qml
 Say 1.0 Say.qml
+Ask 1.0 Ask.qml
 depends Qak 1.0

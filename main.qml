@@ -1,6 +1,8 @@
 import QtQuick 2.5
 
 import Qak 1.0
+import Qak.Dialogue 1.0
+
 import Qak.QtQuick 1.0 as QakQuick
 import Qak.QtQuick.Controls 1.0
 
@@ -376,15 +378,21 @@ ApplicationWindow {
         width: 100
         height: width
 
-        property alias say: bobsays.text
+
 
         Rectangle {
             anchors.fill: parent
             color: "brown"
 
             Text {
-                id:bobsays
                 text: ""
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                dialogue.running = true
             }
         }
     }
@@ -446,211 +454,94 @@ ApplicationWindow {
     }
 
 
-    Item {
-        id: nodeWalker
-
-        property Item root: root
-
-        function all(node,f) {
-            if(f)
-                f(node)
-            for(var i in node.children) {
-                var n = node.children[i]
-                all(n,f)
-            }
-        }
-
-        function backup(node,f) {
-            if(f)
-                f(node)
-            if(!node.isRoot)
-                backup(node.parent,f)
-        }
-
-        function flat(node,f) {
-            for(var i in node.children) {
-                var n = node.children[i]
-                if(f)
-                    f(n)
-            }
-        }
-
-
-        // Sequential
-        function sequential(node,f) {
-            scheduler.root = node
-            scheduler.callback = f
-        }
-
-        Timer {
-            id: scheduler
-            triggeredOnStart: true
-            interval: 2500
-            repeat: true
-
-            property Item root
-            property Item current
-            property int cIndex: 0
-            property var callback
-
-            function reset() {
-                stop()
-                cIndex = 0
-            }
-
-            onRootChanged: {
-                reset()
-                // TODO error checking
-                current = root.children[cIndex]
-                restart()
-            }
-
-            onTriggered: {
-                callback(current,scheduler)
-
-                cIndex++
-                if(root.children[cIndex])
-                    current = root.children[cIndex]
-                else
-                    stop()
-            }
-        }
-
-        Component.onCompleted: {
-            Qak.db('All @',root.tag)
-
-            all(root,function(node){
-                if(node.isLeaf) {
-                    var path = []
-                    backup(node,function(node){
-                        path.unshift(node.tag)
-                    })
-                    Qak.db('Full path',path.join("/"))
-                }
-            })
-
-
-            Qak.db('Flat @',root.tag)
-            flat(root,function(node){
-                Qak.db('@',node.tag)
-            })
-
-
-            Qak.db('Sequential @',root.tag)
-            sequential(root,function(node,sequencer){
-
-                setSay(node)
-                //Qak.db(node.tag, 'says', node.t)
-                if(node.q) {
-                    sequencer.stop()
-                    handleQuestion(node)
-                }
-
-            })
-
-            function handleQuestion(node) {
-                Qak.db(node.tag,'is asking a question')
-                asker.questions = node.children
-                asker.ref = node
-            }
-
-            function setSay(node) {
-                if(node.tag == 'bob') {
-                    bob.say = node.t
-                }
-                if(node.tag == 'ida') {
-                    ida.say = node.t
-                }
-            }
-        }
-    }
-
-    Node {
-        id: root
-        tag: "root"
-
-        Node {
-            tag: "bob"
-            t: "Hi there!"
-            /*t: [
+    Dialogue {
+        id: dialogue
+        Say {
+            who: bob
+            text: [
                 "Hi there!",
                 "I'm Bob! - I'm fun and stuff",
                 "...",
                 "ehehe"
-            ]*/
+            ]
         }
 
-        Node {
-            tag: "ida"
-            t: "Ehrm.. Hi.."
+        Say {
+            who: ida
+            text: "Ehrm.. Hi.."
         }
 
-        Node {
-            tag: "ida"
-            t: "Bob?"
+        Say {
+            who: ida
+            text: "Bob?"
         }
 
-        Node {
-            tag: "bob"
-            t: "Yes! BOB!"
+        Say {
+            who: bob
+            text: "Yes! BOB!"
         }
 
-        Node {
-            tag: "bob"
-            q: true
-            t: "Ain't Bob a cool name?"
+        Ask {
+            who: bob
+            text: "Ain't Bob a cool name?"
 
-            Node {
-                tag: "ida"
-                t: "Ehrm.. no!?"
-                to: ending
+            Answer {
+                who: ida
+                text: "Ehrm.. no!?"
+                go: ending
             }
 
-            Node {
-                tag: "ida"
-                t: "Not really"
+            Answer {
 
-                Node {
-                    tag: "bob"
-                    t: "Really?"
-                }
+                who: ida
+                text: "Not really"
 
-                Node {
-                    tag: "bob"
-                    t: "Why not?"
-                }
+                Dialogue {
 
-                Node {
-                    tag: "ida"
-                    t: "I just don't like the name Bob"
-                }
+                    Say {
+                        who: bob
+                        text: "Really?"
+                    }
 
-                Node {
-                    tag: "bob"
-                    q: true
-                    t: "Are you sure?"
+                    Say {
+                        who: bob
+                        text: "Why not?"
+                    }
 
-                    Node {
-                        tag: "ida"
-                        t: "Bugger off"
-                        to: ending
+                    Say {
+                        who: ida
+                        text: "I just don't like the name Bob"
+                    }
+
+                    Ask {
+                        who: bob
+                        text: "Are you sure?"
+
+                        Answer {
+                            who: ida
+                            text: "Bugger off"
+                            go: ending
+                        }
                     }
                 }
             }
 
-            Node {
-                tag: "ida"
-                t: "Nah..."
-                to: ending
+            Answer {
+                who: ida
+                text: "Nah..."
+                //goto: ending
             }
         }
 
+
     }
 
-    Node {
+    Dialogue {
         id: ending
-        tag: "bob"
-        t: "Ok :/"
+        Say {
+            who: bob
+            text: "Ok"
+        }
     }
 
 
