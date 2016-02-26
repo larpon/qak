@@ -19,5 +19,6 @@
         <file>modules/Qak/Dialogue/Dialogue.qml</file>
         <file>modules/Qak/Dialogue/qmldir</file>
         <file>modules/Qak/Dialogue/Say.qml</file>
+        <file>modules/Qak/Node.qml</file>
     </qresource>
 </RCC>

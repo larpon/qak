@@ -121,8 +121,6 @@ ApplicationWindow {
         */
 
 
-
-
         // Example engine items
 
         /*
@@ -368,6 +366,131 @@ ApplicationWindow {
 
     }
 
+    // Example Tree structure
+
+    Item {
+        id: nodeWalker
+
+        property Item root: root
+
+        function all(node,f) {
+            if(f)
+                f(node)
+            for(var i in node.children) {
+                var n = node.children[i]
+                all(n,f)
+            }
+        }
+
+        function flat(node,f) {
+            for(var i in node.children) {
+                var n = node.children[i]
+                if(f)
+                    f(n)
+            }
+        }
+
+        Component.onCompleted: {
+            Qak.db('All @',root.tag)
+            var path = []
+            all(root,function(node){
+                //Qak.db('@',node.tag)
+                path.push(node.tag)
+                if(node.isLeaf) {
+                   Qak.db('Full path',path.join("/"))
+                   path.pop()
+                }
+
+                if(node.isLast) {
+                   path.pop()
+                }
+            })
+
+
+            Qak.db('Flat @',root.tag)
+            flat(root,function(node){
+                Qak.db('@',node.tag)
+            })
+
+        }
+    }
+
+    Node {
+        id: root
+        tag: "root"
+
+        Node {
+            tag: "bob"
+            t: [
+                "Hi there!",
+                "I'm Bob! - I'm fun and stuff",
+                "...",
+                "ehehe"
+            ]
+        }
+
+        Node {
+            tag: "ida"
+            t: "Ehrm.. Hi.."
+        }
+
+        Node {
+            tag: "ida"
+            t: "Bob?"
+        }
+
+        Node {
+            tag: "bob"
+            t: "Yes! BOB!"
+        }
+
+        Node {
+            tag: "bob"
+            q: true
+            t: "Ain't Bob a cool name?"
+
+            Node {
+                tag: "ida"
+                t: "Ehrm.. no!?"
+
+                Node {
+                    tag: "test"
+                    t: "Nah..."
+
+                    Node {
+                        tag: "urgh"
+                        t: "Nah..."
+                    }
+
+                    Node {
+                        tag: "bah"
+                        t: "Nah..."
+
+                        Node {
+                            tag: "huh"
+                            t: "Nah..."
+                        }
+                    }
+                }
+
+                Node {
+                    tag: "test2"
+                    t: "Nah..."
+                }
+            }
+
+            Node {
+                tag: "ida"
+                t: "Not really"
+            }
+
+            Node {
+                tag: "ida"
+                t: "Nah..."
+            }
+        }
+
+    }
 
 
     Item {
