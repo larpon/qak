@@ -8,12 +8,12 @@ Node {
     property bool running: false
 
     property alias current: scheduler.current
-    property string said: ""
+    property string text: scheduler.text
 
     onRunningChanged: {
         if(running) {
-            sequential(node,function(item){
-                Qak.db('Sequence at',item.text)
+            sequential(node,function(item,text){
+                Qak.db('Item',item,'says',text)
             })
         }
     }
@@ -33,29 +33,67 @@ Node {
 
         property Item root
         property Item current
+
+        property string text
         property int cIndex: 0
         property var callback
 
+        property var cText: []
+        property int cTextIndex: 0
+
+        function isArray(test) {
+            return ( Object.prototype.toString.call( test ) === '[object Array]' )
+        }
+
         function reset() {
             stop()
+            text = ""
+            cText = null
             cIndex = 0
+            cTextIndex = 0
         }
 
         onRootChanged: {
             reset()
             // TODO error checking
-            current = root.children[cIndex]
+            //current = root.children[cIndex]
+
             restart()
         }
 
         onTriggered: {
-            callback(current,scheduler)
 
-            cIndex++
-            if(root.children[cIndex])
+            if(root.children[cIndex]) {
                 current = root.children[cIndex]
-            else
+                cText = current.text
+
+                var isArr = isArray(cText)
+                var doNextItem = false
+
+                if(isArr)
+                    text = cText[cTextIndex]
+                else {
+                    doNextItem = true
+                    text = cText
+                }
+
+                callback(current,text,scheduler)
+
+                // TODO if is Ask type
+                //if(isAskType)
+                //  stop()
+
+                cTextIndex++
+
+                if(isArr && !cText[cTextIndex])
+                    doNextItem = true
+
+                if(doNextItem)
+                    cIndex++
+
+            } else
                 stop()
+
         }
     }
 

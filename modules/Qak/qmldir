@@ -6,7 +6,6 @@ Core 1.0 Core.qml
 DebugVisual 1.0 DebugVisual.qml
 Entity 1.0 Entity.qml
 MouseRotator 1.0 MouseRotator.qml
-SourceEntity 1.0 SourceEntity.qml
 Sprite 1.0 Sprite.qml
 WalkMap 1.0 WalkMap.qml
 

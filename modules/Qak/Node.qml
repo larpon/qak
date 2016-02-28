@@ -1,8 +1,6 @@
 import QtQuick 2.5
 
-//import Qak 1.0
-
-// NOTE see https://github.com/afiore/arboreal or https://github.com/aaronj1335/t-js/blob/master/t.js
+// NOTE maybe use https://github.com/afiore/arboreal or https://github.com/aaronj1335/t-js/blob/master/t.js someday?
 Item {
     id: node
 

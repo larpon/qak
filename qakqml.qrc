@@ -6,7 +6,6 @@
         <file>modules/Qak/MouseRotator.qml</file>
         <file>modules/Qak/Qak.qml</file>
         <file>modules/Qak/qmldir</file>
-        <file>modules/Qak/SourceEntity.qml</file>
         <file>modules/Qak/Sprite.qml</file>
         <file>modules/Qak/WalkMap.qml</file>
         <file>modules/Qak/QtQuick/Image.qml</file>
