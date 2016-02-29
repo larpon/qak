@@ -9,14 +9,16 @@ INCLUDEPATH += \
 
 CONFIG += c++11
 
+HEADERS += \
+    $$PWD/src/maskedmousearea.h \
+    $$PWD/src/resource.h
+
 SOURCES += \
-    $$PWD/src/maskedmousearea.cpp
+    $$PWD/src/maskedmousearea.cpp \
+    $$PWD/src/resource.cpp
 
 RESOURCES += \
     $$PWD/qak.qrc
 
 DISTFILES += \
     $$PWD/README.md
-
-HEADERS += \
-    $$PWD/src/maskedmousearea.h
