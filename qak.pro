@@ -9,11 +9,13 @@ uri = Qak
 # Input
 SOURCES += \
     src/qak_plugin.cpp \
-    src/maskedmousearea.cpp
+    src/maskedmousearea.cpp \
+    src/resource.cpp
 
 HEADERS += \
     src/qak_plugin.h \
-    src/maskedmousearea.h
+    src/maskedmousearea.h \
+    src/resource.h
 
 DISTFILES = qmldir \
     qak.pri \

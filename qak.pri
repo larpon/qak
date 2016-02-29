@@ -3,18 +3,24 @@ QT += qml quick
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH += $$PWD
 
-INCLUDEPATH += src
+INCLUDEPATH += \
+    $$PWD \
+    $$PWD/src
 
 CONFIG += c++11
 
+HEADERS += \
+    $$PWD/src/maskedmousearea.h \
+    $$PWD/src/resource.h
+
 SOURCES += \
-    src/maskedmousearea.cpp
+    $$PWD/src/maskedmousearea.cpp \
+    $$PWD/src/resource.cpp
+
 
 RESOURCES += \
-    qak.qrc
+    $$PWD/qak.qrc
 
 DISTFILES += \
-    README.md
+    $$PWD/README.md
 
-HEADERS += \
-    src/maskedmousearea.h
