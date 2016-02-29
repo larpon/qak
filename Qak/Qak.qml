@@ -1,8 +1,10 @@
 import QtQuick 2.5
 
+import Qak 1.0
+
 pragma Singleton
 
-QtObject {
+QtObject{
     id : component
 
     property bool debug: debugBuild

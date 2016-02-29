@@ -1,4 +1,5 @@
 module Qak
+
 singleton Qak 1.0 Qak.qml
 
 AdaptiveSource 1.0 AdaptiveSource.qml

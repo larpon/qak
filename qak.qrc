@@ -20,6 +20,5 @@
         <file>Qak/Dialogue/Say.qml</file>
         <file>Qak/Node.qml</file>
         <file>Qak/Dialogue/Answer.qml</file>
-        <file>qmldir</file>
     </qresource>
 </RCC>

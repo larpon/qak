@@ -47,7 +47,7 @@
 class MaskedMouseArea : public QQuickItem
 {
     Q_OBJECT
-    Q_DISABLE_COPY(MaskedMouseArea)
+    //Q_DISABLE_COPY(MaskedMouseArea)
 
     Q_PROPERTY(bool pressed READ isPressed NOTIFY pressedChanged)
     Q_PROPERTY(bool containsMouse READ containsMouse NOTIFY containsMouseChanged)
@@ -95,5 +95,16 @@ private:
     qreal m_alphaThreshold;
     bool m_containsMouse;
 };
+
+class MaskedMouseAreaRegisterHelper {
+
+public:
+    MaskedMouseAreaRegisterHelper() {
+        qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
+    }
+};
+
+static MaskedMouseAreaRegisterHelper registerHelper;
+
 
 #endif

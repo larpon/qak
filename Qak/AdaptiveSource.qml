@@ -58,7 +58,7 @@ QtObject {
         var tries = 0
 
         // TODO MAYBE optimize some day to remember the found resource for the given step?
-        while(!resource.exists(src) && tries < tryLimit) {
+        while(!Resources.exists(src) && tries < tryLimit) {
 
             if(step > 0)
                 step = step - assetMultiplierStep
@@ -72,7 +72,7 @@ QtObject {
             tries++
         }
 
-        if(resource.exists(src) && mapSource != src) {
+        if(Resources.exists(src) && mapSource != src) {
             mapSource = src
         }/* else
             Qak.warn('Nothing found for',source,'at steps till',step)
@@ -128,7 +128,7 @@ QtObject {
 
         var path = getSourceStepURL(0)
 
-        if(!resource.exists(path)) {
+        if(!Resources.exists(path)) {
             Qak.warn('No resource',path,'found. Ignoring')
             error = true
             ignore = true

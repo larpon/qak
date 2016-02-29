@@ -1,10 +1,10 @@
-#include "resource.h"
+#include "resources.h"
 
-Resource::Resource(QQuickItem* parent):QQuickItem(parent)
+Resources::Resources(QObject* parent) : QObject(parent)
 {
     _networkManager = new QNetworkAccessManager(this);
     _dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    _baseUrl = "http://1499.dk/bw";
+    _baseUrl = "http://example.com/resource";
 
     // Remember the bug where you connected multiple times in the load() function - only connect once :)
     QObject::connect(_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
@@ -18,25 +18,31 @@ Resource::Resource(QQuickItem* parent):QQuickItem(parent)
     }
 }
 
-bool Resource::available(const QString &name)
+bool Resources::available(const QString &name)
 {
     QFile file(resourceFile(name));
     return file.exists();
 }
 
-bool Resource::exists(const QString &path)
+bool Resources::exists(const QString &path)
 {
-    QFile file(":"+path);
+    QString source = QString(path);
+    source = source.replace("qrc://",":");
+    source = source.replace("file://","");
+
+    QFile file(source);
+    //qDebug() << "Checking" << source;
+    //QFile file(QString(path).replace("qrc://",":"));
     return file.exists();
 }
 
-void Resource::load(const QString &name)
+void Resources::load(const QString &name)
 {
     QUrl url = resourceUrl(name);
     _networkManager->get(QNetworkRequest(url));
 }
 
-bool Resource::unload(const QString &name)
+bool Resources::unload(const QString &name)
 {
     if(available(name))
     {
@@ -47,7 +53,7 @@ bool Resource::unload(const QString &name)
     return false;
 }
 
-void Resource::onNetworkReply(QNetworkReply* reply)
+void Resources::onNetworkReply(QNetworkReply* reply)
 {
     if(reply->error() == QNetworkReply::NoError)
     {
@@ -63,7 +69,7 @@ void Resource::onNetworkReply(QNetworkReply* reply)
                 //replyString = QString::fromUtf8(reply->readAll().data());
 
                 QByteArray data = reply->readAll();
-                qDebug() << "resource.cpp" << name;
+                qDebug() << "resources.cpp" << name;
 
                 QString resName = resourceFile(name);
                 QFile file(resName);
@@ -89,29 +95,29 @@ void Resource::onNetworkReply(QNetworkReply* reply)
     reply->deleteLater();
 }
 
-QString Resource::resourceFile(const QString &name)
+QString Resources::resourceFile(const QString &name)
 {
     return _dataPath+"/"+name+".rcc";
 }
 
-QUrl Resource::resourceUrl(const QString &name)
+QUrl Resources::resourceUrl(const QString &name)
 {
     return _baseUrl+"/"+name+".rcc";
 }
 
-QString Resource::resourceName(const QUrl &url)
+QString Resources::resourceName(const QUrl &url)
 {
     QFileInfo fi(url.fileName());
     return fi.baseName();
 }
 
-QString Resource::resourceName(const QString &str)
+QString Resources::resourceName(const QString &str)
 {
     QFileInfo fi(str);
     return fi.baseName();
 }
 
-QString Resource::appPath()
+QString Resources::appPath()
 {
     return QDir::currentPath();
 }
