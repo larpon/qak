@@ -44,10 +44,11 @@
 #include <QImage>
 #include <QQuickItem>
 
-
 class MaskedMouseArea : public QQuickItem
 {
     Q_OBJECT
+    Q_DISABLE_COPY(MaskedMouseArea)
+
     Q_PROPERTY(bool pressed READ isPressed NOTIFY pressedChanged)
     Q_PROPERTY(bool containsMouse READ containsMouse NOTIFY containsMouseChanged)
     Q_PROPERTY(QUrl maskSource READ maskSource WRITE setMaskSource NOTIFY maskSourceChanged)

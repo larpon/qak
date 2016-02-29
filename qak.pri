@@ -7,13 +7,14 @@ INCLUDEPATH += src
 
 CONFIG += c++11
 
-SOURCES += src/resource.cpp \
+SOURCES += \
     src/maskedmousearea.cpp
 
-RESOURCES += qak.qrc
+RESOURCES += \
+    qak.qrc
 
-DISTFILES += README.md
+DISTFILES += \
+    README.md
 
 HEADERS += \
-    src/resource.h \
     src/maskedmousearea.h
