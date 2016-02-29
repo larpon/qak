@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Qak/Core.qml</file>
+        <file>Qak/DebugVisual.qml</file>
+        <file>Qak/Entity.qml</file>
+        <file>Qak/MouseRotator.qml</file>
+        <file>Qak/Qak.qml</file>
+        <file>Qak/qmldir</file>
+        <file>Qak/Sprite.qml</file>
+        <file>Qak/WalkMap.qml</file>
+        <file>Qak/QtQuick/Image.qml</file>
+        <file>Qak/QtQuick/qmldir</file>
+        <file>Qak/js/walkMapWorker.js</file>
+        <file>Qak/QtQuick/Controls/ApplicationWindow.qml</file>
+        <file>Qak/QtQuick/Controls/qmldir</file>
+        <file>Qak/AdaptiveSource.qml</file>
+        <file>Qak/Dialogue/Ask.qml</file>
+        <file>Qak/Dialogue/Dialogue.qml</file>
+        <file>Qak/Dialogue/qmldir</file>
+        <file>Qak/Dialogue/Say.qml</file>
+        <file>Qak/Node.qml</file>
+        <file>Qak/Dialogue/Answer.qml</file>
+    </qresource>
+</RCC>
