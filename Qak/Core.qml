@@ -5,7 +5,6 @@ import Qak 1.0
 Item {
     id: core
 
-
     readonly property real halfWidth: width/2
     readonly property real halfHeight: height/2
 

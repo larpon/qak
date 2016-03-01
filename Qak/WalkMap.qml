@@ -242,8 +242,8 @@ Entity {
             model: (parent.columns*parent.rows)
             Rectangle {
 
-                width: parent.cellWidth
-                height: parent.cellHeight
+                width: grid.cellWidth
+                height: grid.cellHeight
 
                 opacity: 0.15
 
