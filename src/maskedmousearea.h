@@ -96,15 +96,4 @@ private:
     bool m_containsMouse;
 };
 
-class MaskedMouseAreaRegisterHelper {
-
-public:
-    MaskedMouseAreaRegisterHelper() {
-        qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
-    }
-};
-
-static MaskedMouseAreaRegisterHelper registerHelper;
-
-
 #endif

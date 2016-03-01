@@ -70,7 +70,7 @@ public:
     }
 };
 
-static ResourcesRegisterHelper registerHelper;
+static ResourcesRegisterHelper resourcesRegisterHelper;
 
 
 #endif // RESOURCES_H
