@@ -2,7 +2,9 @@ module Qak
 
 singleton Qak 1.0 Qak.qml
 
-# Viewport 1.0 Viewport.qml
+View 1.0 View.qml
+#Viewer 1.0 Viewer.qml
+Viewport 1.0 Viewport.qml
 AdaptiveSource 1.0 AdaptiveSource.qml
 Core 1.0 Core.qml
 DebugVisual 1.0 DebugVisual.qml

@@ -20,5 +20,8 @@
         <file>Qak/Dialogue/Say.qml</file>
         <file>Qak/Node.qml</file>
         <file>Qak/Dialogue/Answer.qml</file>
+        <file>Qak/Viewport.qml</file>
+        <file>Qak/QtQuick/Item.qml</file>
+        <file>Qak/View.qml</file>
     </qresource>
 </RCC>

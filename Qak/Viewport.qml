@@ -1,21 +1,35 @@
 import QtQuick 2.5
 
 import Qak 1.0
+import Qak.QtQuick 1.0
 
 Item {
     id: viewport
 
     //clip: true
 
-    readonly property real halfWidth: width/2
-    readonly property real halfHeight: height/2
+    property Item container: viewport.parent
+
+    property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
+
+    onFillmodeChanged: {
+        viewport.fix()
+    }
 
     readonly property real scaledWidth: width*activeScaler.xScale
     readonly property real scaledHeight: height*activeScaler.yScale
 
-    readonly property real aspectRatio: width/height
+    readonly property int widthDiff: viewport.scaledWidth - viewport.width
+    readonly property int heightDiff: viewport.scaledWidth - viewport.width
 
-    property int fillmode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
+    function toggleFillmode() {
+        if(fillmode === Image.PreserveAspectFit)
+           fillmode = Image.PreserveAspectCrop
+        else if(fillmode === Image.Stretch)
+           fillmode = Image.PreserveAspectFit
+        else
+           fillmode = Image.Stretch
+    }
 
     property string fillmodeString: ""
     onFillmodeStringChanged: Qak.log('Viewport','Fillmode',fillmodeString)
@@ -30,33 +44,29 @@ Item {
 
     Scale {
         id: aspectScale
-        xScale: Math.min(core.width/viewport.width,core.height/viewport.height)
+        xScale: Math.min(container.width/viewport.width,container.height/viewport.height)
         yScale: xScale
 
     }
 
     Scale {
         id: aspectScaleCrop
-        xScale: Math.max(core.width/viewport.width,core.height/viewport.height)
+        xScale: Math.max(container.width/viewport.width,container.height/viewport.height)
         yScale: xScale
-        origin.x: (viewport.width*xScale)/core.width
-        origin.y: (viewport.height*yScale)/core.height
+        origin.x: (viewport.width*xScale)/container.width
+        origin.y: (viewport.height*yScale)/container.height
     }
 
     Scale {
         id: stretchScale
-        xScale: width/viewport.width
-        yScale: height/viewport.height
+        xScale: container.width/viewport.width
+        yScale: container.height/viewport.height
     }
 
     Connections {
-        target: core
+        target: container
 
         onAspectRatioChanged: {
-            viewport.fix()
-        }
-
-        onFillmodeChanged: {
             viewport.fix()
         }
     }
@@ -65,28 +75,28 @@ Item {
         viewport.x = 0
         viewport.y = 0
 
-        if(core.aspectRatio == viewport.aspectRatio) {
+        if(container.aspectRatio == viewport.aspectRatio) {
             fillmodeString = "no boxes"
             return
-        } else if(core.fillmode === Image.Stretch) {
+        } else if(fillmode === Image.Stretch) {
             fillmodeString = "stretch"
             return
-        } else if(core.fillmode === Image.PreserveAspectCrop) {
-            viewport.x = (core.width-(viewport.width*aspectScaleCrop.xScale))/2
-            viewport.y = (core.height-(viewport.height*aspectScaleCrop.yScale))/2
+        } else if(fillmode === Image.PreserveAspectCrop) {
+            viewport.x = (container.width-(viewport.width*aspectScaleCrop.xScale))/2
+            viewport.y = (container.height-(viewport.height*aspectScaleCrop.yScale))/2
             fillmodeString = "preserve aspect crop"
             return
         }
 
-        var nx = (core.width-(viewport.width*aspectScale.xScale))/2
-        var ny = (core.height-(viewport.height*aspectScale.yScale))/2
+        var nx = (container.width-(viewport.width*aspectScale.xScale))/2
+        var ny = (container.height-(viewport.height*aspectScale.yScale))/2
 
-        if(core.aspectRatio < viewport.aspectRatio) {
+        if(container.aspectRatio < viewport.aspectRatio) {
             fillmodeString = "preserve aspect fit (horizontal boxes)"
             viewport.y = ny
         }
 
-        if(core.aspectRatio > viewport.aspectRatio) {
+        if(container.aspectRatio > viewport.aspectRatio) {
             fillmodeString = "preserve aspect fit (vertical boxes)"
             viewport.x = nx
         }
@@ -96,49 +106,7 @@ Item {
         return fm === Image.PreserveAspectFit ? aspectScale : fm === Image.PreserveAspectCrop ? aspectScaleCrop : stretchScale
     }
 
-    // NOTE Keeping for reference calculations
-    // This is the very base for calculating the suggested asset size
     /*
-    function calculateMapStep() {
-        if(!autoMapSource || ignore)
-            return
-
-        if(viewport.scaledWidth == 0 || core.targetWidth == 0)
-            return
-
-        // How many percent of target width are we off?
-        // + = over
-        // - = under
-        var pct = (viewportWidthDiff/core.viewport.width)*100
-
-        // Step in percent
-        var percentStep = 25.0
-
-        // Round to nearest step size
-        // ... -50,-25,0,25,50 ...
-        var step = Math.floor(pct / percentStep) * percentStep
-
-        // Convert from percent step to integer step
-        // ... -3,-2,-1,0,1,2,3 ...
-        step = (step+percentStep)/percentStep
-
-        // Round integer to nearest asset step size
-        // ... -4,-2,0,2,4 ...
-        step = Math.floor(step / assetStep) * assetStep
-
-        mapStep = step
-    }
-    */
-
-    function toggleFillmode() {
-        if(fillmode === Image.PreserveAspectFit)
-           fillmode = Image.PreserveAspectCrop
-        else if(fillmode === Image.Stretch)
-           fillmode = Image.PreserveAspectFit
-        else
-           fillmode = Image.Stretch
-    }
-
     function clamp(a,b,c) {
         return Math.max(b,Math.min(c,a))
     }
@@ -148,5 +116,5 @@ Item {
         // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
         return (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
     }
-
+    */
 }

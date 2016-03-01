@@ -1,3 +1,4 @@
 module Qak.QtQuick
 Image 1.0 Image.qml
+Item 1.0 Item.qml
 depends Qak 1.0

@@ -28,13 +28,13 @@ ApplicationWindow {
     property string screenmode: "windowed"
 
     onScreenmodeChanged: {
-        Qak.log("Screenmode",screenmode)
         if(screenmode == "full")
             app.showFullScreen()
         else if(app.screenmode == "windowed")
             app.showNormal()
         else
             app.showNormal()
+        Qak.log("ApplicationWindow","Screenmode",screenmode)
     }
 
 

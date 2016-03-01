@@ -4,6 +4,7 @@ import Qak 1.0
 
 Rectangle {
     anchors.fill: parent
+    anchors.margins: -border.width
 
     visible: Qak.debug
     enabled: visible
