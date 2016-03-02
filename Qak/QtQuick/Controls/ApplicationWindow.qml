@@ -38,11 +38,12 @@ ApplicationWindow {
     }
 
 
-    function toggleScreenmode() {
+    function toggleScreenMode() {
         if(screenMode === "windowed")
            screenMode = "full"
         else
            screenMode = "windowed"
     }
 
+    //onScreenChanged: Qak.log("ApplicationWindow","Screen",screen)
 }
