@@ -34,7 +34,7 @@ ApplicationWindow {
             app.showNormal()
         else
             app.showNormal()
-        Qak.log("ApplicationWindow","Screenmode",screenMode)
+        Qak.log("ApplicationWindow","Screen mode",screenMode)
     }
 
 
