@@ -20,12 +20,6 @@ Item {
         viewport.fix()
     }
 
-    readonly property real scaledWidth: width*activeScaler.xScale
-    readonly property real scaledHeight: height*activeScaler.yScale
-
-    readonly property int widthDiff: viewport.scaledWidth - viewport.width
-    readonly property int heightDiff: viewport.scaledWidth - viewport.width
-
     function toggleFillMode() {
         if(fillMode === Image.PreserveAspectFit)
            fillMode = Image.PreserveAspectCrop
@@ -34,6 +28,12 @@ Item {
         else
            fillMode = Image.Stretch
     }
+
+    readonly property real scaledWidth: width*activeScaler.xScale
+    readonly property real scaledHeight: height*activeScaler.yScale
+
+    readonly property int widthDiff: viewport.scaledWidth - viewport.width
+    readonly property int heightDiff: viewport.scaledWidth - viewport.width
 
     property string fillModeString: ""
     onFillModeStringChanged: Qak.log('Viewport','FillMode',fillModeString)
