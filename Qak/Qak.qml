@@ -7,7 +7,7 @@ pragma Singleton
 QtObject{
     id : component
 
-    property bool debug: debugBuild
+    property bool debug: debugBuild ? debugBuild : false
     property bool pause: false
 
     property string logPrefix: "QAK"
