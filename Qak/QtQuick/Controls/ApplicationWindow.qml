@@ -25,24 +25,24 @@ ApplicationWindow {
 
     property bool multiMonitor: (Screen.desktopAvailableWidth > Screen.width) ? true : false
 
-    property string screenmode: "windowed"
+    property string screenMode: "windowed"
 
-    onScreenmodeChanged: {
-        if(screenmode == "full")
+    onScreenModeChanged: {
+        if(screenMode == "full")
             app.showFullScreen()
-        else if(app.screenmode == "windowed")
+        else if(app.screenMode == "windowed")
             app.showNormal()
         else
             app.showNormal()
-        Qak.log("ApplicationWindow","Screenmode",screenmode)
+        Qak.log("ApplicationWindow","Screenmode",screenMode)
     }
 
 
     function toggleScreenmode() {
-        if(screenmode === "windowed")
-           screenmode = "full"
+        if(screenMode === "windowed")
+           screenMode = "full"
         else
-           screenmode = "windowed"
+           screenMode = "windowed"
     }
 
 }
