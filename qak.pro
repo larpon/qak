@@ -1,6 +1,9 @@
 TEMPLATE = lib
+
 TARGET = qak
+
 QT += qml quick
+
 CONFIG += qt plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)

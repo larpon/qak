@@ -7,12 +7,26 @@ pragma Singleton
 QtObject{
     id : component
 
-    property bool debug: debugBuild ? debugBuild : false
+    property bool debug: false
     property bool pause: false
 
     property string logPrefix: "QAK"
 
     property int assetMultiplier: 1
+
+    property QtObject platform: Qt.platform
+
+    Component.onCompleted: {
+        var os = Qt.platform.os
+        platform.isDesktop = (
+            os !== 'android' &&
+            os !== 'ios' &&
+            os !== 'blackberry' &&
+            os !== 'winphone'
+        )
+
+        platform.isMobile = !platform.isDesktop
+    }
 
     function log() {
         //log.history=log.history||[]
@@ -60,4 +74,36 @@ QtObject{
             console.warn.apply(console, args)
         }
     }
+
+    function asset(path) {
+        var assetPath = "assets/"+path
+        var filename = path.replace(/^.*[\\\/]/, '')
+
+        if(platform.isDesktop && debug) {
+            path = 'file:///home/lmp/Projects/HammerBees/HammerBees/assets/'+path
+        } else {
+            if(platform.os === 'android')
+                path = "assets:/"+path
+            else if(platform.os === 'osx' && endsWith(path,'.mp3'))
+                path = 'file://'+Resources.appPath()+'/'+path
+            else
+                path = 'qrc:///'+assetPath
+        }
+
+        if(!Resources.exists(path)) {
+            if(filename.indexOf("*") > -1)
+                warn('Wildcard asset',path)
+            else
+                error('Invalid asset',path)
+        }
+        //else
+        //    console.info('Asset',path)
+
+        return path
+    }
+
+    function assetExists(path) {
+        return Resources.exists(asset(path))
+    }
+
 }
