@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>Qak/Core.qml</file>
         <file>Qak/DebugVisual.qml</file>
         <file>Qak/Entity.qml</file>
         <file>Qak/MouseRotator.qml</file>
@@ -22,6 +21,8 @@
         <file>Qak/Dialogue/Answer.qml</file>
         <file>Qak/Viewport.qml</file>
         <file>Qak/QtQuick/Item.qml</file>
+        <file>Qak/Application.qml</file>
+        <file>Qak/AssetSizeController.qml</file>
         <file>Qak/View.qml</file>
     </qresource>
 </RCC>

@@ -1,17 +1,13 @@
 import QtQuick 2.5
 
 import Qak 1.0
+import Qak.QtQuick 1.0
 
 Item {
 
     id: entity
 
     default property alias contents: container.data
-
-    property real halfWidth: width/2
-    property real halfHeight: height/2
-
-    property bool pause: Qak.pause
 
     property bool draggable: false
     property bool rotatable: false
@@ -32,9 +28,6 @@ Item {
         anchors.fill: parent
 
     }
-
-    // Debug visuals
-    DebugVisual {}
 
     // Drag'n'Drop functionality
     property bool dragReturnOnReject: true
