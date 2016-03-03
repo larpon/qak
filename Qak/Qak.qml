@@ -75,12 +75,22 @@ QtObject{
         }
     }
 
+    function info() {
+        //log.history=log.history||[]
+        //log.history.push(arguments)
+        if(console) {
+            var args = Array.prototype.slice.call(arguments)
+            args.unshift("QAK INFO")
+            console.info.apply(console, args)
+        }
+    }
+
     function asset(path) {
         var assetPath = "assets/"+path
         var filename = path.replace(/^.*[\\\/]/, '')
 
         if(platform.isDesktop && debug) {
-            path = 'file:///home/lmp/Projects/HammerBees/HammerBees/assets/'+path
+            path = 'file:///home/lmp/Projects/HammerBees/HammerBeesApp/assets/'+path
         } else {
             if(platform.os === 'android')
                 path = "assets:/"+path
@@ -92,7 +102,7 @@ QtObject{
 
         if(!Resources.exists(path)) {
             if(filename.indexOf("*") > -1)
-                warn('Wildcard asset',path)
+                info('Wildcard asset',path)
             else
                 error('Invalid asset',path)
         }
