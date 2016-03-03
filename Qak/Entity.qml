@@ -9,6 +9,7 @@ Item {
 
     default property alias contents: container.data
 
+    property bool locked: false
     property bool draggable: false
     property bool rotatable: false
 
@@ -39,6 +40,7 @@ Item {
     signal dragAccepted (variant mouse)
     signal dragRejected (variant mouse)
     signal dragStarted (variant mouse)
+    signal dragged (variant mouse, variant map)
     signal dragReturn
     signal dragEnded (variant mouse)
     signal dragReturned
@@ -49,18 +51,21 @@ Item {
 
     MouseArea {
         id: drag
+
         property int ox: draggable ? entity.x : 0
         property int oy: draggable ? entity.y : 0
 
-        enabled: parent.draggable
-        visible: enabled
+        enabled: parent.draggable && !parent.locked
+        //visible: enabled
 
         anchors.fill: entity
         anchors.margins: 0 //main.grow()
 
         drag.target: entity
+
         onPressed: {
-            if(!dragMoveBackAnimation.running) { // Panic click safety
+            // NOTE Panic click safety
+            if(!dragMoveBackAnimation.running) {
                 ox = entity.x
                 oy = entity.y
             }
@@ -71,6 +76,7 @@ Item {
             Qak.db('drag started',entity)
             dragStarted(mouse)
         }
+
         onReleased: {
             if(entity.Drag.drop() !== Qt.IgnoreAction) {
                 Qak.db('drag accepted',entity)
@@ -82,6 +88,11 @@ Item {
             }
             Qak.db('drag ended',entity)
             dragEnded(mouse)
+        }
+
+        onPositionChanged: {
+            var map = entity.mapToItem(entity.parent,mouse.x,mouse.y)
+            dragged(mouse,map)
         }
 
         function goBack() {
@@ -112,7 +123,7 @@ Item {
     // Mouse rotate functionality
     MouseRotator {
         id: rotator
-        enabled: parent.rotatable
+        enabled: parent.rotatable && !parent.locked
 
         anchors.fill: parent
     }
@@ -145,6 +156,9 @@ Item {
     }
 
     function startMoving() {
+        if(locked)
+            return
+
         pathAnim.stop()
 
         var list = []
