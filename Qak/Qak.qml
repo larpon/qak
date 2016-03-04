@@ -9,6 +9,7 @@ QtObject{
 
     property bool debug: false
     property bool pause: false
+    onPauseChanged: info(pause ? 'Paused' : 'Continued')
 
     property string logPrefix: "QAK"
 
