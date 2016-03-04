@@ -24,5 +24,6 @@
         <file>Qak/Application.qml</file>
         <file>Qak/AssetSizeController.qml</file>
         <file>Qak/View.qml</file>
+        <file>Qak/QtQuick/Rectangle.qml</file>
     </qresource>
 </RCC>
