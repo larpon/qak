@@ -23,6 +23,8 @@ ApplicationWindow {
     //color: "transparent"
     color: "black"
 
+    property bool pause: Qak.pause
+
     property bool multiMonitor: (Screen.desktopAvailableWidth > Screen.width) ? true : false
 
     property string screenMode: "windowed"
