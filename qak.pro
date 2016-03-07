@@ -13,12 +13,12 @@ uri = Qak
 SOURCES += \
     src/qak_plugin.cpp \
     src/maskedmousearea.cpp \
-    src/resources.cpp
+    src/resource.cpp
 
 HEADERS += \
     src/qak_plugin.h \
     src/maskedmousearea.h \
-    src/resources.h
+    src/resource.h
 
 DISTFILES = qmldir \
     qak.pri \

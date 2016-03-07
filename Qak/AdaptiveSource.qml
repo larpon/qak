@@ -15,40 +15,9 @@ QtObject {
     property Item target
     property string targetSourceProperty: "source"
 
-    property string prefix: ""
-
     property bool ignore: false
 
     property bool error: false
-
-    /*
-    function asset(path) {
-        var assetPath = "assets/"+path
-        var filename = path.replace(/^.*[\\\/]/, '')
-
-        if(core.platform.isDesktop && core.platform.isDebugBuild) {
-            path = 'file:///home/lmp/Projects/HammerBees/HammerBees/assets/'+path
-        } else {
-            if(core.platform.isAndroid)
-                path = "assets:/"+path
-            else if(core.platform.isMac && endsWith(path,'.mp3'))
-                path = 'file://'+core.resource.appPath()+'/'+path
-            else
-                path = 'qrc:///'+assetPath
-        }
-
-        if(!core.resource.exists(path)) {
-            if(filename.indexOf("*") > -1)
-                Qak.warn('Wildcard asset',path)
-            else
-                Qak.error('Invalid asset',path)
-        }
-        //else
-        //    Qak.info('Asset',path)
-
-        return path
-    }
-    */
 
     function setMapSource(step) {
 
@@ -58,7 +27,7 @@ QtObject {
         var tries = 0
 
         // TODO MAYBE optimize some day to remember the found resource for the given step?
-        while(!Resources.exists(src) && tries < tryLimit) {
+        while(!Qak.resource.exists(src) && tries < tryLimit) {
 
             if(step > 0)
                 step = step - assetMultiplierStep
@@ -72,7 +41,7 @@ QtObject {
             tries++
         }
 
-        if(Resources.exists(src) && mapSource != src) {
+        if(Qak.resource.exists(src) && mapSource != src) {
             mapSource = src
         }/* else
             Qak.warn('Nothing found for',source,'at steps till',step)
@@ -88,13 +57,9 @@ QtObject {
             src = source.substring(0, source.lastIndexOf(".")) + ".x" + step + source.substring(source.lastIndexOf("."))
         }
 
-        var pfx = ""
-        if(prefix !== '')
-            pfx = prefix.replace(/\/+$/, "")+"/"
-
         // TODO do platform asset protocol control etc..
         if(src && src != "")
-            src = "qrc:///"+pfx+src
+            src = Qak.resource.url(src)
 
         return src
     }
@@ -128,7 +93,7 @@ QtObject {
 
         var path = getSourceStepURL(0)
 
-        if(!Resources.exists(path)) {
+        if(!Qak.resource.exists(path)) {
             Qak.warn('No resource',path,'found. Ignoring')
             error = true
             ignore = true

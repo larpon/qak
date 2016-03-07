@@ -9,12 +9,12 @@ INCLUDEPATH += \
 
 HEADERS += \
     $$PWD/src/maskedmousearea.h \
-    $$PWD/src/resources.h \
-    $$PWD/src/register_types.h
+    $$PWD/src/register_types.h \
+    $$PWD/src/resource.h
 
 SOURCES += \
     $$PWD/src/maskedmousearea.cpp \
-    $$PWD/src/resources.cpp
+    $$PWD/src/resource.cpp
 
 RESOURCES += \
     $$PWD/qak.qrc

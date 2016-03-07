@@ -4,7 +4,7 @@ import Qak 1.0
 
 pragma Singleton
 
-QtObject{
+QtObject {
     id : component
 
     property bool debug: false
@@ -16,6 +16,7 @@ QtObject{
     property int assetMultiplier: 1
 
     property QtObject platform: Qt.platform
+    property alias resource: res
 
     Component.onCompleted: {
         var os = Qt.platform.os
@@ -27,6 +28,10 @@ QtObject{
         )
 
         platform.isMobile = !platform.isDesktop
+    }
+
+    Resource {
+        id: res
     }
 
     function log() {
@@ -96,12 +101,12 @@ QtObject{
             if(platform.os === 'android')
                 path = "assets:/"+path
             else if(platform.os === 'osx' && endsWith(path,'.mp3'))
-                path = 'file://'+Resources.appPath()+'/'+path
+                path = 'file://'+Qak.resource.appPath()+'/'+path
             else
                 path = 'qrc:///'+assetPath
         }
 
-        if(!Resources.exists(path)) {
+        if(!Qak.resource.exists(path)) {
             if(filename.indexOf("*") > -1)
                 info('Wildcard asset',path)
             else
@@ -114,7 +119,7 @@ QtObject{
     }
 
     function assetExists(path) {
-        return Resources.exists(asset(path))
+        return Qak.resource.exists(asset(path))
     }
 
 }

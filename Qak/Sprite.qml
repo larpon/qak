@@ -217,7 +217,7 @@ Entity {
 
         var path = getSourceStepURL(0)
 
-        if(!Resources.exists(path)) {
+        if(!Qak.resource.exists(path)) {
             Qak.warn('No resource',path,'found. Ignoring')
             error = true
             ignore = true

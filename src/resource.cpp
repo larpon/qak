@@ -1,10 +1,11 @@
-#include "resources.h"
+#include "resource.h"
 
-Resources::Resources(QObject* parent) : QObject(parent)
+Resource::Resource(QObject* parent) : QObject(parent)
 {
     _networkManager = new QNetworkAccessManager(this);
     _dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     _baseUrl = "http://example.com/resource";
+    _prefix = "";
 
     // Remember the bug where you connected multiple times in the load() function - only connect once :)
     QObject::connect(_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
@@ -18,13 +19,27 @@ Resources::Resources(QObject* parent) : QObject(parent)
     }
 }
 
-bool Resources::available(const QString &name)
+
+QString Resource::prefix()
+{
+    return _prefix;
+}
+
+void Resource::setPrefix(const QString &prefix)
+{
+    if (prefix != _prefix) {
+        _prefix = prefix;
+        emit prefixChanged();
+    }
+}
+
+bool Resource::available(const QString &name)
 {
     QFile file(resourceFile(name));
     return file.exists();
 }
 
-bool Resources::exists(const QString &path)
+bool Resource::exists(const QString &path)
 {
     QString source = QString(path);
     source = source.replace("qrc://",":");
@@ -36,13 +51,13 @@ bool Resources::exists(const QString &path)
     return file.exists();
 }
 
-void Resources::load(const QString &name)
+void Resource::load(const QString &name)
 {
     QUrl url = resourceUrl(name);
     _networkManager->get(QNetworkRequest(url));
 }
 
-bool Resources::unload(const QString &name)
+bool Resource::unload(const QString &name)
 {
     if(available(name))
     {
@@ -53,7 +68,7 @@ bool Resources::unload(const QString &name)
     return false;
 }
 
-void Resources::onNetworkReply(QNetworkReply* reply)
+void Resource::onNetworkReply(QNetworkReply* reply)
 {
     if(reply->error() == QNetworkReply::NoError)
     {
@@ -95,29 +110,46 @@ void Resources::onNetworkReply(QNetworkReply* reply)
     reply->deleteLater();
 }
 
-QString Resources::resourceFile(const QString &name)
+QString Resource::resourceFile(const QString &name)
 {
     return _dataPath+"/"+name+".rcc";
 }
 
-QUrl Resources::resourceUrl(const QString &name)
+QUrl Resource::resourceUrl(const QString &name)
 {
     return _baseUrl+"/"+name+".rcc";
 }
 
-QString Resources::resourceName(const QUrl &url)
+QString Resource::resourceName(const QUrl &url)
 {
     QFileInfo fi(url.fileName());
     return fi.baseName();
 }
 
-QString Resources::resourceName(const QString &str)
+QString Resource::resourceName(const QString &str)
 {
     QFileInfo fi(str);
     return fi.baseName();
 }
 
-QString Resources::appPath()
+QString Resource::appPath()
 {
     return QDir::currentPath();
+}
+
+QString Resource::url(const QString &relativePath)
+{
+    QString const prefixed = _prefix + relativePath;
+    QString fullPath = "";
+
+    #if defined(Q_OS_ANDROID)
+        fullPath = "assets:/" + relativePath;
+    //#elif defined(Q_OS_OSX) // Fix loading of specific files
+    //    if(relativePath.endsWith('.mp3'))
+    //        fullPath = "file://"+appPath()+'/'+relativePath;
+    #else
+        fullPath = "qrc:///"+prefixed;
+    #endif
+
+    return fullPath;
 }
