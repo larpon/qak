@@ -9,14 +9,16 @@ Item {
 
     property bool debug: false
     property bool pause: false
+
     onPauseChanged: info(pause ? 'Paused' : 'Continued')
 
     property string logPrefix: "QAK"
 
     property int assetMultiplier: 1
+    onAssetMultiplierChanged: db('Asset multiplier',assetMultiplier)
 
     property QtObject platform: Qt.platform
-    property alias resource: res
+    property QtObject resource: Resource { }
 
     Component.onCompleted: {
         var os = Qt.platform.os
@@ -28,10 +30,6 @@ Item {
         )
 
         platform.isMobile = !platform.isDesktop
-    }
-
-    Resource {
-        id: res
     }
 
     function log() {

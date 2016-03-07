@@ -57,10 +57,6 @@ QtObject {
             src = source.substring(0, source.lastIndexOf(".")) + ".x" + step + source.substring(source.lastIndexOf("."))
         }
 
-        // TODO do platform asset protocol control etc..
-        if(src && src != "")
-            src = Qak.resource.url(src)
-
         return src
     }
 

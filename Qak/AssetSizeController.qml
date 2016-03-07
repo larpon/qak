@@ -1,9 +1,8 @@
 import QtQuick 2.5
 
 import Qak 1.0
-// QML type to easen up the creation of application
+
 QtObject {
-    id: viewport
 
     property bool enabled: true
     property real offTargetPercent: 0

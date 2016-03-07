@@ -14,8 +14,10 @@ Item {
 
     property Item container: parent
 
-    property int fillMode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
+    property real containerAspect: container.width/container.height
+    onContainerAspectChanged: viewport.fix()
 
+    property int fillMode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
     onFillModeChanged: {
         viewport.fix()
     }
@@ -29,11 +31,11 @@ Item {
            fillMode = Image.Stretch
     }
 
-    readonly property real scaledWidth: width*activeScaler.xScale
-    readonly property real scaledHeight: height*activeScaler.yScale
+    readonly property real scaledWidth: viewport.width*activeScaler.xScale
+    readonly property real scaledHeight: viewport.height*activeScaler.yScale
 
     readonly property int widthDiff: viewport.scaledWidth - viewport.width
-    readonly property int heightDiff: viewport.scaledWidth - viewport.width
+    readonly property int heightDiff: viewport.scaledHeight - viewport.height
 
     property string fillModeString: ""
     onFillModeStringChanged: Qak.log('Viewport','FillMode',fillModeString)
@@ -42,9 +44,7 @@ Item {
 
     transform: activeScaler
 
-    Component.onCompleted: {
-        fix()
-    }
+    Component.onCompleted: viewport.fix()
 
     Scale {
         id: aspectScale
@@ -65,14 +65,6 @@ Item {
         id: stretchScale
         xScale: container.width/viewport.width
         yScale: container.height/viewport.height
-    }
-
-    Connections {
-        target: container
-
-        onAspectRatioChanged: {
-            viewport.fix()
-        }
     }
 
     function fix() {
