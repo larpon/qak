@@ -91,35 +91,4 @@ Item {
         }
     }
 
-    function asset(path) {
-        var assetPath = "assets/"+path
-        var filename = path.replace(/^.*[\\\/]/, '')
-
-        if(platform.isDesktop && debug) {
-            path = 'file:///home/lmp/Projects/HammerBees/HammerBeesApp/assets/'+path
-        } else {
-            if(platform.os === 'android')
-                path = "assets:/"+path
-            else if(platform.os === 'osx' && endsWith(path,'.mp3'))
-                path = 'file://'+Qak.resource.appPath()+'/'+path
-            else
-                path = 'qrc:///'+assetPath
-        }
-
-        if(!Qak.resource.exists(path)) {
-            if(filename.indexOf("*") > -1)
-                info('Wildcard asset',path)
-            else
-                error('Invalid asset',path)
-        }
-        //else
-        //    console.info('Asset',path)
-
-        return path
-    }
-
-    function assetExists(path) {
-        return Qak.resource.exists(asset(path))
-    }
-
 }

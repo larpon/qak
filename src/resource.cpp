@@ -151,5 +151,8 @@ QString Resource::url(const QString &relativePath)
         fullPath = "qrc:///"+prefixed;
     #endif
 
+    //fullPath = fullPath.replace("qrc://",":");
+    //fullPath = fullPath.replace("file://","");
+
     return fullPath;
 }
