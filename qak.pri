@@ -8,8 +8,8 @@ INCLUDEPATH += \
     $$PWD/src
 
 HEADERS += \
-    $$PWD/src/maskedmousearea.h \
     $$PWD/src/register_types.h \
+    $$PWD/src/maskedmousearea.h \
     $$PWD/src/resource.h
 
 SOURCES += \

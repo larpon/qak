@@ -4,7 +4,7 @@ import Qak 1.0
 
 pragma Singleton
 
-QtObject {
+Item {
     id : component
 
     property bool debug: false
