@@ -1,3 +1,26 @@
+/*!
+    \qmltype Entity
+
+    \since 1.0
+    \brief The Entity elements provide a way to build
+    advanced transformations on Items.
+
+    The Transform element is a base type which cannot be
+    instantiated directly. The concrete Transform types are:
+
+    \list
+      \li \l Rotation
+      \li \l Scale
+      \li \l Translate
+    \endlist
+
+    The Transform elements let you create and control advanced
+    transformations that can be configured independently using
+    specialized properties.
+
+    You can assign any number of Transform elements to an \l
+    Item. Each Transform is applied in order, one at a time.
+*/
 import QtQuick 2.5
 
 import Qak 1.0
