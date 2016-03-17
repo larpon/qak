@@ -6,6 +6,8 @@ QT += qml quick
 
 CONFIG += qt plugin c++11
 
+QML_IMPORT_PATH = $$PWD
+
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = Qak
 

@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick 2.0
 
 // NOTE maybe use https://github.com/afiore/arboreal or https://github.com/aaronj1335/t-js/blob/master/t.js someday?
 Item {

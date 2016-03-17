@@ -21,7 +21,7 @@
     You can assign any number of Transform elements to an \l
     Item. Each Transform is applied in order, one at a time.
 */
-import QtQuick 2.5
+import QtQuick 2.0
 
 import Qak 1.0
 import Qak.QtQuick 1.0

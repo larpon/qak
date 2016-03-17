@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick 2.0
 
 import Qak 1.0
 

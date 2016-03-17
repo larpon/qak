@@ -1,6 +1,6 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.2
-import QtQuick.Window 2.2
+import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Window 2.0
 
 import Qak 1.0
 
