@@ -84,8 +84,8 @@ QtObject {
         ignore = false
 
         if(source == "" || !source) {
-            mapSource = undefined
-            Qak.db('AdaptiveSource',sourceEntity,'Empty source given')
+            //mapSource = undefined
+            Qak.db('AdaptiveSource','source for target',target,'is empty')
             return
         }
 

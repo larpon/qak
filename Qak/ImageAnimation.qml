@@ -13,6 +13,8 @@ Entity {
 
     property bool enabled: true
 
+    property bool running: true
+
     property int defaultFrameDelay: 60
 
     property var sequences: []
@@ -119,7 +121,7 @@ Entity {
         //triggeredOnStart: true
 
         property bool canRun: false
-        property bool pause: imageAnimation.pause
+        property bool pause: imageAnimation.pause || !imageAnimation.running
 
         onTriggered: {
 
@@ -223,7 +225,8 @@ Entity {
             var count = 0
             var nextSource = adaptiveSource
 
-
+            // TODO fix this (async = true (which is default) doesn't work in HammerBees?)
+            state.inc.async = false
             while(Qak.resource.exists(nextSource)) {
                 state.inc.later(imageComponent, frameContainer, {'frame':(count+digit),'source':nextSource,'state':state} )
 
