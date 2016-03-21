@@ -5,7 +5,6 @@
         <file>Qak/MouseRotator.qml</file>
         <file>Qak/Qak.qml</file>
         <file>Qak/qmldir</file>
-        <file>Qak/Sprite.qml</file>
         <file>Qak/WalkMap.qml</file>
         <file>Qak/QtQuick/Image.qml</file>
         <file>Qak/QtQuick/qmldir</file>
@@ -25,5 +24,7 @@
         <file>Qak/AssetSizeController.qml</file>
         <file>Qak/View.qml</file>
         <file>Qak/QtQuick/Rectangle.qml</file>
+        <file>Qak/ImageAnimation.qml</file>
+        <file>Qak/js/incubator.js</file>
     </qresource>
 </RCC>

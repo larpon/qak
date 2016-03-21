@@ -19,6 +19,8 @@ QtObject {
 
     property bool error: false
 
+    Component.onCompleted: detectMapSource()
+
     function setMapSource(step) {
 
         var src = getSourceStepURL(step)
@@ -62,7 +64,7 @@ QtObject {
 
     onTargetChanged: {
         if(target) {
-            //Qak.db(target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            Qak.db('AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }
     }
@@ -73,7 +75,7 @@ QtObject {
         }
     }
 
-    onSourceChanged: {
+    function detectMapSource() {
 
         if(!enabled)
             return
@@ -83,14 +85,14 @@ QtObject {
 
         if(source == "" || !source) {
             mapSource = undefined
-            Qak.db(sourceEntity,'Empty source given')
+            Qak.db('AdaptiveSource',sourceEntity,'Empty source given')
             return
         }
 
         var path = getSourceStepURL(0)
 
         if(!Qak.resource.exists(path)) {
-            Qak.warn('No resource',path,'found. Ignoring')
+            Qak.warn('AdaptiveSource','No resource',path,'found. Ignoring')
             error = true
             ignore = true
             return
@@ -100,7 +102,7 @@ QtObject {
         var match = source.match('\\.(x-?.+?)\\.')
         match = match ? match[1] : false
         if(match !== false) {
-            Qak.warn('Request for specific',match,'mapped source. Ignoring auto mapping')
+            Qak.warn('AdaptiveSource','Request for specific',match,'mapped source. Ignoring auto mapping')
             mapSource = path
             ignore = true
         }
@@ -108,15 +110,19 @@ QtObject {
         mapSource = path
     }
 
+    onSourceChanged: {
+        detectMapSource()
+    }
+
     onMapSourceChanged: {
         if(!enabled || ignore || error)
             return
 
         if(target) {
-            Qak.log(target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            Qak.log('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }// else
-         //   Qak.warn('"target" property is not yet sat for',source)
+         //   Qak.warn('AdaptiveSource','"target" property is not yet sat for',source)
     }
 
     onAssetMultiplierChanged: {

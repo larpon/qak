@@ -10,8 +10,10 @@ Application 1.0 Application.qml
 DebugVisual 1.0 DebugVisual.qml
 Entity 1.0 Entity.qml
 MouseRotator 1.0 MouseRotator.qml
-Sprite 1.0 Sprite.qml
+ImageAnimation 1.0 ImageAnimation.qml
 WalkMap 1.0 WalkMap.qml
+
+Incubator 1.0 js/incubator.js
 
 # Test
 Node 1.0 Node.qml
