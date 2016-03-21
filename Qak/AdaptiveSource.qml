@@ -119,7 +119,7 @@ QtObject {
             return
 
         if(target) {
-            Qak.log('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            Qak.db('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }// else
          //   Qak.warn('AdaptiveSource','"target" property is not yet sat for',source)

@@ -17,16 +17,19 @@ Entity {
 
     property var sequences: []
 
-    readonly property var inc: Incubator.get()
-
     onSequencesChanged: {
-        Qak.log('Reading sequences')
+        Qak.db('ImageAnimation','reading sequences')
+        animControl.canRun = false
         state.sequenceNameIndex = {}
         for(var i in sequences) {
             var s = sequences[i]
-            // TODO validate
-
+            // TODO validate each sequence object
             state.sequenceNameIndex[s.name] = i
+
+            if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
+                Qak.db('ImageAnimation','reversing',s.name)
+                sequences[i].frames = sequences[i].frames.reverse()
+            }
         }
         animControl.canRun = true
     }
@@ -34,7 +37,6 @@ Entity {
     QtObject {
         id: state
 
-        property Image currentFrame
         property int currentFrameIndex: 1
         property int currentSequenceFrameIndex: 0
         property int currentFrameDelay: defaultFrameDelay
@@ -45,20 +47,44 @@ Entity {
         property var sequenceNameIndex: ({})
 
         property int totalAmountOfFrames: 0
-        property int framesStartFrom: 0
-        property int fileStringPadding: 0
-        property string replacer: ""
 
+        readonly property var inc: Incubator.get()
+
+        function reset() {
+            Qak.db('ImageAnimation','state reset')
+            currentFrameIndex = 1
+            currentSequenceFrameIndex = 0
+            currentFrameDelay = defaultFrameDelay
+            activeSequenceIndex = 0
+            activeSequence = undefined
+            sequenceNameIndex = {}
+            totalAmountOfFrames = 0
+        }
     }
 
+    function restart() {
+        reset()
 
+        state.totalAmountOfFrames = frameContainer.children.length
 
+        var tmpSequneces = sequences
+        sequences = tmpSequneces
+    }
+
+    function reset() {
+        Qak.db('ImageAnimation','reset')
+
+        state.reset()
+
+        animControl.canRun = false
+
+    }
 
     function setActiveSequence(name) {
         animControl.stop()
 
         if(!name in state.sequenceNameIndex) {
-            error('Can\'t find sequence named',name)
+            Qak.error('Can\'t find sequence named',name)
             return
         }
 
@@ -80,10 +106,7 @@ Entity {
                 state.currentFrameDelay = defaultFrameDelay
         }
 
-        //Qak.db('New active sequence',activeSequence.name)
-
-        //state.currentFrame = frameContainer.children[state.currentFrameIndex]
-        //repeater.itemAt(state.currentFrameIndex)
+        Qak.db('ImageAnimation','active sequence is now',state.activeSequence.name)
 
         animControl.restart()
     }
@@ -92,11 +115,11 @@ Entity {
         id: animControl
         interval: state.currentFrameDelay
         repeat: true
-        running: !imageAnimation.pause && !pause && canRun && frameContainer.balanced
+        running: !pause && canRun && frameContainer.balanced
         //triggeredOnStart: true
 
         property bool canRun: false
-        property bool pause: false
+        property bool pause: imageAnimation.pause
 
         onTriggered: {
 
@@ -106,27 +129,18 @@ Entity {
             }
 
             // Show the active frame
-            //Qak.db('Now playing',activeSequence.name,'at frame index',currentFrameIndex)
+            state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
+            Qak.db('ImageAnimation','playing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
 
-            //state.currentFrame = frameContainer.children[state.currentFrameIndex]
-                    //repeater.itemAt(state.currentFrameIndex)
 
             // Figure out next frame
             if('frames' in state.activeSequence && Object.prototype.toString.call( state.activeSequence.frames ) === '[object Array]') {
 
-                // TODO reverse support
-                /*
-                if('reverse' in activeSequence && activeSequence.reverse && !('isReversed' in activeSequence)) {
-                    Qak.db('Reversing')
-                    activeSequence.frames = activeSequence.frames.reverse()
-                    activeSequence.isReversed = true
-                }
-                */
+                // TODO optimize
+                var endSequenceFrameIndex = state.activeSequence.frames.length-1
 
-                var endSequenceFrameIndex = state.activeSequence.frames[state.activeSequence.frames.length-1]
-
-                if(state.currentFrameIndex == endSequenceFrameIndex) {
-                    //Qak.db('End of sequence',activeSequence.name,'at index',currentSequenceFrameIndex,'- Deciding next sequence...')
+                if(state.currentSequenceFrameIndex == endSequenceFrameIndex) {
+                    Qak.db('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
 
                     if('to' in state.activeSequence) {
                         var seqTo = state.activeSequence.to
@@ -149,12 +163,13 @@ Entity {
                         //Qak.db('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
                         setActiveSequence(nSeq)
 
+                    } else { // missing to: {...} entry - stop
+                        Qak.db('ImageAnimation','nowhere to go. Stopping...')
+                        animControl.stop()
                     }
 
                 } else
                     state.currentSequenceFrameIndex++
-
-                state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
 
             } else {
                 error('No frames. Skipping...')
@@ -197,20 +212,20 @@ Entity {
 
         if(match !== false) {
             var number = match.replace('.', '')
-            state.replacer = number
+            //state.replacer = number
 
             var padding = countPad(number)
-            state.fileStringPadding = padding
+            //state.fileStringPadding = padding
 
             var digit = parseInt(number,10)
-            state.framesStartFrom = digit
+            //state.framesStartFrom = digit
 
             var count = 0
             var nextSource = adaptiveSource
 
 
             while(Qak.resource.exists(nextSource)) {
-                inc.later(imageComponent, frameContainer, {'frame':(count+digit),'source':nextSource,'state':state} )
+                state.inc.later(imageComponent, frameContainer, {'frame':(count+digit),'source':nextSource,'state':state} )
 
                 count++
 
@@ -218,15 +233,15 @@ Entity {
                 nextSource = adaptiveSource.replace(number, next)
 
             }
-            inc.incubate()
+            state.inc.incubate()
             var lastFrameSource = adaptiveSource.replace(number, pad(count,padding))
 
             state.totalAmountOfFrames = count
 
-            Qak.log('ImageAnimation','Assuming animation source based on','"'+number+'"','has',count,'frames','first frame',adaptiveSource,'last frame',lastFrameSource,'file name has padding',padding)
+            Qak.db('ImageAnimation','Assuming animation source based on','"'+number+'"','has',count,'frames','first frame',adaptiveSource,'last frame',lastFrameSource,'file name has padding',padding)
 
         } else {
-            Qak.log('ImageAnimation','Assuming single image source')
+            Qak.warn('ImageAnimation','Assuming single image source')
             //enabled = false
             return
         }
@@ -239,16 +254,17 @@ Entity {
         QakQuick.Image {
             id: image
 
+            /*
             Component.onCompleted: {
                 Qak.log('Component Image',state,'frame',frame,'source',source)
             }
+            */
 
             width: parent.width
             height: parent.height
             //source: adaptiveSource.replace(state.replacer, pad(frame,state.fileStringPadding))
             sourceSize: Qt.size(width,height)
 
-            //opacity: image == state.currentFrame ? 1 : 0
             opacity: frame === state.currentFrameIndex ? 1 : 0
 
             property int frame: 0
@@ -268,37 +284,7 @@ Entity {
     Item {
         anchors.fill: parent
         id: frameContainer
-        property bool balanced: state.totalAmountOfFrames === children.length
+        property bool balanced: children.length > 0 && state.totalAmountOfFrames === children.length
     }
-
-    /*
-    Repeater {
-       id: repeater
-       model: state.totalAmountOfFrames
-
-       QakQuick.Image { // <- QakQuick Image
-           id: image
-
-           //asynchronous: true
-
-           Component.onCompleted: {
-               Qak.log('Repeater Image',state.totalAmountOfFrames,state.replacer,'idx',index,'framesStartFrom',state.framesStartFrom,'fileStringPadding',state.fileStringPadding)
-           }
-
-           width: imageAnimation.width
-           height: imageAnimation.height
-           source: adaptiveSource.replace(state.replacer, pad(index+state.framesStartFrom,state.fileStringPadding))
-           sourceSize: Qt.size(width,height)
-           opacity: image == state.currentFrame ? 1 : 0
-
-           // Fun "motion blur"-ish effect
-           //Behavior on opacity {
-           //    NumberAnimation { duration: 100 }
-           //}
-
-           //property int frame: index+1
-       }
-   }
-   */
 
 }
