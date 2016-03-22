@@ -24,6 +24,7 @@ ApplicationWindow {
     color: "black"
 
     property bool pause: Qak.pause
+    property bool debug: Qak.debug
 
     property bool multiMonitor: (Screen.desktopAvailableWidth > Screen.width) ? true : false
 
@@ -36,9 +37,8 @@ ApplicationWindow {
             app.showNormal()
         else
             app.showNormal()
-        Qak.log("ApplicationWindow","Screen mode",screenMode)
+        Qak.db("ApplicationWindow","onScreenModeChanged",screenMode)
     }
-
 
     function toggleScreenMode() {
         if(screenMode === "windowed")
@@ -47,5 +47,5 @@ ApplicationWindow {
            screenMode = "windowed"
     }
 
-    //onScreenChanged: Qak.log("ApplicationWindow","Screen",screen)
+    onScreenChanged: Qak.db("ApplicationWindow","onScreenChanged",screen)
 }

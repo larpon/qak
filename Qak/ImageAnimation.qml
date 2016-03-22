@@ -69,6 +69,8 @@ Entity {
 
         state.totalAmountOfFrames = frameContainer.children.length
 
+        running = true
+
         var tmpSequneces = sequences
         sequences = tmpSequneces
     }
@@ -167,7 +169,8 @@ Entity {
 
                     } else { // missing to: {...} entry - stop
                         Qak.db('ImageAnimation','nowhere to go. Stopping...')
-                        animControl.stop()
+                        imageAnimation.running = false
+                        //animControl.stop()
                     }
 
                 } else
