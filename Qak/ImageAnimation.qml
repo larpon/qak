@@ -118,6 +118,7 @@ Entity {
     Timer {
         id: animControl
         interval: state.currentFrameDelay
+        onIntervalChanged: Qak.db('ImageAnimation','animControl','interval',interval)
         repeat: true
         running: !pause && canRun && frameContainer.balanced
         //triggeredOnStart: true
@@ -134,7 +135,7 @@ Entity {
 
             // Show the active frame
             state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
-            Qak.db('ImageAnimation','playing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
+            Qak.db('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
 
 
             // Figure out next frame
@@ -196,6 +197,9 @@ Entity {
             else
                 break
         }
+        // NOTE fixes a string with all zeroes e.g.: '0000'
+        if(count == str.length)
+            count--
         return count
     }
 
@@ -216,7 +220,7 @@ Entity {
         match = match ? match[1] : false
 
         if(match !== false) {
-            var number = match.replace('.', '')
+            var number = match.replace(new RegExp('\\.', 'g'), '')
             //state.replacer = number
 
             var padding = countPad(number)
@@ -225,26 +229,26 @@ Entity {
             var digit = parseInt(number,10)
             //state.framesStartFrom = digit
 
-            var count = 0
+            var frame = 1
             var nextSource = adaptiveSource
 
             // TODO fix this (async = true (which is default) doesn't work in HammerBees?)
             state.inc.async = false
             while(Qak.resource.exists(nextSource)) {
-                state.inc.later(imageComponent, frameContainer, {'frame':(count+digit),'source':nextSource,'state':state} )
+                state.inc.later(imageComponent, frameContainer, {'frame':frame,'source':nextSource,'state':state} )
+                frame++
+                digit++
 
-                count++
-
-                var next = pad((digit+count),padding)
+                var next = pad((digit),padding)
                 nextSource = adaptiveSource.replace(number, next)
 
             }
             state.inc.incubate()
-            var lastFrameSource = adaptiveSource.replace(number, pad(count,padding))
+            var lastFrameSource = adaptiveSource.replace(number, pad(frame,padding))
 
-            state.totalAmountOfFrames = count
+            state.totalAmountOfFrames = frame-1
 
-            Qak.db('ImageAnimation','Assuming animation source based on','"'+number+'"','has',count,'frames','first frame',adaptiveSource,'last frame',lastFrameSource,'file name has padding',padding)
+            Qak.db('ImageAnimation','Assuming animation source based on match','"'+match+'"','number','"'+number+'"','has',frame,'frames','first frame',adaptiveSource,'last frame',lastFrameSource,'file name has padding',padding)
 
         } else {
             Qak.warn('ImageAnimation','Assuming single image source')
