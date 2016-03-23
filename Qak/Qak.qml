@@ -4,11 +4,10 @@ import Qak 1.0
 
 pragma Singleton
 
-Item {
+QtObject {
     id : component
 
     property bool doDebug: false
-    property bool keepDebugHistory: false
     property bool paused: false
 
     onPausedChanged: info('Qak',paused ? 'Paused' : 'Continued')
@@ -16,7 +15,7 @@ Item {
     property int assetMultiplier: 1
     onAssetMultiplierChanged: debug('Qak','asset multiplier',assetMultiplier)
 
-    property QtObject logger: Log { enabled: doDebug; history: keepDebugHistory }
+    property QtObject logger: Log { enabled: doDebug }
     property QtObject platform: Qt.platform
     property QtObject resource: Resource { }
 

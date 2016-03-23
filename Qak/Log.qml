@@ -16,6 +16,7 @@ QtObject {
         property string warnPrefix: "WARNING"
         property string debugPrefix: "DEBUG"
         property string infoPrefix: "INFO"
+        property string historyPrefix: "HISTORY"
     }
 
     property QtObject internal: QtObject {
@@ -27,7 +28,8 @@ QtObject {
             var history = internal.history
             while(history.length > 0) {
                 var args = history.shift()
-                //args.unshift("HISTORY")
+                if(settings.historyPrefix !== "")
+                    args.unshift(settings.historyPrefix)
                 console.log.apply(console, args)
             }
         }
