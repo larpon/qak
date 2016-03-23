@@ -6,10 +6,10 @@ Rectangle {
     anchors.fill: parent
     anchors.margins: -border.width
 
-    visible: Qak.debug
+    visible: Qak.doDebug
     enabled: visible
 
     color: "transparent"
-    border.color: Qak.pause ? "red" : "tomato"
+    border.color: Qak.paused ? "red" : "tomato"
     border.width: 2
 }

@@ -38,7 +38,7 @@ QtObject {
 
             src = getSourceStepURL(step)
 
-            //Qak.db('Tri',tries+1,'of',tryLimit,'to find','"x'+step+'"','resource for',source)
+            //Qak.debug('Tri',tries+1,'of',tryLimit,'to find','"x'+step+'"','resource for',source)
 
             tries++
         }
@@ -64,7 +64,7 @@ QtObject {
 
     onTargetChanged: {
         if(target) {
-            Qak.db('AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            Qak.debug('AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }
     }
@@ -85,7 +85,7 @@ QtObject {
 
         if(source == "" || !source) {
             //mapSource = undefined
-            Qak.db('AdaptiveSource','source for target',target,'is empty')
+            Qak.debug('AdaptiveSource','source for target',target,'is empty')
             return
         }
 
@@ -119,7 +119,7 @@ QtObject {
             return
 
         if(target) {
-            Qak.db('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+            Qak.debug('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }// else
          //   Qak.warn('AdaptiveSource','"target" property is not yet sat for',source)

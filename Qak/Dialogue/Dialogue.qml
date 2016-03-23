@@ -13,7 +13,7 @@ Node {
     onRunningChanged: {
         if(running) {
             sequential(node,function(item,text){
-                Qak.db('Item',item,'says',text)
+                Qak.debug('Item',item,'says',text)
             })
         }
     }

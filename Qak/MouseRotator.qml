@@ -13,7 +13,7 @@ MouseArea {
     property var target: parent
     //property variant handle: parent
 
-    property bool pause: false
+    property bool paused: false
 
     property real startRotation: 0
 
@@ -72,7 +72,7 @@ MouseArea {
     }
 
     onPressed: {
-        if(!enabled || pause)
+        if(!enabled || paused)
             return
 
         var point = mapToItem(target.parent, mouse.x, mouse.y)
@@ -83,7 +83,7 @@ MouseArea {
     }
 
     onPositionChanged: {
-        if(!enabled || pause)
+        if(!enabled || paused)
             return
 
         var point = mapToItem(target.parent, mouse.x, mouse.y)
@@ -92,10 +92,10 @@ MouseArea {
 
         rotation -= startRotation
 
-        if(!pause)
+        if(!paused)
             target.rotation = rotation
 
-        //Qak.db(rotation)
+        //Qak.debug(rotation)
 
         rotate(rotation)
     }

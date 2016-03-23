@@ -26,5 +26,6 @@
         <file>Qak/QtQuick/Rectangle.qml</file>
         <file>Qak/ImageAnimation.qml</file>
         <file>Qak/js/incubator.js</file>
+        <file>Qak/Log.qml</file>
     </qresource>
 </RCC>

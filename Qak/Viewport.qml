@@ -8,19 +8,26 @@ Item {
 
     //clip: true
 
+    QtObject {
+        id: internal
+        property string fillModeString
+        onFillModeStringChanged: Qak.debug('Viewport',fillModeString)
+    }
+
     AssetSizeController {
         offTargetPercent: ((viewport.widthDiff/viewport.width)*100)
     }
 
     property Item container: parent
-
-    property real containerAspect: container.width/container.height
+    readonly property real containerAspect: containerWidth/containerHeight
     onContainerAspectChanged: viewport.fix()
+    readonly property real containerWidth: container.width
+    onContainerWidthChanged: viewport.fix()
+    readonly property real containerHeight: container.height
+    onContainerHeightChanged: viewport.fix()
 
     property int fillMode: Image.PreserveAspectFit //Image.PreserveAspectCrop //Image.Stretch
-    onFillModeChanged: {
-        viewport.fix()
-    }
+    onFillModeChanged: viewport.fix()
 
     function toggleFillMode() {
         if(fillMode === Image.PreserveAspectFit)
@@ -36,9 +43,6 @@ Item {
 
     readonly property int widthDiff: viewport.scaledWidth - viewport.width
     readonly property int heightDiff: viewport.scaledHeight - viewport.height
-
-    property string fillModeString: ""
-    onFillModeStringChanged: Qak.log('Viewport','FillMode',fillModeString)
 
     readonly property Scale activeScaler: selectScaler(fillMode)
 
@@ -71,30 +75,31 @@ Item {
         viewport.x = 0
         viewport.y = 0
 
-        if(container.aspectRatio == viewport.aspectRatio) {
-            fillModeString = "no boxes"
+        if(containerAspect == viewport.aspectRatio) {
+            internal.fillModeString = "no boxes"
             return
         } else if(fillMode === Image.Stretch) {
-            fillModeString = "stretch"
+            internal.fillModeString = "stretch"
             return
         } else if(fillMode === Image.PreserveAspectCrop) {
             viewport.x = (container.width-(viewport.width*aspectScaleCrop.xScale))/2
             viewport.y = (container.height-(viewport.height*aspectScaleCrop.yScale))/2
-            fillModeString = "preserve aspect crop"
+            internal.fillModeString = "preserve aspect crop"
             return
         }
 
-        var nx = (container.width-(viewport.width*aspectScale.xScale))/2
-        var ny = (container.height-(viewport.height*aspectScale.yScale))/2
-
-        if(container.aspectRatio < viewport.aspectRatio) {
-            fillModeString = "preserve aspect fit (horizontal boxes)"
+        if(containerAspect < viewport.aspectRatio) {
+            var ny = (container.height-(viewport.height*aspectScale.yScale))/2
+            internal.fillModeString = "preserve aspect fit (horizontal boxes)"
             viewport.y = ny
+            return
         }
 
-        if(container.aspectRatio > viewport.aspectRatio) {
-            fillModeString = "preserve aspect fit (vertical boxes)"
+        if(containerAspect > viewport.aspectRatio) {
+            var nx = (container.width-(viewport.width*aspectScale.xScale))/2
+            internal.fillModeString = "preserve aspect fit (vertical boxes)"
             viewport.x = nx
+            return
         }
     }
 

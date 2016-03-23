@@ -2,6 +2,8 @@ module Qak
 
 singleton Qak 1.0 Qak.qml
 
+Log 1.0 Log.qml
+
 AssetSizeController 1.0 AssetSizeController.qml
 View 1.0 View.qml
 Viewport 1.0 Viewport.qml
