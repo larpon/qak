@@ -55,6 +55,7 @@ Item {
 
     // Drag'n'Drop functionality
     property bool dragReturnOnReject: true
+    readonly property bool dragging: drag.dragging
     property alias dragArea: drag
 
     property int dragDisplaceX: 0 //main.grow()
@@ -81,12 +82,15 @@ Item {
         enabled: parent.draggable && !parent.locked
         //visible: enabled
 
+        property bool dragging: false
+
         anchors.fill: entity
         anchors.margins: 0 //main.grow()
 
         drag.target: entity
 
         onPressed: {
+
             // NOTE Panic click safety
             if(!dragMoveBackAnimation.running) {
                 ox = entity.x
@@ -97,6 +101,7 @@ Item {
             entity.x = map.x-(entity.width/2)+entity.dragDisplaceX
             entity.y = map.y-(entity.height/2)+entity.dragDisplaceY
             //Qak.debug('drag started',entity)
+            dragging = true
             dragStarted(mouse)
         }
 
@@ -111,6 +116,7 @@ Item {
             }
             //Qak.debug('drag ended',entity)
             dragEnded(mouse)
+            dragging = false
         }
 
         onPositionChanged: {
