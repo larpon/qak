@@ -20,7 +20,7 @@ Entity {
     property var sequences: []
 
     onSequencesChanged: {
-        Qak.debug('ImageAnimation','reading sequences')
+        //Qak.debug('ImageAnimation','reading sequences')
         animControl.canRun = false
         state.sequenceNameIndex = {}
         for(var i in sequences) {
@@ -29,7 +29,7 @@ Entity {
             state.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
-                Qak.debug('ImageAnimation','reversing',s.name)
+                //Qak.debug('ImageAnimation','reversing',s.name)
                 sequences[i].frames = sequences[i].frames.reverse()
             }
         }
@@ -46,6 +46,8 @@ Entity {
         property int activeSequenceIndex: 0
         property var activeSequence
 
+        property string nextActiveSequence: ""
+
         property var sequenceNameIndex: ({})
 
         property int totalAmountOfFrames: 0
@@ -53,7 +55,7 @@ Entity {
         readonly property var inc: Incubator.get()
 
         function reset() {
-            Qak.debug('ImageAnimation','state reset')
+            //Qak.debug('ImageAnimation','state reset')
             currentFrameIndex = 1
             currentSequenceFrameIndex = 0
             currentFrameDelay = defaultFrameDelay
@@ -76,7 +78,7 @@ Entity {
     }
 
     function reset() {
-        Qak.debug('ImageAnimation','reset')
+        //Qak.debug('ImageAnimation','reset')
 
         state.reset()
 
@@ -110,7 +112,7 @@ Entity {
                 state.currentFrameDelay = defaultFrameDelay
         }
 
-        Qak.debug('ImageAnimation','active sequence is now',state.activeSequence.name)
+        //Qak.debug('ImageAnimation','active sequence is now',state.activeSequence.name)
 
         animControl.restart()
     }
@@ -118,7 +120,7 @@ Entity {
     Timer {
         id: animControl
         interval: state.currentFrameDelay
-        onIntervalChanged: Qak.debug('ImageAnimation','animControl','interval',interval)
+        //onIntervalChanged: Qak.debug('ImageAnimation','animControl','interval',interval)
         repeat: true
         running: !paused && canRun && frameContainer.balanced
         //triggeredOnStart: true
@@ -133,10 +135,16 @@ Entity {
                 state.activeSequence = sequences[state.activeSequenceIndex]
             }
 
+            // If instructed to set a new active sequences
+            if(state.nextActiveSequence != '') {
+                //Qak.debug('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
+                setActiveSequence(state.nextActiveSequence)
+                state.nextActiveSequence = ""
+            }
+
             // Show the active frame
             state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
-            Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
-
+            //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
 
             // Figure out next frame
             if('frames' in state.activeSequence && Object.prototype.toString.call( state.activeSequence.frames ) === '[object Array]') {
@@ -145,7 +153,7 @@ Entity {
                 var endSequenceFrameIndex = state.activeSequence.frames.length-1
 
                 if(state.currentSequenceFrameIndex == endSequenceFrameIndex) {
-                    Qak.debug('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
+                    //Qak.debug('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
 
                     if('to' in state.activeSequence) {
                         var seqTo = state.activeSequence.to
@@ -165,13 +173,12 @@ Entity {
 
                         }
 
-                        //Qak.debug('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
-                        setActiveSequence(nSeq)
+                        // Instruct state to setActiveSequence() next run
+                        state.nextActiveSequence = nSeq
 
                     } else { // missing to: {...} entry - stop
-                        Qak.debug('ImageAnimation','nowhere to go. Stopping...')
+                        //Qak.debug('ImageAnimation','nowhere to go. Stopping...')
                         imageAnimation.running = false
-                        //animControl.stop()
                     }
 
                 } else
@@ -211,7 +218,7 @@ Entity {
         //ignore = false
 
         if(!adaptiveSource || adaptiveSource === "") {
-            Qak.debug('ImageAnimation',imageAnimation,'Empty source given')
+            Qak.warn('ImageAnimation',imageAnimation,'Empty source given')
             return
         }
 
@@ -248,7 +255,7 @@ Entity {
 
             state.totalAmountOfFrames = frame-1
 
-            Qak.debug('ImageAnimation','Assuming animation source based on match','"'+match+'"','number','"'+number+'"','has',frame,'frames','first frame',adaptiveSource,'last frame',lastFrameSource,'file name has padding',padding)
+            //Qak.debug('ImageAnimation','Assuming animation source based on match','"'+match+'"','number','"'+number+'"','has',frame,'frames','first frame',adaptiveSource,'last frame',lastFrameSource,'file name has padding',padding)
 
         } else {
             Qak.warn('ImageAnimation','Assuming single image source')

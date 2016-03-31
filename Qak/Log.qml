@@ -36,7 +36,7 @@ QtObject {
     }
 
     function log() {
-        if(console) {
+        if(console && enabled) {
             // Convert arguments to a normal array
             var args = Array.prototype.slice.call(arguments);
 
@@ -49,15 +49,13 @@ QtObject {
                 args.unshift(settings.prefix)
 
             // Pass along arguments to console
-            if(enabled)
-                console.log.apply(console, args)
-            else if(history) // Record history
-                internal.history.push(args)
-        }
+            console.log.apply(console, args)
+        } else if(history) // Record history
+            internal.history.push(args)
     }
 
     function error() {
-        if(console) {
+        if(console && enabled) {
             var args = Array.prototype.slice.call(arguments)
 
             if(settings.errorPrefix !== "")
@@ -66,15 +64,14 @@ QtObject {
             if(settings.prefix !== "")
                 args.unshift(settings.prefix)
 
-            if(enabled)
-                console.error.apply(console, args)
-            else
-                internal.history.push(args)
-        }
+            console.error.apply(console, args)
+
+        } else if(history)
+            internal.history.push(args)
     }
 
     function debug() {
-        if(console) {
+        if(console && enabled) {
             var args = Array.prototype.slice.call(arguments)
 
             if(settings.debugPrefix !== "")
@@ -83,16 +80,15 @@ QtObject {
             if(settings.prefix !== "")
                 args.unshift(settings.prefix)
 
-            if(enabled)
-                console.debug.apply(console, args)
-            else if(history)
-                internal.history.push(args)
+            console.debug.apply(console, args)
 
-        }
+        } else if(history)
+            internal.history.push(args)
+
     }
 
     function warn() {
-        if(console) {
+        if(console && enabled) {
             var args = Array.prototype.slice.call(arguments)
 
             if(settings.warnPrefix !== "")
@@ -101,15 +97,14 @@ QtObject {
             if(settings.prefix !== "")
                 args.unshift(settings.prefix)
 
-            if(enabled)
-                console.warn.apply(console, args)
-            else if(history)
-                internal.history.push(args)
-        }
+            console.warn.apply(console, args)
+
+        } else if(history)
+            internal.history.push(args)
     }
 
     function info() {
-        if(console) {
+        if(console && enabled) {
             var args = Array.prototype.slice.call(arguments)
 
             if(settings.infoPrefix !== "")
@@ -118,11 +113,10 @@ QtObject {
             if(settings.prefix !== "")
                 args.unshift(settings.prefix)
 
-            if(enabled)
-                console.info.apply(console, args)
-            else if(history)
-                internal.history.push(args)
-        }
+            console.info.apply(console, args)
+
+        } else if(history)
+            internal.history.push(args)
     }
 
 }
