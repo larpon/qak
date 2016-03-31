@@ -185,7 +185,8 @@ Entity {
                     state.currentSequenceFrameIndex++
 
             } else {
-                error('No frames. Skipping...')
+                Qak.error('No frames. Skipping...')
+                imageAnimation.running = false
             }
 
         }
