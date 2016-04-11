@@ -133,6 +133,12 @@ Entity {
             // For inital frame
             if(!state.activeSequence) {
                 state.activeSequence = sequences[state.activeSequenceIndex]
+
+                if(state.activeSequence === undefined) {
+                    Qak.error('No active sequence can be set. Stopping...')
+                    imageAnimation.running = false
+                    return
+                }
             }
 
             // If instructed to set a new active sequences
