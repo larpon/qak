@@ -27,5 +27,6 @@
         <file>Qak/ImageAnimation.qml</file>
         <file>Qak/js/incubator.js</file>
         <file>Qak/Log.qml</file>
+        <file>Qak/Mover.qml</file>
     </qresource>
 </RCC>
