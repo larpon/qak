@@ -184,6 +184,7 @@ Item {
     function startMoving() {
         mover.startMoving()
     }
+
     Mover {
         id: mover
         locked: parent.locked
