@@ -40,17 +40,28 @@ Item {
     property string adaptiveSource: ""
     property alias source: adaptive.source
 
+    property Item viewport: findViewport(entity)
+
+    function findViewport(item) {
+        if(item && item.toString().startsWith('Viewport_QMLTYPE') && 'qakViewport' in item && item.qakViewport)
+            return item
+        else if(item && item.parent)
+            return findViewport(item.parent)
+        else
+            return null
+    }
+
     AdaptiveSource {
         id: adaptive
         enabled: adaptSource
         target: entity
         targetSourceProperty: "adaptiveSource"
+        assetMultiplierSource: (viewport && 'assetMultiplier' in viewport) ? viewport : null
     }
 
     Item {
         id: container
         anchors.fill: parent
-
     }
 
     // Drag'n'Drop functionality
@@ -158,7 +169,6 @@ Item {
     }
 
     // Movement
-
     function moveTo(x,y) {
         mover.moveTo(x,y)
     }

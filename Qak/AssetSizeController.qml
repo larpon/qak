@@ -4,12 +4,13 @@ import Qak 1.0
 
 QtObject {
 
+    property bool global: false
     property bool enabled: true
     property real offTargetPercent: 0
     property real thresholdPercent: 25.0
 
     readonly property int assetMultiplier: (((Math.floor(offTargetPercent / thresholdPercent) * thresholdPercent)+thresholdPercent)/thresholdPercent)
-    onAssetMultiplierChanged: if(enabled) Qak.assetMultiplier = assetMultiplier
+    onAssetMultiplierChanged: if(enabled && global) Qak.assetMultiplier = assetMultiplier
 
     // NOTE Keeping for reference calculations
     // This is the very base for calculating the suggested asset size

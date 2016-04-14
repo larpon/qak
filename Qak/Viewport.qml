@@ -6,15 +6,19 @@ import Qak.QtQuick 1.0
 Item {
     id: viewport
 
+    // bool to identify this object as a Qak Viewport
+    readonly property bool qakViewport: true
     //clip: true
 
     QtObject {
         id: internal
         property string fillModeString
-        onFillModeStringChanged: Qak.debug('Viewport',fillModeString)
+        onFillModeStringChanged: Qak.debug('Viewport',viewport,fillModeString)
     }
 
+    readonly property alias assetMultiplier: localAssetSizeController.assetMultiplier
     AssetSizeController {
+        id: localAssetSizeController
         offTargetPercent: ((viewport.widthDiff/viewport.width)*100)
     }
 

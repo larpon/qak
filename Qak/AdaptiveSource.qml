@@ -9,8 +9,9 @@ QtObject {
     property string source: ""
     property string mapSource
 
+    property Item assetMultiplierSource
     property int assetMultiplierStep: 2
-    readonly property int assetMultiplier: Math.floor(Qak.assetMultiplier / assetMultiplierStep) * assetMultiplierStep
+    readonly property int assetMultiplier: Math.floor((assetMultiplierSource ? assetMultiplierSource.assetMultiplier : Qak.assetMultiplier) / assetMultiplierStep) * assetMultiplierStep
 
     property Item target
     property string targetSourceProperty: "source"
