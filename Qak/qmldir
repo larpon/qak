@@ -17,6 +17,7 @@ ImageAnimation 1.0 ImageAnimation.qml
 WalkMap 1.0 WalkMap.qml
 
 Incubator 1.0 js/incubator.js
+Utility 1.0 js/utility.js
 
 # Test
 Node 1.0 Node.qml

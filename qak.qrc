@@ -28,5 +28,6 @@
         <file>Qak/js/incubator.js</file>
         <file>Qak/Log.qml</file>
         <file>Qak/Mover.qml</file>
+        <file>Qak/js/utility.js</file>
     </qresource>
 </RCC>
