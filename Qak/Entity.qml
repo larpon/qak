@@ -43,7 +43,7 @@ Item {
     property Item viewport: findViewport(entity)
 
     function findViewport(item) {
-        if(item && item.toString().startsWith('Viewport_QMLTYPE') && 'qakViewport' in item && item.qakViewport)
+        if(item && 'qakViewport' in item && item.qakViewport)
             return item
         else if(item && item.parent)
             return findViewport(item.parent)

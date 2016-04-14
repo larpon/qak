@@ -25,9 +25,10 @@
         <file>Qak/View.qml</file>
         <file>Qak/QtQuick/Rectangle.qml</file>
         <file>Qak/ImageAnimation.qml</file>
-        <file>Qak/js/incubator.js</file>
         <file>Qak/Log.qml</file>
         <file>Qak/Mover.qml</file>
-        <file>Qak/js/utility.js</file>
+        <file>Qak/Tools/incubator.js</file>
+        <file>Qak/Tools/aid.js</file>
+        <file>Qak/Tools/qmldir</file>
     </qresource>
 </RCC>
