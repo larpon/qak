@@ -30,5 +30,7 @@
         <file>Qak/Tools/incubator.js</file>
         <file>Qak/Tools/aid.js</file>
         <file>Qak/Tools/qmldir</file>
+        <file>Qak/Tools/Console.qml</file>
+        <file>Qak/Tools/console.js</file>
     </qresource>
 </RCC>

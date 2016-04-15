@@ -2,3 +2,6 @@ module Qak.Tools
 
 Incubator 1.0 incubator.js
 Aid 1.0 aid.js
+
+Console 1.0 Console.qml
+# internal MyPrivateType MyPrivateType.qml
