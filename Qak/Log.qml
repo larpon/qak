@@ -36,59 +36,55 @@ QtObject {
     }
 
     function log() {
-        if(console && enabled) {
-            // Convert arguments to a normal array
-            var args = Array.prototype.slice.call(arguments);
+        // Convert arguments to a normal array
+        var args = Array.prototype.slice.call(arguments);
 
-            // Prepend context log prefix
-            if(settings.logPrefix !== "")
-                args.unshift(settings.logPrefix)
+        // Prepend context log prefix
+        if(settings.logPrefix !== "")
+            args.unshift(settings.logPrefix)
 
-            // Prepend general log prefix
-            if(settings.prefix !== "")
-                args.unshift(settings.prefix)
+        // Prepend general log prefix
+        if(settings.prefix !== "")
+            args.unshift(settings.prefix)
 
-            // Pass along arguments to console
+        if(console && enabled) // Pass along arguments to console
             console.log.apply(console, args)
-        } else if(history) // Record history
+        else if(history) // Record history
             internal.history.push(args)
     }
 
     function error() {
-        if(console && enabled) {
-            var args = Array.prototype.slice.call(arguments)
+        var args = Array.prototype.slice.call(arguments)
 
-            if(settings.errorPrefix !== "")
-                args.unshift(settings.errorPrefix)
+        if(settings.errorPrefix !== "")
+            args.unshift(settings.errorPrefix)
 
-            if(settings.prefix !== "")
-                args.unshift(settings.prefix)
+        if(settings.prefix !== "")
+            args.unshift(settings.prefix)
 
+        if(console && enabled)
             console.error.apply(console, args)
-
-        } else if(history)
+        else if(history)
             internal.history.push(args)
+
     }
 
     function debug() {
-        if(console && enabled) {
-            var args = Array.prototype.slice.call(arguments)
+        var args = Array.prototype.slice.call(arguments)
 
-            if(settings.debugPrefix !== "")
-                args.unshift(settings.debugPrefix)
+        if(settings.debugPrefix !== "")
+            args.unshift(settings.debugPrefix)
 
-            if(settings.prefix !== "")
-                args.unshift(settings.prefix)
+        if(settings.prefix !== "")
+            args.unshift(settings.prefix)
 
+        if(console && enabled)
             console.debug.apply(console, args)
-
-        } else if(history)
+        else if(history)
             internal.history.push(args)
-
     }
 
     function warn() {
-        if(console && enabled) {
             var args = Array.prototype.slice.call(arguments)
 
             if(settings.warnPrefix !== "")
@@ -97,25 +93,24 @@ QtObject {
             if(settings.prefix !== "")
                 args.unshift(settings.prefix)
 
-            console.warn.apply(console, args)
-
-        } else if(history)
-            internal.history.push(args)
+            if(console && enabled)
+                console.warn.apply(console, args)
+            else if(history)
+                internal.history.push(args)
     }
 
     function info() {
-        if(console && enabled) {
-            var args = Array.prototype.slice.call(arguments)
+        var args = Array.prototype.slice.call(arguments)
 
-            if(settings.infoPrefix !== "")
-                args.unshift(settings.infoPrefix)
+        if(settings.infoPrefix !== "")
+            args.unshift(settings.infoPrefix)
 
-            if(settings.prefix !== "")
-                args.unshift(settings.prefix)
+        if(settings.prefix !== "")
+            args.unshift(settings.prefix)
 
+        if(console && enabled)
             console.info.apply(console, args)
-
-        } else if(history)
+        else if(history)
             internal.history.push(args)
     }
 
