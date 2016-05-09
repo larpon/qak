@@ -2,7 +2,7 @@ TEMPLATE = lib
 
 TARGET = qak
 
-QT += qml quick
+QT += qml quick widgets
 
 CONFIG += qt plugin c++11
 
