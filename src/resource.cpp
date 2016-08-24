@@ -33,6 +33,28 @@ void Resource::setPrefix(const QString &prefix)
     }
 }
 
+bool Resource::copy(const QString &source, const QString &destination)
+{
+    QString src = QString(source);
+    src = src.replace("qrc://",":");
+    src = src.replace("file://","");
+
+    // TODO check that destination is not qrc
+    QString dest = QString(destination);
+    dest = dest.replace("qrc://",":");
+    dest = dest.replace("file://","");
+
+    QFileInfo dest_info = QFileInfo(dest);
+
+    QDir destdir(dest_info.path());
+    if (!destdir.exists()) {
+        destdir.mkpath(dest_info.path());
+        qDebug() << "Created data directory" << dest_info.path();
+    }
+
+    return QFile::copy(src , dest);
+}
+
 bool Resource::available(const QString &name)
 {
     QFile file(resourceFile(name));
@@ -135,6 +157,11 @@ QString Resource::resourceName(const QString &str)
 QString Resource::appPath()
 {
     return QDir::currentPath();
+}
+
+QString Resource::dataPath()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 }
 
 QString Resource::url(const QString &relativePath)
