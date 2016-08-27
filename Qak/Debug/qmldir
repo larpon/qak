@@ -1,0 +1,4 @@
+module Qak.Debug
+DebugServer 1.0 DebugServer.qml
+DebugClient 1.0 DebugClient.qml
+depends Qak 1.0

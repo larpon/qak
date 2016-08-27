@@ -32,5 +32,8 @@
         <file>Qak/Tools/qmldir</file>
         <file>Qak/Tools/Console.qml</file>
         <file>Qak/Tools/console.js</file>
+        <file>Qak/Debug/qmldir</file>
+        <file>Qak/Debug/DebugServer.qml</file>
+        <file>Qak/Debug/DebugClient.qml</file>
     </qresource>
 </RCC>
