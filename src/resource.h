@@ -40,6 +40,7 @@ class Resource : public QObject
         bool available(const QString &name);
         bool exists(const QString &name);
         bool copy(const QString &source, const QString &destination);
+        bool clearDataPath();
         QString appPath();
         QString dataPath();
         QString url(const QString &relativePath);

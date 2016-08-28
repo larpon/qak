@@ -33,6 +33,25 @@ void Resource::setPrefix(const QString &prefix)
     }
 }
 
+bool Resource::available(const QString &name)
+{
+    QFile file(resourceFile(name));
+    return file.exists();
+}
+
+bool Resource::exists(const QString &path)
+{
+    QString source = QString(path);
+    source = source.replace("qrc://",":");
+    source = source.replace("file://","");
+
+    QFile file(source);
+    //qDebug() << "Checking" << source;
+    //QFile file(QString(path).replace("qrc://",":"));
+    return file.exists();
+}
+
+
 bool Resource::copy(const QString &source, const QString &destination)
 {
     QString src = QString(source);
@@ -55,22 +74,10 @@ bool Resource::copy(const QString &source, const QString &destination)
     return QFile::copy(src , dest);
 }
 
-bool Resource::available(const QString &name)
+bool Resource::clearDataPath()
 {
-    QFile file(resourceFile(name));
-    return file.exists();
-}
-
-bool Resource::exists(const QString &path)
-{
-    QString source = QString(path);
-    source = source.replace("qrc://",":");
-    source = source.replace("file://","");
-
-    QFile file(source);
-    //qDebug() << "Checking" << source;
-    //QFile file(QString(path).replace("qrc://",":"));
-    return file.exists();
+    QDir dir(dataPath());
+    return dir.removeRecursively();
 }
 
 void Resource::load(const QString &name)
