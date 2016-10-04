@@ -24,7 +24,8 @@ HEADERS += \
 
 DISTFILES = qmldir \
     qak.pri \
-    README.md
+    README.md \
+    LICENSE
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir

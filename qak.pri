@@ -20,4 +20,5 @@ RESOURCES += \
     $$PWD/qak.qrc
 
 DISTFILES += \
-    $$PWD/README.md
+    $$PWD/README.md \
+    $$PWD/LICENSE
