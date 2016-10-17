@@ -4,8 +4,8 @@
 #include <QQmlEngine>
 #include <QJSEngine>
 
-#include "resource.h"
-#include "maskedmousearea.h"
+#include "src/resource.h"
+#include "src/maskedmousearea.h"
 
 #include "qqml.h"
 
