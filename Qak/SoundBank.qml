@@ -11,6 +11,7 @@ Item {
 
     property var incubator: Incubator.get()
     property var bank: ({})
+    //property var groups: ({ 'all': {} })
 
     readonly property int infinite: SoundEffect.Infinite
     property int loops: 0
