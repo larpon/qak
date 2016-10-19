@@ -15,6 +15,7 @@ MouseRotator 1.0 MouseRotator.qml
 Mover 1.0 Mover.qml
 ImageAnimation 1.0 ImageAnimation.qml
 WalkMap 1.0 WalkMap.qml
+SoundBank 1.0 SoundBank.qml
 
 # Test
 Node 1.0 Node.qml

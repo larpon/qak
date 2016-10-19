@@ -6,8 +6,6 @@ import Qak.Tools 1.0
 
 import "."
 
-import "../utility.js" as Utility
-
 Item {
     id: soundBank
 
@@ -33,12 +31,12 @@ Item {
     function add(tag, path) {
 
         if(tag === '') {
-            App.warn('SoundBank','Tag is empty for sound "'+path+'". Not added...')
+            Qak.warn('SoundBank','Tag is empty for sound "'+path+'". Not added...')
             return
         }
 
         if(!Qak.resource.exists(path)) {
-            App.warn('SoundBank','Seems like',path,'sound file doesn\'t exist? Not added...')
+            Qak.warn('SoundBank','Seems like',path,'sound file doesn\'t exist? Not added...')
             return
         }
 
@@ -46,10 +44,10 @@ Item {
             var sound = bank[tag]
             if('source' in sound) {
                 if(sound.source === path) {
-                    //App.info('SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
+                    //Qak.info('SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
                     return
                 } else
-                    App.info('SoundBank','Updating',tag,'from',sound.source,'to',path)
+                    Qak.info('SoundBank','Updating',tag,'from',sound.source,'to',path)
             }
         }
 
@@ -95,7 +93,7 @@ Item {
     }
 
     function clear() {
-        App.info('SoundBank','clearing bank')
+        Qak.info('SoundBank','clearing bank')
         for(var tag in bank) {
             bank[tag].destroy()
         }
@@ -107,17 +105,17 @@ Item {
             var sound = bank[object.tag]
             if('source' in sound) {
                 if(sound.source === object.source) {
-                    App.info('SoundBank','Skipping',object.tag,'with sound',object.source,'it\'s already loaded')
+                    Qak.info('SoundBank','Skipping',object.tag,'with sound',object.source,'it\'s already loaded')
                     object.destroy()
                     return
                 } else {
-                    App.info('SoundBank','Updating',object.tag,'from',sound.source,'to',object.source)
+                    Qak.info('SoundBank','Updating',object.tag,'from',sound.source,'to',object.source)
                     sound.destroy()
                 }
             }
         }
 
-        App.debug('SoundBank',soundBank,'Loaded',object.tag)
+        Qak.debug('SoundBank',soundBank,'Loaded',object.tag)
         bank[object.tag] = object
         loaded(object.tag , object)
     }
@@ -168,7 +166,7 @@ Item {
             var sound
             if(tag && tag in bank) {
                 sound = bank[tag]
-                if(Utility.isInteger(loops))
+                if(Aid.isInteger(loops))
                     sound.loops = loops
                 else
                     sound.loops = soundBank.loops
@@ -196,7 +194,7 @@ Item {
         // NOTE if index is out of bounds play() will play the whole bank
         var tag = keys[getRandomInt(0,keys.length-1)]
 
-        //App.debug('SoundBank playRandom',tag)
+        //Qak.debug('SoundBank playRandom',tag)
         play(tag)
     }
 
