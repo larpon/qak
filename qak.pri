@@ -1,4 +1,5 @@
-QT += qml quick widgets
+QT += qml quick multimedia
+!no_desktop: QT += widgets
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH += $$PWD
@@ -8,7 +9,7 @@ INCLUDEPATH += \
     $$PWD/src
 
 HEADERS += \
-    $$PWD/src/register_types.h \
+    $$PWD/qak.h \
     $$PWD/src/maskedmousearea.h \
     $$PWD/src/resource.h
 
