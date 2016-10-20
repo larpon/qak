@@ -20,6 +20,8 @@ Entity {
 
     property var sequences: []
 
+    signal frame(int frame, string sequenceName)
+
     onSequencesChanged: {
         //Qak.debug('ImageAnimation','reading sequences')
         animControl.canRun = false
@@ -151,6 +153,7 @@ Entity {
 
             // Show the active frame
             state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
+            frame(state.currentFrameIndex, state.activeSequence.name)
             //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
 
             // Figure out next frame
