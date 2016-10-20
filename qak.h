@@ -4,6 +4,7 @@
 #include <QQmlEngine>
 #include <QJSEngine>
 
+#include "src/store.h"
 #include "src/resource.h"
 #include "src/maskedmousearea.h"
 
@@ -28,6 +29,7 @@ public:
     RegisterHelper() {
         qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
         qmlRegisterType<Resource>("Qak", 1, 0, "Resource");
+        qmlRegisterType<Store>("Qak", 1, 0, "Store");
         //qmlRegisterSingletonType<Resource>("Qak", 1, 0, "Resources", ResourceQmlInstance);
     }
 };
