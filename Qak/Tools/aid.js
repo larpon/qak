@@ -140,6 +140,11 @@ function randomProperty(obj) {
     return obj[keys[ keys.length * Math.random() << 0]];
 }
 
+function randomFromArray(arr) {
+    var key = Math.floor(Math.random() * arr.length);
+    return arr[key];
+}
+
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex ;
 
