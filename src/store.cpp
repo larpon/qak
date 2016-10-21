@@ -158,7 +158,7 @@ void Store::save()
             QVariant value = this->property(name);
 
             #ifdef QT_DEBUG
-            qDebug() << "Store" << _name << "property" << name << "stored" << value.typeName() << ":" << value;
+            qDebug() << "Store" << _name << "property" << name << "stored" << value;
             #endif
 
             QJsonValue jValue;
