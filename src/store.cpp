@@ -203,6 +203,7 @@ void Store::load()
         #ifdef QT_DEBUG
         qWarning() << "Store" << _name << "warning: Couldn't load" << path;
         #endif
+        emit error("Could not load store from: \""+path+"\"");
         //_loaded = true;
         //emit isLoadedChanged();
         //emit loaded();
@@ -253,7 +254,7 @@ void Store::clear()
     if(_name == "")
     {
         qCritical() << "Store error: Property \"name\" not set";
-        emit error("Store error: Property \"name\" not set");
+        emit error("Property \"name\" not set");
         return;
     }
 
@@ -275,7 +276,7 @@ void Store::clear(const QString &name)
     if(name == "")
     {
         qCritical() << "Store error: Argument \"name\" not set";
-        emit error("Store error: Argument \"name\" not set");
+        emit error("Argument \"name\" not set");
         return;
     }
 
