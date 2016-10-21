@@ -36,5 +36,6 @@
         <file>Qak/Debug/DebugServer.qml</file>
         <file>Qak/Debug/DebugClient.qml</file>
         <file>Qak/SoundBank.qml</file>
+        <file>Qak/RoundMouseArea.qml</file>
     </qresource>
 </RCC>
