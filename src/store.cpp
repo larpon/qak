@@ -157,6 +157,9 @@ void Store::save()
         if(!blacklisted) {
             QVariant value = this->property(name);
 
+            if(value.canConvert<QJSValue>())
+                value = value.value<QJSValue>().toVariant();
+
             #ifdef QT_DEBUG
             qDebug() << "Store" << _name << "property" << name << "stored" << value;
             #endif
