@@ -319,7 +319,7 @@ void Store::_ensureStorePath()
             emit error("Failed creating store directory "+_store_path);
         #ifdef QT_DEBUG
         else
-            qDebug() << "Created store directory" << _store_path;
+            qDebug() << "Store created directory" << _store_path;
         #endif
     }
 
