@@ -42,6 +42,8 @@ Item {
 
     property Item viewport: findViewport(entity)
 
+    signal clicked(var mouse)
+
     function findViewport(item) {
         if(item && 'qakViewport' in item && item.qakViewport)
             return item
@@ -135,6 +137,8 @@ Item {
             dragged(mouse,map)
         }
 
+        onClicked: entity.clicked(mouse)
+
         function goBack() {
             if(dragReturnOnReject) {
                 dragMoveBackAnimation.running = true
@@ -164,6 +168,8 @@ Item {
     MouseRotator {
         id: rotator
         enabled: parent.rotatable && !parent.locked
+
+        onClicked: entity.clicked(mouse)
 
         anchors.fill: parent
     }
