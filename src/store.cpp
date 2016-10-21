@@ -23,7 +23,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
         sub += QGuiApplication::applicationVersion() + QDir::separator() ;
 
     if(sub == "") {
-         qWarning() << "Store warning: Couldn't resolve" << sub << "for storing values. Using generic: \"Qak\"";
+         qWarning() << "Store warning: Couldn't resolve" << sub << "for storing values. Using generic directory: \"Qak\"";
          sub = "Qak";
     }
 
@@ -157,7 +157,7 @@ void Store::save()
             QVariant value = this->property(name);
 
             #ifdef QT_DEBUG
-            qDebug() << "Store" << _name << "storing property:" << name << value.typeName() << ":" << value;
+            qDebug() << "Store" << _name << "property" << name << "stored" << value.typeName() << ":" << value;
             #endif
 
             QJsonValue jValue;
@@ -233,7 +233,7 @@ void Store::load()
             {
                 this->setProperty(name,value.toVariant());
                 #ifdef QT_DEBUG
-                qDebug() << "Store" << _name << "property loaded" << name << " : " << value;
+                qDebug() << "Store" << _name << "property" << name << "loaded" << value;
                 #endif
 
             }
