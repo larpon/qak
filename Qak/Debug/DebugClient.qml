@@ -1,3 +1,4 @@
+import QtQuick 2.0
 import QtWebSockets 1.0
 
 WebSocket {
@@ -12,15 +13,53 @@ WebSocket {
     signal connectionClosing
     signal connecting
     signal connected
+    signal authorized(string token)
 
     signal response(var response)
 
     property var watches: ({})
+    property var watchCallQueue: []
 
-    function watch(object, prop, tag) {
-        tag = tag || prop
-        var uprop = prop.charAt(0).toUpperCase() + prop.slice(1)
+    property bool online: false
 
+    onAuthorized: {
+        for(var i in watchCallQueue) {
+            var o = watchCallQueue.pop()
+            _watch(o.object,o.tag)
+        }
+    }
+
+    function watch(object, tag) {
+        tag = tag || object.toString()
+
+        if(!online) {
+            console.log('pushing',object,tag)
+            watchCallQueue.push({ object: object, tag: tag })
+            return
+        }
+
+        _watch(object,tag)
+    }
+
+    function _watch(object, tag) {
+
+        var properties = {}
+
+        var data = []
+
+        for(var p in object) {
+            properties[p] = typeof object[p]
+        }
+
+        for(var i in object.data) {
+            data.push(object.data[i].toString())
+        }
+
+        log(auth)
+        var request = { watch: object.toString(), tag: tag, properties: properties, data: data  }
+        send(request)
+
+        /*
         var w = function() {
             var request = { watch: true, tag: tag, value: object[prop] }
             send(request)
@@ -28,6 +67,8 @@ WebSocket {
         watches[object.toString()+tag] = w
 
         object['on'+uprop+'Changed'].connect(w)
+        */
+
     }
 
     /*
@@ -43,6 +84,16 @@ WebSocket {
         })
     }
     */
+
+    function loop(object,callback) {
+        if(object !== undefined && object !== null) {
+            var children = object.children;
+            for(var i in children) {
+                callback(children[i]);
+                loop(children[i],callback);
+            }
+        }
+    }
 
     function extend(target, source) {
         target = target || {}
@@ -69,6 +120,10 @@ WebSocket {
     }
 
     function log(message) {
+
+        if (!(typeof message === 'string' || message instanceof String))
+            message = JSON.stringify(message)
+
         var request = { type: 'log', log: message }
         send(request)
     }
@@ -100,6 +155,7 @@ WebSocket {
 
             if('auth' in message) {
                 socket.auth = message.auth
+                authorized(message.auth)
                 return
             }
             response(message)
@@ -116,18 +172,22 @@ WebSocket {
         return true
     }
 
-    onTextMessageReceived: handleResponse(message)
+    onTextMessageReceived: {
+        handleResponse(message)
+    }
 
     onStatusChanged: {
         if (status === WebSocket.Error) {
             connectionError(socket.errorString)
         } else if (status === WebSocket.Closed) {
+            online = false
             connectionClosed()
         } else if (status === WebSocket.Closing) {
             connectionClosing()
         } else if (status === WebSocket.Connecting) {
             connecting()
         } else if (status === WebSocket.Open) {
+            online = true
             connected()
         } else
             console.error('Qak.Debug.DebugClient','Unknown websocket status',status)
@@ -139,5 +199,6 @@ WebSocket {
     }
 
     onConnectionError: console.error('Connection error',url,errorString)
+
 
 }
