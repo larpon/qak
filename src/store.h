@@ -68,6 +68,7 @@ class Store : public QQuickItem
         bool _loaded;
 
         void _ensureStorePath();
+        void _ensurePath(const QString& path);
 };
 
 #endif // STORE_H

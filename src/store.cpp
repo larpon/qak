@@ -96,7 +96,7 @@ void Store::setName(const QString &n)
 {
     if (n != _name) {
         _name = n;
-        emit nameChanged();
+
         /*
         if( _autoLoad ) {
             #ifdef QT_DEBUG
@@ -105,6 +105,18 @@ void Store::setName(const QString &n)
             load();
         }
         */
+        if(_name.contains("/")) {
+            QStringList parts = _name.split('/');
+            if(!parts.isEmpty())
+                parts.removeLast();
+            QString new_path = _store_path + QDir::separator() + parts.join(QDir::separator());
+            _ensurePath(new_path);
+            #ifdef QT_DEBUG
+            qDebug() << "Store using name fragments as paths" << _name << new_path;
+            #endif
+
+        }
+        emit nameChanged();
     }
 }
 /*
@@ -205,12 +217,12 @@ void Store::load()
     else
     {
         #ifdef QT_DEBUG
-        qWarning() << "Store" << _name << "warning: Couldn't load" << path;
+        qWarning() << "Store" << _name << "warning: Couldn't load from" << path;
         #endif
         emit error("Could not load store from: \""+path+"\"");
-        //_loaded = true;
-        //emit isLoadedChanged();
-        //emit loaded();
+        _loaded = true;
+        emit isLoadedChanged();
+        emit loaded();
         return;
     }
 
@@ -318,13 +330,18 @@ void Store::_ensureStorePath()
     if(_name == "")
         return;
 
-    QDir dir(_store_path);
+    _ensurePath(_store_path);
+}
+
+void Store::_ensurePath(const QString &path)
+{
+    QDir dir(path);
     if (!dir.exists()) {
         if(!dir.mkpath("."))
-            emit error("Failed creating store directory "+_store_path);
+            emit error("Failed creating store directory "+path);
         #ifdef QT_DEBUG
         else
-            qDebug() << "Store created directory" << _store_path;
+            qDebug() << "Store created directory" << path;
         #endif
     }
 
