@@ -67,9 +67,10 @@ Item {
     }
 
     // Drag'n'Drop functionality
+    property alias dragger: drag
     property bool dragReturnOnReject: true
     readonly property bool dragging: drag.dragging
-    property alias dragArea: drag
+    property alias dragReturnAnimation: dragMoveBackAnimation
 
     property int dragDisplaceX: 0 //main.grow()
     property int dragDisplaceY: 0 //main.grow()
@@ -165,6 +166,7 @@ Item {
     Drag.hotSpot.y: height / 2
 
     // Mouse rotate functionality
+    property alias rotator: rotator
     MouseRotator {
         id: rotator
         enabled: parent.rotatable && !parent.locked
@@ -191,6 +193,7 @@ Item {
         mover.startMoving()
     }
 
+    property alias mover: mover
     Mover {
         id: mover
         locked: parent.locked
