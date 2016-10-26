@@ -10,6 +10,9 @@ Item {
 
     property point anchorPoint: Qt.point(0,0)
 
+    property double speedModifier: 1
+    property int duration: 0
+
     property var moveQueue: []
 
     function moveTo(x,y) {
@@ -54,7 +57,11 @@ Item {
             pp = p
         }
         //Qak.debug('Travel distance',d)
-        pathAnim.duration = d*2
+        pathAnim.duration = d*2*speedModifier
+        if(duration > 0) {
+            pathAnim.duration = duration
+        }
+
         if(list.length > 0) {
             path.pathElements = list
             pathAnim.start()
