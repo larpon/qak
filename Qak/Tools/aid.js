@@ -7,12 +7,24 @@ function findRoot(item) {
 }
 */
 
-function loop(object,callback) {
+function loopData(object,callback) {
     if(object !== undefined && object !== null) {
-        var children = object.children;
+        if('data' in object) {
+            var data = object.data
+            for(var i in data) {
+                callback(data[i])
+                loopData(data[i],callback)
+            }
+        }
+    }
+}
+
+function loopChildren(object,callback) {
+    if(object !== undefined && object !== null) {
+        var children = object.children
         for(var i in children) {
-            callback(children[i]);
-            loop(children[i],callback);
+            callback(children[i])
+            loopChildren(children[i],callback)
         }
     }
 }
