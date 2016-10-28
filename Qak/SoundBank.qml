@@ -293,21 +293,21 @@ Item {
 
         // Play tag from group specific
         if(tag && group && group in groups && tag in groups[group]) {
-            playSound(groups[group][tag])
+            playSound(groups[group][tag],loops)
             return
         }
 
         // Play tag from bank
         if(tag in bank) {
-            playSound(bank[tag])
+            playSound(bank[tag],loops)
             return
         }
 
         // Play tag from group if found
         if(tag && group === undefined) {
             for(group in groups) {
-                if(tag in groups[group]) {
-                    playSound(groups[group][tag])
+                if(groups[group] && tag in groups[group]) {
+                    playSound(groups[group][tag],loops)
                     return
                 }
             }
@@ -387,12 +387,44 @@ Item {
 
     // BUG TODO Ugly horrible fix to let buzzer fix it's windows only sound stutter bug
     property var stop: function (tag) {
-        if(tag && tag in bank)
-            bank[tag].stop()
-        else {
-            for(var i in bank) {
+
+        var i, group
+
+        // Stop everything, also the world from spinning
+        if(!tag) {
+            for(i in bank) {
                 bank[i].stop()
             }
+
+            for(group in groups) {
+                if(groups[group]) {
+                    for(i in groups[group]) {
+                        groups[group][i].stop()
+                    }
+                }
+            }
+            return
+        }
+
+        // Stop group
+        if (tag in groups) {
+            for(i in groups[tag]) {
+                groups[tag][i].stop()
+            }
+            return
+        }
+
+        // Stop tag in group
+        for(group in groups) {
+            if(groups[group] && tag in groups[group]) {
+                groups[group][tag].stop()
+                return
+            }
+        }
+
+        // Stop tag in bank
+        if(tag && tag in bank) {
+            bank[tag].stop()
         }
     }
 
