@@ -385,7 +385,7 @@ Item {
         }
     }
 
-    // BUG TODO Ugly fix to let buzzer fix it's windows only sound stutter bug
+    // BUG TODO Ugly horrible fix to let buzzer fix it's windows only sound stutter bug
     property var stop: function (tag) {
         if(tag && tag in bank)
             bank[tag].stop()
