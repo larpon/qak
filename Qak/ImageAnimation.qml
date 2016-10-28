@@ -96,7 +96,7 @@ Entity {
     function setActiveSequence(name) {
         animControl.stop()
 
-        if(!name in state.sequenceNameIndex) {
+        if(!(name in state.sequenceNameIndex)) {
             Qak.error('Can\'t find sequence named',name)
             return
         }
