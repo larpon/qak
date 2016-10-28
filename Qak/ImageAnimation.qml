@@ -19,8 +19,11 @@ Entity {
     property int defaultFrameDelay: 60
 
     property var sequences: []
+    readonly property alias sequence: state.activeSequence
 
     signal frame(int frame, string sequenceName)
+
+    signal restarted
 
     onSequencesChanged: {
         //Qak.debug('ImageAnimation','reading sequences')
@@ -78,6 +81,7 @@ Entity {
 
         var tmpSequneces = sequences
         sequences = tmpSequneces
+        restarted()
     }
 
     function reset() {
