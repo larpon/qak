@@ -32,6 +32,7 @@ Item {
 
     default property alias contents: container.data
 
+    property bool clickable: true
     property bool locked: false
     property bool draggable: false
     property bool rotatable: false
@@ -61,9 +62,10 @@ Item {
         assetMultiplierSource: (viewport && 'assetMultiplier' in viewport) ? viewport : null
     }
 
-    Item {
-        id: container
-        anchors.fill: parent
+    MouseArea {
+        anchors { fill: parent }
+        enabled: parent.clickable && !parent.draggable && !parent.rotatable
+        onClicked: entity.clicked(mouse)
     }
 
     // Drag'n'Drop functionality
@@ -98,7 +100,7 @@ Item {
 
         property bool dragging: false
 
-        anchors.fill: entity
+        anchors { fill: parent }
         anchors.margins: 0 //main.grow()
 
         drag.target: entity
@@ -138,7 +140,7 @@ Item {
             dragged(mouse,map)
         }
 
-        onClicked: entity.clicked(mouse)
+        onClicked: if(clickable) entity.clicked(mouse)
 
         function goBack() {
             if(dragReturnOnReject) {
@@ -169,11 +171,12 @@ Item {
     property alias rotator: rotator
     MouseRotator {
         id: rotator
+
+        anchors { fill: parent }
+
         enabled: parent.rotatable && !parent.locked
 
-        onClicked: entity.clicked(mouse)
-
-        anchors.fill: parent
+        onClicked: if(clickable) entity.clicked(mouse)
     }
 
     // Movement
@@ -198,4 +201,10 @@ Item {
         id: mover
         locked: parent.locked
     }
+
+    Item {
+        id: container
+        anchors.fill: parent
+    }
+
 }

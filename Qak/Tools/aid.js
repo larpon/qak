@@ -199,3 +199,18 @@ function isInteger(value) {
   x = parseFloat(value)
   return (x | 0) === x
 }
+
+// NOTE WARNING There is currently no official Qt way of getting the QML type of an object as a string - so this might break someday!
+// Further more this won't take QML inheritance into account :(
+function qtypeof(object) {
+    var type = typeof object
+
+    if(type === "object") {
+
+        type = object.toString()
+        if(type.match(/.*_QMLTYPE_.*/i)) {
+            type = type.replace(/_QMLTYPE_.*/i,'')
+        }
+    }
+    return type
+}

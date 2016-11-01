@@ -15,6 +15,9 @@ Item {
 
     property var moveQueue: []
 
+    signal started
+    signal stopped
+
     function moveTo(x,y) {
         pushMove(x,y)
         startMoving()
@@ -92,5 +95,8 @@ Item {
         path: Path {
             id: path
         }
+
+        onStopped: mover.stopped()
+        onStarted: mover.started()
     }
 }
