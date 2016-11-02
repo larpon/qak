@@ -7,6 +7,7 @@ Item {
     property Item target: parent
 
     property bool locked: false
+    readonly property bool moving: pathAnim.running
 
     property point anchorPoint: Qt.point(0,0)
 
