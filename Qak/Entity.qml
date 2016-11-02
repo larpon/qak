@@ -32,7 +32,7 @@ Item {
 
     default property alias contents: container.data
 
-    property bool clickable: true
+    property bool clickable: false
     property bool locked: false
     property bool draggable: false
     property bool rotatable: false
