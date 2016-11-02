@@ -44,6 +44,9 @@ Item {
     property Item viewport: findViewport(entity)
 
     signal clicked(var mouse)
+    signal pressed(var mouse)
+    signal released(var mouse)
+    signal positionChanged(var mouse)
 
     function findViewport(item) {
         if(item && 'qakViewport' in item && item.qakViewport)
@@ -66,6 +69,9 @@ Item {
         anchors { fill: parent }
         enabled: parent.clickable && !parent.draggable && !parent.rotatable
         onClicked: entity.clicked(mouse)
+        onPressed: entity.pressed(mouse)
+        onReleased: entity.released(mouse)
+        onPositionChanged: entity.positionChanged(mouse)
     }
 
     // Drag'n'Drop functionality
@@ -100,43 +106,57 @@ Item {
 
         property bool dragging: false
 
+        property bool startDrag: false
+
         anchors { fill: parent }
         anchors.margins: 0 //main.grow()
 
         drag.target: entity
 
         onPressed: {
-
+            if(clickable) entity.pressed(mouse)
             // NOTE Panic click safety
             if(!dragMoveBackAnimation.running) {
                 ox = entity.x
                 oy = entity.y
             }
 
-            var map = mapToItem(entity.parent,mouse.x,mouse.y)
-            entity.x = map.x-(entity.width/2)+entity.dragDisplaceX
-            entity.y = map.y-(entity.height/2)+entity.dragDisplaceY
-            //Qak.debug('drag started',entity)
-            dragging = true
-            dragStarted(mouse)
+            startDrag = true
         }
 
         onReleased: {
-            if(entity.Drag.drop() !== Qt.IgnoreAction) {
-                //Qak.debug('drag accepted',entity)
-                dragAccepted(mouse)
-            } else {
-                //Qak.debug('drag rejected',entity)
-                dragRejected(mouse)
-                goBack()
+            if(clickable) entity.released(mouse)
+
+            if(dragging) {
+                if(entity.Drag.drop() !== Qt.IgnoreAction) {
+                    //Qak.debug('drag accepted',entity)
+                    dragAccepted(mouse)
+                } else {
+                    //Qak.debug('drag rejected',entity)
+                    dragRejected(mouse)
+                    goBack()
+                }
+                //Qak.debug('drag ended',entity)
+                dragEnded(mouse)
+                dragging = false
             }
-            //Qak.debug('drag ended',entity)
-            dragEnded(mouse)
-            dragging = false
         }
 
         onPositionChanged: {
-            var map = entity.mapToItem(entity.parent,mouse.x,mouse.y)
+            entity.positionChanged(mouse)
+
+            var map = mapToItem(entity.parent,mouse.x,mouse.y)
+
+            if(startDrag) {
+                entity.x = map.x-(entity.width/2)+entity.dragDisplaceX
+                entity.y = map.y-(entity.height/2)+entity.dragDisplaceY
+                //Qak.debug('drag started',entity)
+                dragging = true
+                startDrag = false
+
+                dragStarted(mouse)
+            }
+
             dragged(mouse,map)
         }
 
@@ -177,6 +197,9 @@ Item {
         enabled: parent.rotatable && !parent.locked
 
         onClicked: if(clickable) entity.clicked(mouse)
+        onPressed: if(clickable) entity.pressed(mouse)
+        onReleased: if(clickable) entity.released(mouse)
+        onPositionChanged: entity.positionChanged(mouse)
     }
 
     // Movement
