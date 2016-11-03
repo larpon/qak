@@ -6,8 +6,8 @@ Rectangle {
     anchors.fill: parent
     anchors.margins: -border.width
 
-    visible: Qak.doDebug
-    enabled: visible
+    visible: Qak.doDebug && enabled
+    enabled: Qak.doDebug
 
     color: "transparent"
     border.color: Qak.paused ? "red" : "tomato"
