@@ -219,7 +219,7 @@ Item {
                 }
             }
         } else {
-            if(object.group in groups && object.tag in groups[object.group]) {
+            if(object.group in groups && groups[object.group] && object.tag in groups[object.group]) {
                 sound = groups[object.group][object.tag]
                 if('source' in sound) {
                     if(sound.source === object.source) {
@@ -239,6 +239,8 @@ Item {
             Qak.debug('SoundBank',soundBank,'Loaded',object.tag)
         } else {
             Qak.debug('SoundBank',soundBank,'Loaded',object.tag,'in group',object.group)
+            if(!groups[object.group])
+                groups[object.group] = {}
             groups[object.group][object.tag] = object
         }
         loaded(object.tag , object)
