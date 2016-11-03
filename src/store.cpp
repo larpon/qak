@@ -33,7 +33,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
     _store_path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+QDir::separator()+sub;
 
     _ensureStorePath();
-    #ifdef QT_DEBUG
+    #ifdef QAK_DEBUG
     qDebug() << "Store using" << _store_path;
     #endif
 
@@ -62,7 +62,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
 Store::~Store()
 {
     if( _autoSave ) {
-        #ifdef QT_DEBUG
+        #ifdef QAK_DEBUG
         qDebug() << "Store auto saving";
         #endif
         save();
@@ -92,6 +92,17 @@ bool Store::isLoaded()
 }
 
 
+bool Store::existOnDisk()
+{
+    QFileInfo check(fullPath());
+    return check.exists() && check.isFile();
+}
+
+QString Store::fullPath()
+{
+    return _store_path + QDir::separator() + _name;
+}
+
 void Store::setName(const QString &n)
 {
     if (n != _name) {
@@ -99,7 +110,7 @@ void Store::setName(const QString &n)
 
         /*
         if( _autoLoad ) {
-            #ifdef QT_DEBUG
+            #ifdef QAK_DEBUG
             qDebug() << "Store auto loading" << _name;
             #endif
             load();
@@ -111,7 +122,7 @@ void Store::setName(const QString &n)
                 parts.removeLast();
             QString new_path = _store_path + QDir::separator() + parts.join(QDir::separator());
             _ensurePath(new_path);
-            #ifdef QT_DEBUG
+            #ifdef QAK_DEBUG
             qDebug() << "Store using name fragments as paths" << _name << new_path;
             #endif
 
@@ -172,7 +183,7 @@ void Store::save()
             if(value.canConvert<QJSValue>())
                 value = value.value<QJSValue>().toVariant();
 
-            #ifdef QT_DEBUG
+            #ifdef QAK_DEBUG
             qDebug() << "Store" << _name << "property" << name << "stored" << value;
             #endif
 
@@ -216,7 +227,7 @@ void Store::load()
     }
     else
     {
-        #ifdef QT_DEBUG
+        #ifdef QAK_DEBUG
         qWarning() << "Store" << _name << "warning: Couldn't load from" << path;
         #endif
         emit error("Could not load store from: \""+path+"\"");
@@ -249,7 +260,7 @@ void Store::load()
             if(value != QJsonValue::Undefined)
             {
                 this->setProperty(name,value.toVariant());
-                #ifdef QT_DEBUG
+                #ifdef QAK_DEBUG
                 qDebug() << "Store" << _name << "property" << name << "loaded" << value;
                 #endif
 
@@ -279,7 +290,7 @@ void Store::clear()
 
     if(!result)
         emit error("Failed removing store directory "+path);
-    #ifdef QT_DEBUG
+    #ifdef QAK_DEBUG
     else
         qDebug() << "Store clear" << path << result;
     #endif
@@ -301,7 +312,7 @@ void Store::clear(const QString &name)
 
     if(!result)
         emit error("Failed removing store directory "+path);
-    #ifdef QT_DEBUG
+    #ifdef QAK_DEBUG
     else
         qDebug() << "Store" << name << "clear" << path << result;
     #endif
@@ -315,7 +326,7 @@ void Store::clearAll()
     if (dir.exists()) {
         dir.removeRecursively();
 
-        #ifdef QT_DEBUG
+        #ifdef QAK_DEBUG
         qDebug() << "Store clearAll" << _store_path;
         #endif
 
@@ -339,7 +350,7 @@ void Store::_ensurePath(const QString &path)
     if (!dir.exists()) {
         if(!dir.mkpath("."))
             emit error("Failed creating store directory "+path);
-        #ifdef QT_DEBUG
+        #ifdef QAK_DEBUG
         else
             qDebug() << "Store created directory" << path;
         #endif
