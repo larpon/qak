@@ -9,6 +9,8 @@ Item {
     property alias mouseY: mouseArea.mouseY
 
     property bool containsMouse: {
+        if(!enabled)
+            return false
         var x1 = width / 2;
         var y1 = height / 2;
         var x2 = mouseX;
@@ -21,16 +23,17 @@ Item {
 
     readonly property bool pressed: containsMouse && mouseArea.pressed
 
-    signal clicked
+    signal clicked(var mouse)
 
-    DebugVisual { radius: width / 2 }
+    DebugVisual { enabled: mouseArea.enabled; radius: width / 2 }
 
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        enabled: roundMouseArea.enabled
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: if (roundMouseArea.containsMouse) roundMouseArea.clicked()
+        onClicked: if (roundMouseArea.containsMouse) roundMouseArea.clicked(mouse)
     }
 
 }
