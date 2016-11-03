@@ -207,10 +207,20 @@ function qtypeof(object) {
 
     if(type === "object") {
 
-        type = object.toString()
-        if(type.match(/.*_QMLTYPE_.*/i)) {
-            type = type.replace(/_QMLTYPE_.*/i,'')
+        if('toString' in object && isFunction(object.toString)) {
+            type = object.toString()
+            if(type.match(/.*_QMLTYPE_.*/i)) {
+                type = type.replace(/_QMLTYPE_.*/i,'')
+            }
         }
     }
     return type
+}
+
+function isFunction(v) {
+    return (typeof v === "function")
+}
+
+function isArray(a) {
+    return (a instanceof Array)
 }
