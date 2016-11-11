@@ -5,7 +5,7 @@ import Qak.Tools 1.0
 import Qak.QtQuick 2.0 as QakQuick
 
 /*
- *
+ * TODO add 'sources' property to support multiple animations
  */
 Entity {
     id: imageAnimation
@@ -20,6 +20,46 @@ Entity {
 
     property var sequences: []
     readonly property alias sequence: state.activeSequence
+    readonly property alias sequenceName: state.currentActiveSequence
+
+    property string goalSequence: ""
+    onGoalSequenceChanged: {
+        if(!state.activeSequence)
+            return
+        if(goalSequence === "")
+            state.sequencePath = []
+
+        var from = state.activeSequence.name
+        var to = goalSequence
+
+        var nodes = {}
+
+        // Convert sequence items to nodes format with all costs set to 1
+        // NOTE see aid.js for implementation and format
+        for(var i in sequences) {
+            var s = sequences[i]
+            var sto = s.to
+            for(var k in sto) {
+                sto[k] = 1
+            }
+            nodes[s.name] = sto
+        }
+
+        // Calculate fastest route to goal sequence
+        var route = Aid.findShortestPath(nodes,from,to)
+        if(route === null) {
+            Qak.error('ImageAnimation','No path from',from,'to',to,'ignoring goalSequence')
+            return
+        }
+        if(route.length > 0 && route[0] === goalSequence) {
+            //Qak.info('ImageAnimation','already at goalSequence')
+            goalSequenceReached()
+            return
+        }
+        state.sequencePath = route
+    }
+
+    signal goalSequenceReached
 
     signal frame(int frame, string sequenceName)
 
@@ -31,7 +71,7 @@ Entity {
         state.sequenceNameIndex = {}
         for(var i in sequences) {
             var s = sequences[i]
-            // TODO validate each sequence object
+            // TODO validate each sequence object - or force use of some new QML type e.g. "SequenceItem" ??
             state.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
@@ -52,7 +92,9 @@ Entity {
         property int activeSequenceIndex: 0
         property var activeSequence
 
+        property string currentActiveSequence: ""
         property string nextActiveSequence: ""
+        property var sequencePath: ([])
 
         property var sequenceNameIndex: ({})
 
@@ -67,6 +109,9 @@ Entity {
             currentFrameDelay = defaultFrameDelay
             activeSequenceIndex = 0
             activeSequence = undefined
+            currentActiveSequence = ""
+            nextActiveSequence = ""
+            sequencePath = []
             sequenceNameIndex = {}
             totalAmountOfFrames = 0
         }
@@ -89,6 +134,7 @@ Entity {
 
         state.reset()
 
+        goalSequence = ""
         animControl.canRun = false
 
     }
@@ -103,6 +149,9 @@ Entity {
 
         state.activeSequenceIndex = state.sequenceNameIndex[name]
         state.activeSequence = sequences[state.activeSequenceIndex]
+        if('name' in state.activeSequence) {
+            state.currentActiveSequence = state.activeSequence.name
+        }
         state.currentSequenceFrameIndex = 0
         if('frames' in state.activeSequence && Object.prototype.toString.call( state.activeSequence.frames ) === '[object Array]') {
             state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
@@ -169,7 +218,13 @@ Entity {
                 if(state.currentSequenceFrameIndex == endSequenceFrameIndex) {
                     //Qak.debug('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
 
-                    if('to' in state.activeSequence) {
+                    if(state.sequencePath.length > 0) {
+                        state.nextActiveSequence = state.sequencePath.shift()
+                        if(state.sequencePath.length === 0) {
+                            imageAnimation.goalSequence = ""
+                            imageAnimation.goalSequenceReached()
+                        }
+                    } else if('to' in state.activeSequence) {
                         var seqTo = state.activeSequence.to
                         var nSeq = ""
                         var totalWeight = 0, cumWeight = 0
@@ -318,5 +373,7 @@ Entity {
         id: frameContainer
         property bool balanced: children.length > 0 && state.totalAmountOfFrames === children.length
     }
+
+
 
 }
