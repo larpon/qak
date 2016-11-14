@@ -6,6 +6,7 @@ import Qak.QtQuick 2.0 as QakQuick
 
 /*
  * TODO add 'sources' property to support multiple animations
+ * TODO re-write in C++
  */
 Entity {
     id: imageAnimation
@@ -26,6 +27,10 @@ Entity {
 
     property string goalSequence: ""
     onGoalSequenceChanged: {
+        setGoalSequence()
+    }
+
+    function setGoalSequence() {
         if(!state.activeSequence)
             return
 
@@ -58,16 +63,17 @@ Entity {
         }
 
         if(route.length > 1 && route[0] === from) {
-            Qak.info('ImageAnimation','already at',from,'removing from path')
+            //Qak.info('ImageAnimation','already at',from,'removing from path')
             route.shift()
         }
 
+        /* // TODO This is fucking up situations where goalSequence is set during initialization
         if(route.length > 0 && route[0] === goalSequence) {
-            Qak.info('ImageAnimation','already at goalSequence')
+            Qak.info('ImageAnimation','already at goalSequence',goalSequence)
             goalSequenceReached()
             goalSequence = ""
             return
-        }
+        }*/
 
         Qak.debug('ImageAnimation','goalSequence',route.join(' -> '))
         state.sequencePath = route
@@ -214,6 +220,12 @@ Entity {
                 }
             }
 
+            // NOTE stupid trigger if goalSequence is set during init
+            if(goalSequence !== "" && state.sequencePath.length <= 0) {
+                Qak.debug('ImageAnimation', 'Correcting goalSequence',goalSequence)
+                setGoalSequence()
+            }
+
             // If instructed to set a new active sequence
             if(state.nextActiveSequence != '') {
                 //Qak.debug('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
@@ -254,7 +266,7 @@ Entity {
 
                         if(nextSequence === state.activeSequence.name)
                             nextSequence = ""
-                        else { // TODO fix signal - trigger when actually in that sequence
+                        else {
                             state.nextActiveSequence = nextSequence
                             if(state.sequencePath.length === 0) {
                                 imageAnimation.goalSequence = ""
