@@ -22,12 +22,17 @@ Entity {
     readonly property alias sequence: state.activeSequence
     readonly property alias sequenceName: state.currentActiveSequence
 
+    readonly property alias balanced: frameContainer.balanced
+
     property string goalSequence: ""
     onGoalSequenceChanged: {
         if(!state.activeSequence)
             return
+
         if(goalSequence === "")
-            state.sequencePath = []
+            return
+
+        state.sequencePath = []
 
         var from = state.activeSequence.name
         var to = goalSequence
@@ -38,7 +43,7 @@ Entity {
         // NOTE see aid.js for implementation and format
         for(var i in sequences) {
             var s = sequences[i]
-            var sto = s.to
+            var sto = Aid.clone(s.to)
             for(var k in sto) {
                 sto[k] = 1
             }
@@ -51,11 +56,20 @@ Entity {
             Qak.error('ImageAnimation','No path from',from,'to',to,'ignoring goalSequence')
             return
         }
+
+        if(route.length > 1 && route[0] === from) {
+            Qak.info('ImageAnimation','already at',from,'removing from path')
+            route.shift()
+        }
+
         if(route.length > 0 && route[0] === goalSequence) {
-            //Qak.info('ImageAnimation','already at goalSequence')
+            Qak.info('ImageAnimation','already at goalSequence')
             goalSequenceReached()
+            goalSequence = ""
             return
         }
+
+        Qak.debug('ImageAnimation','goalSequence',route.join(' -> '))
         state.sequencePath = route
     }
 
@@ -96,6 +110,8 @@ Entity {
         property string nextActiveSequence: ""
         property var sequencePath: ([])
 
+        property bool signalGoalSequenceReached: false
+
         property var sequenceNameIndex: ({})
 
         property int totalAmountOfFrames: 0
@@ -112,6 +128,7 @@ Entity {
             currentActiveSequence = ""
             nextActiveSequence = ""
             sequencePath = []
+            signalGoalSequenceReached = false
             sequenceNameIndex = {}
             totalAmountOfFrames = 0
         }
@@ -153,7 +170,7 @@ Entity {
             state.currentActiveSequence = state.activeSequence.name
         }
         state.currentSequenceFrameIndex = 0
-        if('frames' in state.activeSequence && Object.prototype.toString.call( state.activeSequence.frames ) === '[object Array]') {
+        if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
             state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
         }
 
@@ -197,20 +214,27 @@ Entity {
                 }
             }
 
-            // If instructed to set a new active sequences
+            // If instructed to set a new active sequence
             if(state.nextActiveSequence != '') {
                 //Qak.debug('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
                 setActiveSequence(state.nextActiveSequence)
+
+                if(state.signalGoalSequenceReached) {
+                    state.signalGoalSequenceReached = false
+                    imageAnimation.goalSequenceReached()
+                }
+
                 state.nextActiveSequence = ""
             }
 
-            // Show the active frame
-            state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
-            frame(state.currentFrameIndex, state.activeSequence.name)
-            //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
-
             // Figure out next frame
-            if('frames' in state.activeSequence && Object.prototype.toString.call( state.activeSequence.frames ) === '[object Array]') {
+            if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
+
+                // Show the active frame
+                state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
+                frame(state.currentFrameIndex, state.activeSequence.name)
+                //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
+
 
                 // TODO optimize
                 var endSequenceFrameIndex = state.activeSequence.frames.length-1
@@ -218,15 +242,28 @@ Entity {
                 if(state.currentSequenceFrameIndex == endSequenceFrameIndex) {
                     //Qak.debug('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
 
+                    var nextSequence = ""
                     if(state.sequencePath.length > 0) {
-                        state.nextActiveSequence = state.sequencePath.shift()
-                        if(state.sequencePath.length === 0) {
-                            imageAnimation.goalSequence = ""
-                            imageAnimation.goalSequenceReached()
+                        nextSequence = state.sequencePath.shift()
+
+                        // TODO fix this mess
+                        while(state.sequencePath.length > 0 && nextSequence === state.activeSequence.name) {
+                            Qak.debug('ImageAnimation','already at',nextSequence,'trying next')
+                            nextSequence = state.sequencePath.shift()
+                        }
+
+                        if(nextSequence === state.activeSequence.name)
+                            nextSequence = ""
+                        else { // TODO fix signal - trigger when actually in that sequence
+                            state.nextActiveSequence = nextSequence
+                            if(state.sequencePath.length === 0) {
+                                imageAnimation.goalSequence = ""
+                                state.signalGoalSequenceReached = true
+                            }
                         }
                     } else if('to' in state.activeSequence) {
                         var seqTo = state.activeSequence.to
-                        var nSeq = ""
+
                         var totalWeight = 0, cumWeight = 0
                         for(var seqName in seqTo) {
                             totalWeight += seqTo[seqName]
@@ -234,16 +271,19 @@ Entity {
                         var randInt = Math.floor(Math.random()*totalWeight)
 
                         for(seqName in seqTo) {
+                            if(seqTo[seqName] <= 0)
+                                continue
+
                             cumWeight += seqTo[seqName]
                             if (randInt < cumWeight) {
-                                nSeq = seqName
-                                break;
+                                nextSequence = seqName
+                                break
                             }
 
                         }
 
                         // Instruct state to setActiveSequence() next run
-                        state.nextActiveSequence = nSeq
+                        state.nextActiveSequence = nextSequence
 
                     } else { // missing to: {...} entry - stop
                         //Qak.debug('ImageAnimation','nowhere to go. Stopping...')
