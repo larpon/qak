@@ -20,6 +20,8 @@ Item {
     property bool muted: false
     property real volume: 1
 
+    property bool safePlay: true // Only play sound if it's not already playing - if false playing sound will be stopped first
+
     signal loaded (string tag, var sound)
     signal error (string errorMessage)
 
@@ -301,10 +303,7 @@ Item {
         if(tag === undefined && group === undefined) {
             for(i in bank) {
                 sound = bank[i]
-                if(!sound.playing) {
-                    sound.play()
-                    playing(sound.tag,sound)
-                }
+                playSound(sound,loops)
             }
             return
         }
@@ -313,10 +312,7 @@ Item {
         if(tag === undefined && group && groupExists(group)) {
             for(i in groups[group]) {
                 sound = groups[group][i]
-                if(!sound.playing) {
-                    sound.play()
-                    playing(sound.tag,sound)
-                }
+                playSound(sound,loops)
             }
             return
         }
@@ -353,7 +349,12 @@ Item {
                 sound.loops = loops
             else
                 sound.loops = soundBank.loops
-            if(!sound.playing) {
+
+            if(!safePlay && sound.playing) {
+                sound.stop()
+                sound.play()
+                playing(sound.tag,sound)
+            } else if(!sound.playing) {
                 sound.play()
                 playing(sound.tag,sound)
             }
@@ -367,11 +368,28 @@ Item {
         var keys, tag
 
         if(group === undefined) {
+
             keys = Object.keys( bank )
+
+            // NOTE include available groups in randomization
+            var includeGroups = (Aid.objectSize(groups) > 0)
+            if(includeGroups) {
+                var aGroupsKeys = Object.keys( groups )
+                var rGroupKey = aGroupsKeys[getRandomInt(0,aGroupsKeys.length-1)]
+                if(groupExists(rGroupKey))
+                    keys = keys.concat(Object.keys( groups[rGroupKey] ))
+            }
+
             // NOTE if index is out of bounds play() will play the whole bank
             tag = keys[getRandomInt(0,keys.length-1)]
 
             //Qak.debug('SoundBank playRandom',tag)
+            play(tag)
+            return
+        }
+
+        if(Aid.isArray(group)) { // Expecting array of keys
+            tag = group[getRandomInt(0,group.length-1)]
             play(tag)
             return
         }
