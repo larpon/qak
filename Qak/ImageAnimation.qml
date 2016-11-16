@@ -6,7 +6,7 @@ import Qak.QtQuick 2.0 as QakQuick
 
 /*
  * TODO add 'sources' property to support multiple animations
- * TODO re-write in C++
+ * TODO re-write in C++ - the code is a mess
  */
 Entity {
     id: imageAnimation
@@ -28,6 +28,13 @@ Entity {
     property string goalSequence: ""
     onGoalSequenceChanged: {
         setGoalSequence()
+    }
+
+    function jumpTo(sequenceName) {
+        animControl.stop()
+        restart()
+        setActiveSequence(sequenceName)
+        animControl.restart()
     }
 
     function setGoalSequence() {
