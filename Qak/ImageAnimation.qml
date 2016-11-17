@@ -223,6 +223,7 @@ Entity {
                 if(state.activeSequence === undefined) {
                     Qak.error('No active sequence can be set. Stopping...')
                     imageAnimation.running = false
+                    animControl.stop()
                     return
                 }
             }
