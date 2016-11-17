@@ -304,9 +304,17 @@ Entity {
                         // Instruct state to setActiveSequence() next run
                         state.nextActiveSequence = nextSequence
 
-                    } else { // missing to: {...} entry - stop
-                        //Qak.debug('ImageAnimation','nowhere to go. Stopping...')
+                    } else if(endSequenceFrameIndex == 0) {
+                        // The sequence only has one frame
+                        Qak.debug('ImageAnimation','Only one frame and nowhere to go next. Stopping...')
                         imageAnimation.running = false
+                        animControl.stop()
+                        return
+                    } else { // missing to: {...} entry - stop
+                        Qak.debug('ImageAnimation','nowhere to go. Stopping...')
+                        imageAnimation.running = false
+                        animControl.stop()
+                        return
                     }
 
                 } else
@@ -315,6 +323,8 @@ Entity {
             } else {
                 Qak.error('No frames. Skipping...')
                 imageAnimation.running = false
+                animControl.stop()
+                return
             }
 
         }
