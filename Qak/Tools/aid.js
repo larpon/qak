@@ -211,6 +211,9 @@ function qtypeof(object) {
             type = object.toString()
             if(type.match(/.*_QMLTYPE_.*/i)) {
                 type = type.replace(/_QMLTYPE_.*/i,'')
+            } else if(type.match(/QQuick.*/i)) {
+                type = type.replace(/\(0x.*\)$/i,'')
+                type = type.replace(/_QML_\d+$/i,'')
             }
         }
     }

@@ -12,12 +12,14 @@ HEADERS += \
     $$PWD/qak.h \
     $$PWD/src/maskedmousearea.h \
     $$PWD/src/resource.h \
-    $$PWD/src/store.h
+    $$PWD/src/store.h \
+    $$PWD/src/qak_plugin.h
 
 SOURCES += \
     $$PWD/src/maskedmousearea.cpp \
     $$PWD/src/resource.cpp \
-    $$PWD/src/store.cpp
+    $$PWD/src/store.cpp \
+    $$PWD/src/qak_plugin.cpp
 
 RESOURCES += \
     $$PWD/qak.qrc
