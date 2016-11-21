@@ -114,7 +114,7 @@ Item {
         drag.target: entity
 
         onPressed: {
-            if(clickable) entity.pressed(mouse)
+            entity.pressed(mouse)
             // NOTE Panic click safety
             if(!dragMoveBackAnimation.running) {
                 ox = entity.x
@@ -125,7 +125,7 @@ Item {
         }
 
         onReleased: {
-            if(clickable) entity.released(mouse)
+            entity.released(mouse)
 
             if(dragging) {
                 if(entity.Drag.drop() !== Qt.IgnoreAction) {
@@ -197,8 +197,8 @@ Item {
         enabled: parent.rotatable && !parent.locked
 
         onClicked: if(clickable) entity.clicked(mouse)
-        onPressed: if(clickable) entity.pressed(mouse)
-        onReleased: if(clickable) entity.released(mouse)
+        onPressed: entity.pressed(mouse)
+        onReleased: entity.released(mouse)
         onPositionChanged: entity.positionChanged(mouse)
     }
 

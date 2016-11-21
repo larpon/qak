@@ -20,6 +20,8 @@ Item {
     property bool muted: false
     property real volume: 1
 
+    property bool safePlay: true // Only play sound if it's not already playing - if false playing sound will be stopped first
+
     signal loaded (string tag, var sound)
     signal error (string errorMessage)
 
@@ -98,7 +100,7 @@ Item {
         if(groups[group] === undefined)
             groups[group] = {}
 
-        if(group in groups && tag in groups[group]) {
+        if(groupExists(group) && tag in groups[group]) {
             var sound = groups[group][tag]
             if('source' in sound) {
                 if(sound.source === path) {
@@ -134,7 +136,7 @@ Item {
         }
 
         for(var group in groups) {
-            if(tag in groups[group]) {
+            if(groupExists(group) && tag in groups[group]) {
                 sound = groups[group][tag]
                 if(sound)
                     return sound
@@ -142,6 +144,31 @@ Item {
         }
 
         return sound
+    }
+
+    function isGrouped(tag) {
+        for(var group in groups) {
+            if(groupExists(group) && tag in groups[group]) {
+                if(groups[group][tag])
+                    return true
+            }
+        }
+        return false
+    }
+
+    function isGlobal(tag) {
+        if(tag in bank) {
+            return true
+        }
+        return false
+    }
+
+    function has(tag) {
+        return (isGlobal(tag) || isGrouped(tag))
+    }
+
+    function groupExists(group) {
+        return (group in groups && groups[group])
     }
 
     Component {
@@ -167,7 +194,7 @@ Item {
 
         var tag
 
-        if(group !== undefined && group in groups) {
+        if(group !== undefined && groupExists(group)) {
             Qak.info('SoundBank','clearing group',group)
             for(tag in groups[group]) {
                 groups[group][tag].destroy()
@@ -181,7 +208,10 @@ Item {
             Qak.info('SoundBank','clearing tag',tag)
             bank[tag].destroy()
             bank[tag] = undefined
-        } else {
+        }
+
+        // If called without arguments
+        if(group === undefined) {
 
             Qak.info('SoundBank','clearing bank')
 
@@ -219,7 +249,7 @@ Item {
                 }
             }
         } else {
-            if(object.group in groups && groups[object.group] && object.tag in groups[object.group]) {
+            if(groupExists(object.group) && object.tag in groups[object.group]) {
                 sound = groups[object.group][object.tag]
                 if('source' in sound) {
                     if(sound.source === object.source) {
@@ -273,28 +303,22 @@ Item {
         if(tag === undefined && group === undefined) {
             for(i in bank) {
                 sound = bank[i]
-                if(!sound.playing) {
-                    sound.play()
-                    playing(sound.tag,sound)
-                }
+                playSound(sound,loops)
             }
             return
         }
 
         // Play default all of group
-        if(tag === undefined && group && group in groups) {
+        if(tag === undefined && group && groupExists(group)) {
             for(i in groups[group]) {
                 sound = groups[group][i]
-                if(!sound.playing) {
-                    sound.play()
-                    playing(sound.tag,sound)
-                }
+                playSound(sound,loops)
             }
             return
         }
 
         // Play tag from group specific
-        if(tag && group && group in groups && tag in groups[group]) {
+        if(tag && group && groupExists(group) && tag in groups[group]) {
             playSound(groups[group][tag],loops)
             return
         }
@@ -315,7 +339,7 @@ Item {
             }
         }
 
-        Qak.error('SoundBank','no valid combinations of arguments',tag,group,loops)
+        Qak.error('SoundBank','play','no valid combinations of arguments',tag,group,loops)
 
     }
 
@@ -325,7 +349,12 @@ Item {
                 sound.loops = loops
             else
                 sound.loops = soundBank.loops
-            if(!sound.playing) {
+
+            if(!safePlay && sound.playing) {
+                sound.stop()
+                sound.play()
+                playing(sound.tag,sound)
+            } else if(!sound.playing) {
                 sound.play()
                 playing(sound.tag,sound)
             }
@@ -339,7 +368,18 @@ Item {
         var keys, tag
 
         if(group === undefined) {
+
             keys = Object.keys( bank )
+
+            // NOTE include available groups in randomization
+            var includeGroups = (Aid.objectSize(groups) > 0)
+            if(includeGroups) {
+                var aGroupsKeys = Object.keys( groups )
+                var rGroupKey = aGroupsKeys[getRandomInt(0,aGroupsKeys.length-1)]
+                if(groupExists(rGroupKey))
+                    keys = keys.concat(Object.keys( groups[rGroupKey] ))
+            }
+
             // NOTE if index is out of bounds play() will play the whole bank
             tag = keys[getRandomInt(0,keys.length-1)]
 
@@ -348,7 +388,13 @@ Item {
             return
         }
 
-        if(group in groups) {
+        if(Aid.isArray(group)) { // Expecting array of keys
+            tag = group[getRandomInt(0,group.length-1)]
+            play(tag)
+            return
+        }
+
+        if(groupExists(group)) {
             keys = Object.keys( groups[group] )
             // NOTE if index is out of bounds play() will play the whole bank
             tag = keys[getRandomInt(0,keys.length-1)]
@@ -378,9 +424,9 @@ Item {
             return
         }
 
-        if(tag && group in groups && tag in groups[group]) // Mute tag in group
+        if(tag && groupExists(group) && tag in groups[group]) // Mute tag in group
             groups[group][tag].muted = muted
-        else if(group in groups) { // Mute group
+        else if(groupExists(group)) { // Mute group
             for(i in groups[group]) {
                 groups[group][i].muted = muted
             }

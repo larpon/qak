@@ -5,7 +5,8 @@ import Qak.Tools 1.0
 import Qak.QtQuick 2.0 as QakQuick
 
 /*
- *
+ * TODO add 'sources' property to support multiple animations
+ * TODO re-write in C++ - the code is a mess
  */
 Entity {
     id: imageAnimation
@@ -20,6 +21,72 @@ Entity {
 
     property var sequences: []
     readonly property alias sequence: state.activeSequence
+    readonly property alias sequenceName: state.currentActiveSequence
+
+    readonly property alias balanced: frameContainer.balanced
+
+    property string goalSequence: ""
+    onGoalSequenceChanged: {
+        setGoalSequence()
+    }
+
+    function jumpTo(sequenceName) {
+        animControl.stop()
+        restart()
+        setActiveSequence(sequenceName)
+        animControl.restart()
+    }
+
+    function setGoalSequence() {
+        if(!state.activeSequence)
+            return
+
+        if(goalSequence === "")
+            return
+
+        state.sequencePath = []
+
+        var from = state.activeSequence.name
+        var to = goalSequence
+
+        var nodes = {}
+
+        // Convert sequence items to nodes format with all costs set to 1
+        // NOTE see aid.js for implementation and format
+        for(var i in sequences) {
+            var s = sequences[i]
+            var sto = Aid.clone(s.to)
+            for(var k in sto) {
+                sto[k] = 1
+            }
+            nodes[s.name] = sto
+        }
+
+        // Calculate fastest route to goal sequence
+        var route = Aid.findShortestPath(nodes,from,to)
+        if(route === null) {
+            Qak.error('ImageAnimation','No path from',from,'to',to,'ignoring goalSequence')
+            return
+        }
+
+        if(route.length > 1 && route[0] === from) {
+            //Qak.info('ImageAnimation','already at',from,'removing from path')
+            route.shift()
+        }
+
+        /* // TODO This is fucking up situations where goalSequence is set during initialization
+        if(route.length > 0 && route[0] === goalSequence) {
+            Qak.info('ImageAnimation','already at goalSequence',goalSequence)
+            goalSequenceReached()
+            goalSequence = ""
+            return
+        }*/
+
+        Qak.debug('ImageAnimation','goalSequence',route.join(' -> '))
+        state.sequencePath = route
+    }
+
+    signal goalSequenceReached
 
     signal frame(int frame, string sequenceName)
 
@@ -31,7 +98,7 @@ Entity {
         state.sequenceNameIndex = {}
         for(var i in sequences) {
             var s = sequences[i]
-            // TODO validate each sequence object
+            // TODO validate each sequence object - or force use of some new QML type e.g. "SequenceItem" ??
             state.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
@@ -52,7 +119,11 @@ Entity {
         property int activeSequenceIndex: 0
         property var activeSequence
 
+        property string currentActiveSequence: ""
         property string nextActiveSequence: ""
+        property var sequencePath: ([])
+
+        property bool signalGoalSequenceReached: false
 
         property var sequenceNameIndex: ({})
 
@@ -67,6 +138,10 @@ Entity {
             currentFrameDelay = defaultFrameDelay
             activeSequenceIndex = 0
             activeSequence = undefined
+            currentActiveSequence = ""
+            nextActiveSequence = ""
+            sequencePath = []
+            signalGoalSequenceReached = false
             sequenceNameIndex = {}
             totalAmountOfFrames = 0
         }
@@ -89,6 +164,7 @@ Entity {
 
         state.reset()
 
+        goalSequence = ""
         animControl.canRun = false
 
     }
@@ -103,8 +179,11 @@ Entity {
 
         state.activeSequenceIndex = state.sequenceNameIndex[name]
         state.activeSequence = sequences[state.activeSequenceIndex]
+        if('name' in state.activeSequence) {
+            state.currentActiveSequence = state.activeSequence.name
+        }
         state.currentSequenceFrameIndex = 0
-        if('frames' in state.activeSequence && Object.prototype.toString.call( state.activeSequence.frames ) === '[object Array]') {
+        if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
             state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
         }
 
@@ -144,24 +223,38 @@ Entity {
                 if(state.activeSequence === undefined) {
                     Qak.error('No active sequence can be set. Stopping...')
                     imageAnimation.running = false
+                    animControl.stop()
                     return
                 }
             }
 
-            // If instructed to set a new active sequences
+            // NOTE stupid trigger if goalSequence is set during init
+            if(goalSequence !== "" && state.sequencePath.length <= 0) {
+                Qak.debug('ImageAnimation', 'Correcting goalSequence',goalSequence)
+                setGoalSequence()
+            }
+
+            // If instructed to set a new active sequence
             if(state.nextActiveSequence != '') {
                 //Qak.debug('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
                 setActiveSequence(state.nextActiveSequence)
+
+                if(state.signalGoalSequenceReached) {
+                    state.signalGoalSequenceReached = false
+                    imageAnimation.goalSequenceReached()
+                }
+
                 state.nextActiveSequence = ""
             }
 
-            // Show the active frame
-            state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
-            frame(state.currentFrameIndex, state.activeSequence.name)
-            //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
-
             // Figure out next frame
-            if('frames' in state.activeSequence && Object.prototype.toString.call( state.activeSequence.frames ) === '[object Array]') {
+            if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
+
+                // Show the active frame
+                state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
+                frame(state.currentFrameIndex, state.activeSequence.name)
+                //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
+
 
                 // TODO optimize
                 var endSequenceFrameIndex = state.activeSequence.frames.length-1
@@ -169,9 +262,28 @@ Entity {
                 if(state.currentSequenceFrameIndex == endSequenceFrameIndex) {
                     //Qak.debug('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
 
-                    if('to' in state.activeSequence) {
+                    var nextSequence = ""
+                    if(state.sequencePath.length > 0) {
+                        nextSequence = state.sequencePath.shift()
+
+                        // TODO fix this mess
+                        while(state.sequencePath.length > 0 && nextSequence === state.activeSequence.name) {
+                            Qak.debug('ImageAnimation','already at',nextSequence,'trying next')
+                            nextSequence = state.sequencePath.shift()
+                        }
+
+                        if(nextSequence === state.activeSequence.name)
+                            nextSequence = ""
+                        else {
+                            state.nextActiveSequence = nextSequence
+                            if(state.sequencePath.length === 0) {
+                                imageAnimation.goalSequence = ""
+                                state.signalGoalSequenceReached = true
+                            }
+                        }
+                    } else if('to' in state.activeSequence) {
                         var seqTo = state.activeSequence.to
-                        var nSeq = ""
+
                         var totalWeight = 0, cumWeight = 0
                         for(var seqName in seqTo) {
                             totalWeight += seqTo[seqName]
@@ -179,20 +291,31 @@ Entity {
                         var randInt = Math.floor(Math.random()*totalWeight)
 
                         for(seqName in seqTo) {
+                            if(seqTo[seqName] <= 0)
+                                continue
+
                             cumWeight += seqTo[seqName]
                             if (randInt < cumWeight) {
-                                nSeq = seqName
-                                break;
+                                nextSequence = seqName
+                                break
                             }
 
                         }
 
                         // Instruct state to setActiveSequence() next run
-                        state.nextActiveSequence = nSeq
+                        state.nextActiveSequence = nextSequence
 
-                    } else { // missing to: {...} entry - stop
-                        //Qak.debug('ImageAnimation','nowhere to go. Stopping...')
+                    } else if(endSequenceFrameIndex == 0) {
+                        // The sequence only has one frame
+                        Qak.debug('ImageAnimation','Only one frame and nowhere to go next. Stopping...')
                         imageAnimation.running = false
+                        animControl.stop()
+                        return
+                    } else { // missing to: {...} entry - stop
+                        Qak.debug('ImageAnimation','nowhere to go. Stopping...')
+                        imageAnimation.running = false
+                        animControl.stop()
+                        return
                     }
 
                 } else
@@ -201,6 +324,8 @@ Entity {
             } else {
                 Qak.error('No frames. Skipping...')
                 imageAnimation.running = false
+                animControl.stop()
+                return
             }
 
         }
@@ -318,5 +443,7 @@ Entity {
         id: frameContainer
         property bool balanced: children.length > 0 && state.totalAmountOfFrames === children.length
     }
+
+
 
 }
