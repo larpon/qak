@@ -169,6 +169,14 @@ Entity {
 
     }
 
+    function stop() {
+        animControl.stop()
+    }
+
+    function start() {
+        animControl.start()
+    }
+
     function setActiveSequence(name) {
         animControl.stop()
 
