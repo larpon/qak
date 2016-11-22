@@ -370,7 +370,9 @@ Entity {
             return
         }
 
-        // Match any '.<digit>.' entries
+        // Match any '<digit>.' entries or '.<digit>.'
+        // TODO make more fail safe as any preceeding '<digit>.' in adaptiveSource string will be replaced
+        // Maybe only make replacement on adaptiveSource basename() or something
         var match = adaptiveSource.match('(\\.?\\d+?\\.)')
         match = match ? match[1] : false
 
@@ -395,11 +397,11 @@ Entity {
                 digit++
 
                 var next = pad((digit),padding)
-                nextSource = adaptiveSource.replace(number, next)
+                nextSource = adaptiveSource.replace(match, next+".") // TODO improve this some day - see NOTE at 'match' start
 
             }
             state.inc.incubate()
-            var lastFrameSource = adaptiveSource.replace(number, pad(frame,padding))
+            var lastFrameSource = adaptiveSource.replace(match, pad(frame,padding)+".") // TODO improve this some day - see NOTE at 'match' start
 
             state.totalAmountOfFrames = frame-1
 
