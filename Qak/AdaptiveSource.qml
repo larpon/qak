@@ -64,7 +64,7 @@ QtObject {
     }
 
     onTargetChanged: {
-        if(target) {
+        if(target && mapSource !== "") {
             Qak.debug('AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
             target[targetSourceProperty] = mapSource
         }
