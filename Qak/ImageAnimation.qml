@@ -6,7 +6,7 @@ import Qak.QtQuick 2.0 as QakQuick
 
 /*
  * TODO add 'sources' property to support multiple animations
- * TODO re-write in C++ - the code is a mess
+ * TODO re-write in C++ - the code is a mess - running states are hard to use and predict
  */
 Entity {
     id: imageAnimation
@@ -16,6 +16,8 @@ Entity {
     property bool enabled: true
 
     property bool running: true
+    // Stupid hack to expose if the animation is actually running (due to QML property running user vs. system read/write)
+    readonly property alias animating: animControl.running
 
     property int defaultFrameDelay: 60
 
