@@ -61,6 +61,13 @@ function normalize0to360(degrees) {
     return degrees
 }
 
+// Oscillate e.g. "wave" or "ping-pong" between min and max value
+// Integers only
+function oscillate(value, min, max) {
+    var range = max - min ;
+    return min + Math.abs(((value + range) % (range * 2)) - range);
+}
+
 /**
  * Returns a random number between min and max
  */
