@@ -202,6 +202,27 @@ function extend(target, source) {
   return target;
 }
 
+function pad(number, digits, padChar) {
+    padChar = padChar || 0
+    return new Array(Math.max(digits + 1 - String(number).length + 1, 0)).join(padChar) + number
+}
+
+function countPad(str, padChar) {
+    padChar = padChar || "0"
+    var count = 0
+    for (var i = 0, len = str.length; i < len; i++) {
+        if(str[i] === padChar)
+            count++
+        else
+            break
+    }
+    // NOTE fixes a string with all zeroes e.g.: '0000'
+    if(count === str.length)
+        count--
+    return count
+}
+
+
 function isObject(o) {
     return o !== null && typeof o === 'object'
 }
