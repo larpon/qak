@@ -7,6 +7,7 @@ import Qak.QtQuick 2.0 as QakQuick
 /*
  * TODO add 'sources' property to support multiple animations
  * TODO re-write in C++ - the code is a mess - running states are hard to use and predict
+ * Remember to include access to the actual Component showed - see use of 'frames' property
  */
 Entity {
     id: imageAnimation
@@ -28,6 +29,9 @@ Entity {
     readonly property alias balanced: frameContainer.balanced
 
     property string goalSequence: ""
+
+    property var frames: ({})
+
     onGoalSequenceChanged: {
         setGoalSequence()
     }
@@ -423,11 +427,12 @@ Entity {
         QakQuick.Image {
             id: image
 
-            /*
+
             Component.onCompleted: {
-                Qak.log('Component Image',state,'frame',frame,'source',source)
+                //Qak.log('Component Image',state,'frame',frame,'source',source)
+                imageAnimation.frames[image.frame+""] = image
             }
-            */
+
 
             width: parent.width
             height: parent.height
