@@ -395,6 +395,9 @@ Entity {
             var frame = 1
             var nextSource = adaptiveSource
 
+            // TODO FIXME proper matching
+            var startWithDot = (match.charAt(0) === '.') ? "." : ""
+
             // TODO fix this (async = true (which is default) doesn't work in HammerBees?)
             state.inc.async = false
             while(Qak.resource.exists(nextSource)) {
@@ -403,11 +406,11 @@ Entity {
                 digit++
 
                 var next = pad((digit),padding)
-                nextSource = adaptiveSource.replace(match, next+".") // TODO improve this some day - see NOTE at 'match' start
+                nextSource = adaptiveSource.replace(match, startWithDot+next+".") // TODO improve this some day - see NOTE at 'match' start
 
             }
             state.inc.incubate()
-            var lastFrameSource = adaptiveSource.replace(match, pad(frame,padding)+".") // TODO improve this some day - see NOTE at 'match' start
+            var lastFrameSource = adaptiveSource.replace(match, startWithDot+pad(frame,padding)+".") // TODO improve this some day - see NOTE at 'match' start
 
             state.totalAmountOfFrames = frame-1
 
