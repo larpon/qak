@@ -75,6 +75,7 @@ Item {
     }
 
     // Drag'n'Drop functionality
+
     property alias dragger: drag
     property bool dragReturnOnReject: true
     readonly property bool dragging: drag.dragging
@@ -91,6 +92,10 @@ Item {
     signal dragEnded (variant mouse)
     signal dragReturned
 
+    Drag.active: drag.dragging
+    Drag.hotSpot.x: width / 2
+    Drag.hotSpot.y: height / 2
+
     function goBack() {
         dragMoveBackAnimation.running = true
     }
@@ -104,7 +109,12 @@ Item {
         enabled: parent.draggable && !parent.locked
         //visible: enabled
 
+        // Distance travelled before the drag is activated
+        property int activateDistance: 8
+        property real dragDistance: drag.drag.active ? Math.sqrt( (ox-entity.x)*(ox-entity.x) + (oy-entity.y)*(oy-entity.y) ) : 0
+
         property bool dragging: false
+        property bool returning: false
 
         property bool startDrag: false
 
@@ -147,7 +157,7 @@ Item {
 
             var map = mapToItem(entity.parent,mouse.x,mouse.y)
 
-            if(startDrag) {
+            if(startDrag && dragDistance > activateDistance) {
                 entity.x = map.x-(entity.width/2)+entity.dragDisplaceX
                 entity.y = map.y-(entity.height/2)+entity.dragDisplaceY
                 //Qak.debug('drag started',entity)
@@ -167,6 +177,7 @@ Item {
                 dragMoveBackAnimation.running = true
                 //Qak.debug('drag return',entity)
                 dragReturn()
+                returning = true
             }
         }
 
@@ -178,14 +189,11 @@ Item {
             }
             ScriptAction { script: {
                 //Qak.debug('drag returned',entity)
+                drag.returning = false
                 entity.dragReturned()
             }}
         }
     }
-
-    Drag.active: drag.drag.active
-    Drag.hotSpot.x: width / 2
-    Drag.hotSpot.y: height / 2
 
     // Mouse rotate functionality
     property alias rotator: rotator
