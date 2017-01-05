@@ -33,6 +33,29 @@ QtObject {
         logger.settings.prefix = "QAK"
     }
 
+    // NOTE Hacky 'setTimeout' function based on Timer
+    readonly property Item __qak: Item {
+        id: qak
+        Component { id: timerComponent; Timer {} }
+        function setTimeout(callback, timeout)
+        {
+            var timer = timerComponent.createObject(tci)
+            timer.interval = timeout || 0
+            timer.triggered.connect(function()
+            {
+                timer.stop()
+                timer.destroy()
+                callback()
+            })
+            timer.start()
+        }
+    }
+
+    function setTimeout(callback, timeout)
+    {
+        qak.setTimeout(callback,timeout)
+    }
+
     function log() {
         logger.log.apply(logger, arguments)
     }
