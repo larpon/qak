@@ -94,7 +94,7 @@ function get() {
 
                         var status = that.incubator.status
 
-                        if(status === Component.Ready) {
+                        if(Component && status === Component.Ready) {
 
                             that.onSuccess(that.incubator.object)
                             if(incubatorInstance.debug)console.info('incubated', that.id, that.incubator.object)
