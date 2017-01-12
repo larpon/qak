@@ -18,6 +18,8 @@ Item {
     }
 
     // Mattes (black boxes / letterboxing)
+
+    // Left box
     Rectangle {
         enabled: visible
         visible: mattes
@@ -28,6 +30,7 @@ Item {
         color: mattesColor
     }
 
+    // Top box
     Rectangle {
         enabled: visible
         visible: mattes
@@ -38,6 +41,7 @@ Item {
         color: mattesColor
     }
 
+    // Right box
     Rectangle {
         enabled: visible
         visible: mattes
@@ -47,6 +51,7 @@ Item {
         color: mattesColor
     }
 
+    // Bottom box
     Rectangle {
         enabled: visible
         visible: mattes
