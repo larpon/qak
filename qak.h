@@ -6,6 +6,7 @@
 
 #include "src/store.h"
 #include "src/resource.h"
+#include "src/itemtoggle.h"
 #include "src/maskedmousearea.h"
 
 #include "qqml.h"
@@ -30,6 +31,7 @@ public:
         qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
         qmlRegisterType<Resource>("Qak", 1, 0, "Resource");
         qmlRegisterType<Store>("Qak", 1, 0, "Store");
+        qmlRegisterType<ItemToggle>("Qak", 1, 0, "ItemToggle");
         //qmlRegisterSingletonType<Resource>("Qak", 1, 0, "Resources", ResourceQmlInstance);
     }
 };

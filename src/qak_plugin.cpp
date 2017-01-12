@@ -1,5 +1,6 @@
 #include "qak_plugin.h"
 #include "maskedmousearea.h"
+#include "itemtoggle.h"
 #include "resource.h"
 #include "store.h"
 
@@ -11,5 +12,6 @@ void QakPlugin::registerTypes(const char *uri)
     qmlRegisterType<MaskedMouseArea>(uri, 1, 0, "MaskedMouseArea");
     qmlRegisterType<Resource>(uri, 1, 0, "Resource");
     qmlRegisterType<Store>(uri, 1, 0, "Store");
+    qmlRegisterType<ItemToggle>(uri, 1, 0, "ItemToggle");
 }
 
