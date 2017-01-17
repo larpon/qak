@@ -178,6 +178,8 @@ Item {
             muted: false
             volume: soundBank.volume
 
+            category: group !== "" ? group : "SoundEffects"
+
             property string tag: ""
             property string group: ""
 
@@ -187,6 +189,11 @@ Item {
                     registerSoundReady(soundEffect)
                 }
             }*/
+            onStatusChanged: {
+                if(status == SoundEffect.Error) {
+                    soundBank.error("SoundEffect error",group,tag)
+                }
+            }
         }
     }
 
