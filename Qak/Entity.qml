@@ -43,6 +43,17 @@ Item {
 
     property Item viewport: findViewport(entity)
 
+    readonly property MouseArea input: activeInput()
+
+    function activeInput() {
+        if(drag.enabled)
+            return drag
+        else if(rotator.enabled)
+            return rotator
+        else
+            return standard
+    }
+
     signal clicked(var mouse)
     signal pressed(var mouse)
     signal released(var mouse)
@@ -66,6 +77,7 @@ Item {
     }
 
     MouseArea {
+        id: standard
         anchors { fill: parent }
         enabled: parent.clickable && !parent.draggable && !parent.rotatable
         onClicked: entity.clicked(mouse)
@@ -230,6 +242,7 @@ Item {
     property alias mover: mover
     Mover {
         id: mover
+        paused: parent.paused
         locked: parent.locked
     }
 
