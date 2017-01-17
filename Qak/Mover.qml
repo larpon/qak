@@ -7,7 +7,9 @@ Item {
     property Item target: parent
 
     property bool locked: false
-    readonly property bool moving: pathAnim.running
+    readonly property bool moving: pathAnim.running && !paused
+
+    property bool paused: false
 
     property point anchorPoint: Qt.point(0,0)
 
@@ -91,6 +93,8 @@ Item {
 
     PathAnimation {
         id: pathAnim
+
+        paused: running && mover.paused
 
         duration: 2000
 
