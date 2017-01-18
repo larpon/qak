@@ -217,6 +217,14 @@ Entity {
         animControl.restart()
     }
 
+    function setFrame(index) {
+        state.currentFrameIndex = index
+        if(!state.activeSequence || !state.activeSequence.name)
+            frame(state.currentFrameIndex, '')
+        else
+            frame(state.currentFrameIndex, state.activeSequence.name)
+    }
+
     Timer {
         id: animControl
         interval: state.currentFrameDelay
@@ -265,8 +273,9 @@ Entity {
             if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
 
                 // Show the active frame
-                state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
-                frame(state.currentFrameIndex, state.activeSequence.name)
+                setFrame(state.activeSequence.frames[state.currentSequenceFrameIndex])
+                //state.currentFrameIndex =
+                //frame(state.currentFrameIndex, state.activeSequence.name)
                 //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
 
 
