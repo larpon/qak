@@ -32,6 +32,11 @@ Entity {
 
     property var frames: ({})
 
+    property int currentFrame: 0
+    onCurrentFrameChanged: {
+        setFrame(currentFrame)
+    }
+
     onGoalSequenceChanged: {
         setGoalSequence()
     }
@@ -273,7 +278,8 @@ Entity {
             if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
 
                 // Show the active frame
-                setFrame(state.activeSequence.frames[state.currentSequenceFrameIndex])
+                currentFrame = state.activeSequence.frames[state.currentSequenceFrameIndex]
+                //setFrame(state.activeSequence.frames[state.currentSequenceFrameIndex])
                 //state.currentFrameIndex =
                 //frame(state.currentFrameIndex, state.activeSequence.name)
                 //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
