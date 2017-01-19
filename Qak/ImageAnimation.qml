@@ -203,7 +203,8 @@ Entity {
         }
         state.currentSequenceFrameIndex = 0
         if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
-            state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
+            //state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
+            currentFrame = state.activeSequence.frames[state.currentSequenceFrameIndex]
         }
 
         // Figure out frame delay
@@ -224,10 +225,10 @@ Entity {
 
     function setFrame(index) {
         state.currentFrameIndex = index
-        if(!state.activeSequence || !state.activeSequence.name)
+        if(!state.activeSequence)
             frame(state.currentFrameIndex, '')
         else
-            frame(state.currentFrameIndex, state.activeSequence.name)
+            frame(state.currentFrameIndex, state.currentActiveSequence)
     }
 
     Timer {
@@ -277,19 +278,23 @@ Entity {
             // Figure out next frame
             if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
 
+                var activeFrame = state.activeSequence.frames[state.currentSequenceFrameIndex]
                 // Show the active frame
-                currentFrame = state.activeSequence.frames[state.currentSequenceFrameIndex]
+                if(currentFrame === activeFrame) // NOTE Hack (again) to work around of variable user assignment
+                    setFrame(activeFrame)
+                else
+                    currentFrame = activeFrame // this should idealy be emitted as changed even if the same frame?
                 //setFrame(state.activeSequence.frames[state.currentSequenceFrameIndex])
                 //state.currentFrameIndex =
                 //frame(state.currentFrameIndex, state.activeSequence.name)
-                //Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
+                Qak.debug('ImageAnimation','showing',state.activeSequence.name,'at frame index',state.currentFrameIndex,'current sequence frame index',state.currentSequenceFrameIndex)
 
 
                 // TODO optimize
                 var endSequenceFrameIndex = state.activeSequence.frames.length-1
 
                 if(state.currentSequenceFrameIndex == endSequenceFrameIndex) {
-                    //Qak.debug('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
+                    Qak.debug('ImageAnimation','end of sequence',state.activeSequence.name,'at index',state.currentSequenceFrameIndex,'- Deciding next sequence...')
 
                     var nextSequence = ""
                     if(state.sequencePath.length > 0) {
