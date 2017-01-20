@@ -77,6 +77,7 @@ Item {
     }
 
     MouseArea {
+        id: standard
         anchors { fill: parent }
         enabled: parent.clickable && !parent.draggable && !parent.rotatable
         onClicked: entity.clicked(mouse)
@@ -241,6 +242,7 @@ Item {
     property alias mover: mover
     Mover {
         id: mover
+        paused: parent.paused
         locked: parent.locked
     }
 
