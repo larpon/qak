@@ -43,6 +43,17 @@ Item {
 
     property Item viewport: findViewport(entity)
 
+    readonly property MouseArea input: activeInput()
+
+    function activeInput() {
+        if(drag.enabled)
+            return drag
+        else if(rotator.enabled)
+            return rotator
+        else
+            return standard
+    }
+
     signal clicked(var mouse)
     signal pressed(var mouse)
     signal released(var mouse)
