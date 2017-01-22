@@ -30,7 +30,9 @@ DISTFILES += \
     $$PWD/README.md \
     $$PWD/LICENSE
 
-unix {
-    GIT_BRANCH_NAME = $$system(git rev-parse --abbrev-ref HEAD)
-    message("Qak branch $$GIT_BRANCH_NAME")
+exists(.git) {
+    unix {
+        GIT_BRANCH_NAME = $$system(git rev-parse --abbrev-ref HEAD)
+        message("Qak branch $$GIT_BRANCH_NAME")
+    }
 }
