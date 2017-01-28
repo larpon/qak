@@ -1,4 +1,4 @@
-QT += qml quick multimedia
+QT += qml quick multimedia gui
 !no_desktop: QT += widgets
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -17,12 +17,14 @@ INCLUDEPATH += \
 HEADERS += \
     $$PWD/src/maskedmousearea.h \
     $$PWD/src/resource.h \
-    $$PWD/src/store.h
+    $$PWD/src/store.h \
+    $$PWD/src/propertytoggle.h
 
 SOURCES += \
     $$PWD/src/maskedmousearea.cpp \
     $$PWD/src/resource.cpp \
-    $$PWD/src/store.cpp
+    $$PWD/src/store.cpp \
+    $$PWD/src/propertytoggle.cpp
 
 RESOURCES += \
     $$PWD/qak.qrc
