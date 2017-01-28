@@ -8,7 +8,7 @@
 
 #include "src/store.h"
 #include "src/resource.h"
-#include "src/itemtoggle.h"
+#include "src/propertytoggle.h"
 #include "src/maskedmousearea.h"
 
 static void registerQak() {
@@ -16,7 +16,7 @@ static void registerQak() {
         qmlRegisterType<Resource>("Qak", 1, 0, "Resource");
         qmlRegisterType<Store>("Qak", 1, 0, "Store");
 
-        qmlRegisterType<ItemToggle>("Qak", 1, 0, "ItemToggle");
+        qmlRegisterType<PropertyToggle>("Qak", 1, 0, "PropertyToggle");
         //qmlRegisterSingletonType<Resource>("Qak", 1, 0, "Resources", ResourceQmlInstance);
 }
 
