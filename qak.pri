@@ -6,6 +6,8 @@ QML_IMPORT_PATH += $$PWD
 
 !contains(QAK_CONFIG,"noautoregister") {
     DEFINES += QAK_AUTO_REGISTER
+    HEADERS += $$PWD/qak.h
+    SOURCES += $$PWD/qak.cpp
 }
 
 INCLUDEPATH += \
@@ -13,13 +15,11 @@ INCLUDEPATH += \
     $$PWD/src
 
 HEADERS += \
-    $$PWD/qak.h \
     $$PWD/src/maskedmousearea.h \
     $$PWD/src/resource.h \
     $$PWD/src/store.h
 
 SOURCES += \
-    $$PWD/src/qak.cpp \
     $$PWD/src/maskedmousearea.cpp \
     $$PWD/src/resource.cpp \
     $$PWD/src/store.cpp

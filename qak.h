@@ -4,6 +4,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtQml/QQmlEngine>
 
+#include "qqml.h"
+
 #include "src/store.h"
 #include "src/resource.h"
 #include "src/maskedmousearea.h"
