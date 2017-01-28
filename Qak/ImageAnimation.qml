@@ -28,6 +28,8 @@ Entity {
 
     readonly property alias balanced: frameContainer.balanced
 
+    property size sourceSize: Qt.size(width,height)
+
     property string goalSequence: ""
 
     property var frames: ({})
@@ -450,17 +452,15 @@ Entity {
         QakQuick.Image {
             id: image
 
-
             Component.onCompleted: {
                 //Qak.log('Component Image',state,'frame',frame,'source',source)
                 imageAnimation.frames[image.frame+""] = image
             }
 
-
             width: parent.width
             height: parent.height
             //source: adaptiveSource.replace(state.replacer, pad(frame,state.fileStringPadding))
-            sourceSize: Qt.size(width,height)
+            sourceSize: imageAnimation.sourceSize
 
             opacity: frame === state.currentFrameIndex ? 1 : 0
 

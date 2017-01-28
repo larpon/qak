@@ -14,7 +14,6 @@ Item {
 
         width: 1100
         height: 660
-
     }
 
     // Mattes (black boxes / letterboxing)

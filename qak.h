@@ -1,41 +1,25 @@
-#ifndef REGISTER_TYPES_H
-#define REGISTER_TYPES_H
+#ifndef REGISTER_QAK_H
+#define REGISTER_QAK_H
 
-#include <QQmlEngine>
-#include <QJSEngine>
+#include <QtCore/QCoreApplication>
+#include <QtQml/QQmlEngine>
+
+#include "qqml.h"
 
 #include "src/store.h"
 #include "src/resource.h"
 #include "src/itemtoggle.h"
 #include "src/maskedmousearea.h"
 
-#include "qqml.h"
-
-/*
-// Second, define the singleton type provider function (callback).
-static QObject *ResourceQmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine)
-{
-    Q_UNUSED(engine);
-    Q_UNUSED(scriptEngine);
-
-    Resource *resource = new Resource();
-    //QQmlEngine::setObjectOwnership( resources, QQmlEngine::CppOwnership );
-    return resource;
-}
-*/
-
-class RegisterHelper {
-
-public:
-    RegisterHelper() {
+static void registerQak() {
         qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
         qmlRegisterType<Resource>("Qak", 1, 0, "Resource");
         qmlRegisterType<Store>("Qak", 1, 0, "Store");
+
         qmlRegisterType<ItemToggle>("Qak", 1, 0, "ItemToggle");
         //qmlRegisterSingletonType<Resource>("Qak", 1, 0, "Resources", ResourceQmlInstance);
-    }
-};
+}
 
-static RegisterHelper registerHelper;
+Q_COREAPP_STARTUP_FUNCTION(registerQak)
 
-#endif // REGISTER_TYPES_H
+#endif // REGISTER_QAK_H
