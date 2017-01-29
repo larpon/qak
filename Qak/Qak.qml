@@ -39,7 +39,7 @@ QtObject {
         Component { id: timerComponent; Timer {} }
         function setTimeout(callback, timeout)
         {
-            var timer = timerComponent.createObject(tci)
+            var timer = timerComponent.createObject(qak)
             timer.interval = timeout || 0
             timer.triggered.connect(function()
             {
