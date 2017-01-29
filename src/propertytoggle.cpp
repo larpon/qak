@@ -5,8 +5,6 @@ PropertyToggle::PropertyToggle(QQuickItem* parent) : QQuickItem(parent)
 {
     _toggle = 0;
     _lastToggled = 0;
-    //connect(this, &ItemToggle::widthChanged, this, &ItemToggle::doUpdate);
-    //connect(this, &ItemToggle::heightChanged, this, &ItemToggle::doUpdate);
     setFlag(ItemHasContents);
 }
 
@@ -17,18 +15,27 @@ void PropertyToggle::componentComplete()
     QQuickItem::componentComplete();
 
     _children = childItems();
-    foreach(QQuickItem *qi, _children) {
-        qi->setProperty(_property.toLatin1().constData(),_offValue);
+    if(_children.size() > 0) {
+        foreach(QQuickItem *qi, _children) {
+            qi->setProperty(_property.toLatin1().constData(),_offValue);
+        }
+        if(_toggle == 1) {
+            ensureProperty();
+        } else
+            setToggle(1);
     }
-    setToggle(1);
-
 
 }
 
 void PropertyToggle::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
 {
-    if(change == QQuickItem::ItemChildAddedChange || QQuickItem::ItemChildRemovedChange)
+    if(change == QQuickItem::ItemChildAddedChange || QQuickItem::ItemChildRemovedChange) {
         _children = childItems();
+        foreach(QQuickItem *qi, _children) {
+            qi->setProperty(_property.toLatin1().constData(),_offValue);
+        }
+        ensureProperty();
+    }
     QQuickItem::itemChange(change, value);
 }
 
@@ -85,13 +92,20 @@ void PropertyToggle::setToggle(int toggle)
 
     if(_toggle != toggle) {
         _toggle = toggle;
-        if(_lastToggled != 0)
-            _lastToggled->setProperty(_property.toLatin1().constData(),_offValue);
-        QQuickItem *qi = _children.at(_toggle-1);
-        qi->setProperty(_property.toLatin1().constData(),_onValue);
-        _lastToggled = qi;
+        ensureProperty();
         emit toggleChanged();
     }
+}
+
+void PropertyToggle::ensureProperty()
+{
+    if(_toggle-1 < 0 || _toggle > _children.size())
+        return;
+    if(_lastToggled != 0)
+        _lastToggled->setProperty(_property.toLatin1().constData(),_offValue);
+    QQuickItem *qi = _children.at(_toggle-1);
+    qi->setProperty(_property.toLatin1().constData(),_onValue);
+    _lastToggled = qi;
 }
 
 void PropertyToggle::next()

@@ -9,6 +9,7 @@
 #include "src/store.h"
 #include "src/resource.h"
 #include "src/propertytoggle.h"
+#include "src/itemanimationprivate.h"
 #include "src/maskedmousearea.h"
 
 static void registerQak() {
@@ -17,6 +18,7 @@ static void registerQak() {
         qmlRegisterType<Store>("Qak", 1, 0, "Store");
 
         qmlRegisterType<PropertyToggle>("Qak", 1, 0, "PropertyToggle");
+        qmlRegisterType<ItemAnimationPrivate>("Qak.Private", 1, 0, "ItemAnimationPrivate");
         //qmlRegisterSingletonType<Resource>("Qak", 1, 0, "Resources", ResourceQmlInstance);
 }
 

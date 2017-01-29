@@ -50,32 +50,8 @@ private:
 
     QList<QQuickItem *>	_children;
     QQuickItem *_lastToggled;
+
+    void ensureProperty();
 };
 
-
-/*
-#include <QQuickItem>
-#include <QSGSimpleRectNode>
-
-class ItemToggle : public QQuickItem
-{
-    Q_OBJECT
-public:
-    ItemToggle(QQuickItem* parent = 0);
-
-protected:
-    QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
-    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
-
-public slots:
-    void appendSample(qreal value);
-    void removeFirstSample();
-
-private:
-    QList<qreal> m_samples;
-
-    bool m_samplesChanged;
-    bool m_geometryChanged;
-};
-*/
 #endif // QAK_ITEMTOGGLE_H

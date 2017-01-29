@@ -15,6 +15,7 @@ MouseRotator 1.0 MouseRotator.qml
 RoundMouseArea 1.0 RoundMouseArea.qml
 Mover 1.0 Mover.qml
 ImageAnimation 1.0 ImageAnimation.qml
+ItemAnimation 1.0 ItemAnimation.qml
 WalkMap 1.0 WalkMap.qml
 SoundBank 1.0 SoundBank.qml
 

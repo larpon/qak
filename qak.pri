@@ -18,13 +18,15 @@ HEADERS += \
     $$PWD/src/maskedmousearea.h \
     $$PWD/src/resource.h \
     $$PWD/src/store.h \
-    $$PWD/src/propertytoggle.h
+    $$PWD/src/propertytoggle.h \
+    $$PWD/src/itemanimationprivate.h
 
 SOURCES += \
     $$PWD/src/maskedmousearea.cpp \
     $$PWD/src/resource.cpp \
     $$PWD/src/store.cpp \
-    $$PWD/src/propertytoggle.cpp
+    $$PWD/src/propertytoggle.cpp \
+    $$PWD/src/itemanimationprivate.cpp
 
 RESOURCES += \
     $$PWD/qak.qrc
