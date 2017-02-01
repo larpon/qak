@@ -4,19 +4,23 @@ Resource::Resource(QObject* parent) : QObject(parent)
 {
     _networkManager = new QNetworkAccessManager(this);
     _dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    _cachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     _baseUrl = "http://example.com/resource";
     _prefix = "";
 
     // Remember the bug where you connected multiple times in the load() function - only connect once :)
     QObject::connect(_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
 
-    QDir dir(_dataPath);
-    if (!dir.exists()) {
-        if(dir.mkpath("."))
-            qDebug() << "Created data directory" << _dataPath;
-        else
-            emit error("Failed creating data directory "+_dataPath);
-    }
+    if(ensure(_dataPath))
+        qDebug() << "Created data directory" << _dataPath;
+    else
+        emit error("Failed creating data directory "+_dataPath);
+
+    if(ensure(_cachePath))
+        qDebug() << "Created cache directory" << _cachePath;
+    else
+        emit error("Failed creating cache directory "+_cachePath);
+
 }
 
 
@@ -65,18 +69,31 @@ bool Resource::copy(const QString &source, const QString &destination)
 
     QFileInfo dest_info = QFileInfo(dest);
 
-    QDir destdir(dest_info.path());
-    if (!destdir.exists()) {
-        destdir.mkpath(dest_info.path());
-        qDebug() << "Created data directory" << dest_info.path();
-    }
+    if(ensure(dest_info.path()))
+        qDebug() << "Created destination directory" << dest_info.path();
+    else
+        emit error("Failed creating destination directory "+dest_info.path());
 
     return QFile::copy(src , dest);
+}
+
+bool Resource::ensure(const QString &path)
+{
+    QDir dir(path);
+    if (!dir.exists())
+        return dir.mkpath(".");
+    return false;
 }
 
 bool Resource::clearDataPath()
 {
     QDir dir(dataPath());
+    return dir.removeRecursively();
+}
+
+bool Resource::clearCachePath()
+{
+    QDir dir(cachePath());
     return dir.removeRecursively();
 }
 
@@ -168,7 +185,12 @@ QString Resource::appPath()
 
 QString Resource::dataPath()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    return _dataPath;
+}
+
+QString Resource::cachePath()
+{
+    return _cachePath;
 }
 
 QString Resource::url(const QString &relativePath)

@@ -27,7 +27,7 @@ class Resource : public QObject
         QString prefix();
         void setPrefix(const QString &prefix);
 
-    signals:
+signals:
         void loaded(const QString &name);
         void unloaded(const QString &name);
         void error(const QString& msg);
@@ -40,9 +40,12 @@ class Resource : public QObject
         bool available(const QString &name);
         bool exists(const QString &name);
         bool copy(const QString &source, const QString &destination);
+        bool ensure(const QString &path);
         bool clearDataPath();
+        bool clearCachePath();
         QString appPath();
         QString dataPath();
+        QString cachePath();
         QString url(const QString &relativePath);
 
     private slots:
@@ -55,6 +58,7 @@ class Resource : public QObject
         QString resourceName(const QUrl &url);
         QString resourceName(const QString &str);
         QString _dataPath;
+        QString _cachePath;
         QString _baseUrl;
         QString _prefix;
 
