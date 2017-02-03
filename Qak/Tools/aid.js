@@ -222,6 +222,13 @@ function countPad(str, padChar) {
     return count
 }
 
+function distance(p1,p2) {
+    return Math.sqrt( (p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y) );
+}
+
+function distance(x1,y1,x2,y2) {
+    return Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
+}
 
 function isObject(o) {
     return o !== null && typeof o === 'object'
