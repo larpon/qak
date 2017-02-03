@@ -48,6 +48,7 @@ Entity {
         restart()
         setActiveSequence(sequenceName)
         animControl.restart()
+        //Qak.debug('ImageAnimation','jumpTo',sequenceName)
     }
 
     function setGoalSequence() {
@@ -338,6 +339,14 @@ Entity {
 
                         }
 
+                        // Handle a to: entry with all 0 weights
+                        if(nextSequence === "") {
+                            Qak.debug('ImageAnimation','No next sequence due to 0 weight(s). Stopping...')
+                            imageAnimation.running = false
+                            animControl.stop()
+                            return
+                        }
+
                         // Instruct state to setActiveSequence() next run
                         state.nextActiveSequence = nextSequence
 
@@ -354,6 +363,7 @@ Entity {
                         return
                     }
 
+                    //Qak.debug('ImageAnimation','next sequence',state.nextActiveSequence)
                 } else
                     state.currentSequenceFrameIndex++
 
