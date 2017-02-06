@@ -39,6 +39,10 @@ function interpolate(x0, x1, alpha) {
     return (x0 * (1 - alpha) + alpha * x1)
 }
 
+function lerp(x0, x1, alpha) {
+    return interpolate(x0,x1,alpha)
+}
+
 //Normalizes any number to an arbitrary range
 //by assuming the range wraps around when going below min or above max
 // NOTE untested

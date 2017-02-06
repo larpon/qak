@@ -4,7 +4,7 @@ import QtWebSockets 1.0
 WebSocket {
     id: socket
 
-    url: 'ws://localhost:40402'
+    //url: 'ws://localhost:40402'
 
     property string auth
 
@@ -56,7 +56,13 @@ WebSocket {
         }
 
         log(auth)
-        var request = { watch: object.toString(), tag: tag, properties: properties, data: data  }
+        var request = {
+            watch: object.toString(),
+            tag: tag,
+            properties: properties,
+            functions: {},
+            data: data
+        }
         send(request)
 
         /*

@@ -1,5 +1,7 @@
 import QtWebSockets 1.0
 
+import Qak.Tools 1.0
+
 WebSocketServer {
     id: server
 
@@ -9,12 +11,14 @@ WebSocketServer {
     port: 40402
 
     property var clients: ({})
-
     property int clientId: 0
+
+    property var watches: ({})
 
     signal connectionError(string errorString)
 
     signal request(var client, var request)
+    signal log(string type, var message)
 
     function extend(target, source) {
         target = target || {}
@@ -65,6 +69,22 @@ WebSocketServer {
                             console.warn(message.log)
                         if(message.type === 'debug')
                             console.debug(message.log)
+                        log(message.type, message.log)
+                    }
+
+                    if('watch' in message && 'tag' in message) {
+                        console.log('Adding watch',message.tag)
+                        var t = watches
+                        if(!Aid.isArray(t[cid]))
+                            t[cid] = []
+                        t[cid].push({
+                            tag: message.tag,
+                            cid: cid,
+                            properties: message.properties,
+                            functions: message.functions,
+                            data: message.data
+                        })
+                        watches = t
                     }
 
                     request(client,message)
@@ -109,6 +129,10 @@ WebSocketServer {
                     } else if (status === WebSocket.Closed) {
                         console.info('Qak.Debug.DebugServer','websocket to client',id,'closed connection')
                         clients[id] = undefined
+
+                        var t = watches
+                        t[id] = {}
+                        watches = t
                     } else if (status === WebSocket.Closing) {
                         console.info('Qak.Debug.DebugServer','websocket to client',id,'closing connection')
                     } else if (status === WebSocket.Connecting) {
