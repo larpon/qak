@@ -9,6 +9,10 @@ QtObject {
     property bool enabled: true
     property bool history: false
 
+    property string gid: "¤#"
+    property var groups: ({"*":true})
+    property bool logGid: true
+
     property QtObject settings: QtObject {
         property string prefix: ""
         property string logPrefix: ""
@@ -21,10 +25,40 @@ QtObject {
 
     property QtObject internal: QtObject {
         property var history: []
+        function logGroup(logArgsArray) {
+            var s = logArgsArray[0]
+            if(typeof s === "string") {
+                if(s.startsWith(gid)) {
+                    var groupName = s.replace(gid,"")
+                    if(!logGid)
+                        logArgsArray.shift()
+                    else
+                        logArgsArray[0] = groupName
+
+                    if("*" in groups && groups["*"]) {
+                        if((groupName in groups) && !groups[groupName])
+                            return false
+                        return true
+                    }
+
+                    if(!(groupName in groups))
+                        return false
+                    else {
+                        if(!groups[groupName])
+                            return false
+                    }
+
+                }
+            }
+            return true
+        }
     }
 
     onEnabledChanged: {
-        if(enabled) { // Empty history if any
+        if(enabled) {
+            log.log(gid+"Log","groups",JSON.stringify(groups)) //¤qakdbg
+
+            // Empty history if any
             var history = internal.history
             while(history.length > 0) {
                 var args = history.shift()
@@ -38,6 +72,9 @@ QtObject {
     function log() {
         // Convert arguments to a normal array
         var args = Array.prototype.slice.call(arguments);
+
+        if(!internal.logGroup(args))
+            return
 
         // Prepend context log prefix
         if(settings.logPrefix !== "")
@@ -56,6 +93,9 @@ QtObject {
     function error() {
         var args = Array.prototype.slice.call(arguments)
 
+        if(!internal.logGroup(args))
+            return
+
         if(settings.errorPrefix !== "")
             args.unshift(settings.errorPrefix)
 
@@ -72,6 +112,9 @@ QtObject {
     function debug() {
         var args = Array.prototype.slice.call(arguments)
 
+        if(!internal.logGroup(args))
+            return
+
         if(settings.debugPrefix !== "")
             args.unshift(settings.debugPrefix)
 
@@ -87,6 +130,9 @@ QtObject {
     function warn() {
             var args = Array.prototype.slice.call(arguments)
 
+            if(!internal.logGroup(args))
+                return
+
             if(settings.warnPrefix !== "")
                 args.unshift(settings.warnPrefix)
 
@@ -101,6 +147,9 @@ QtObject {
 
     function info() {
         var args = Array.prototype.slice.call(arguments)
+
+        if(!internal.logGroup(args))
+            return
 
         if(settings.infoPrefix !== "")
             args.unshift(settings.infoPrefix)

@@ -13,6 +13,7 @@ DebugVisual 1.0 DebugVisual.qml
 Entity 1.0 Entity.qml
 MouseRotator 1.0 MouseRotator.qml
 RoundMouseArea 1.0 RoundMouseArea.qml
+PolygonMouseArea 1.0 PolygonMouseArea.qml
 Mover 1.0 Mover.qml
 ImageAnimation 1.0 ImageAnimation.qml
 ItemAnimation 1.0 ItemAnimation.qml

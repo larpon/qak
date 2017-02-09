@@ -10,14 +10,16 @@ QtObject {
     property bool doDebug: false
     property bool paused: false
 
-    onPausedChanged: info('Qak',paused ? 'Paused' : 'Continued')
+    onPausedChanged: debug('Qak',paused ? 'Paused' : 'Continued') //¤qakdbg
 
     property int assetMultiplier: 1
-    onAssetMultiplierChanged: debug('Qak','asset multiplier',assetMultiplier)
+    onAssetMultiplierChanged: debug('Qak','asset multiplier',assetMultiplier) //¤qakdbg
 
-    property QtObject logger: Log { enabled: doDebug }
+    property Log logger: Log { enabled: doDebug }
     property QtObject platform: Qt.platform
     property QtObject resource: Resource { }
+
+    readonly property string gid: logger.gid
 
     Component.onCompleted: {
         var os = Qt.platform.os
