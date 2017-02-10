@@ -42,5 +42,6 @@
         <file>Qak/QtQuick/Image.2.3.qml</file>
         <file>Qak/ItemAnimation.qml</file>
         <file>Qak/PolygonMouseArea.qml</file>
+        <file>Qak/Events.qml</file>
     </qresource>
 </RCC>

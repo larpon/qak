@@ -11,6 +11,7 @@ AdaptiveSource 1.0 AdaptiveSource.qml
 Application 1.0 Application.qml
 DebugVisual 1.0 DebugVisual.qml
 Entity 1.0 Entity.qml
+Events 1.0 Events.qml
 MouseRotator 1.0 MouseRotator.qml
 RoundMouseArea 1.0 RoundMouseArea.qml
 PolygonMouseArea 1.0 PolygonMouseArea.qml

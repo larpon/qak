@@ -1,62 +1,44 @@
-import Qak.QtQuick 2.0
+import QtQuick 2.0
 
-Item {
+import Qak 1.0
 
-    default property alias content: viewport.data
+QtObject {
 
-    readonly property alias viewport: viewport
+    property var topics: ({})
 
-    property bool mattes: true
-    property color mattesColor: "black"
+    signal subscribe(string topic, var handler)
+    signal unsubscribe(string topic, var handler)
+    signal publish(string topic, var event)
 
-    Viewport {
-        id: viewport
-
-        width: 1100
-        height: 660
+    // Get or create a named handler list
+    function list(topic) {
+        var t = topic.replace(/\/$/, "").toLowerCase()
+        return topics[t] || (topics[t] = [])
     }
 
-    // Mattes (black boxes / letterboxing)
-
-    // Left box
-    Rectangle {
-        enabled: visible
-        visible: mattes
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: viewport.left
-        anchors.bottom: parent.bottom
-        color: mattesColor
+    function sub(topic, handler) {
+        Qak.debug(Qak.gid+'Events','::sub',topic) //¤qakdbg
+        list(topic).push(handler)
+        subscribe(topic, handler)
+        return handler
     }
 
-    // Top box
-    Rectangle {
-        enabled: visible
-        visible: mattes
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: viewport.top
-        color: mattesColor
+    function unsub(topic, handler) {
+        Qak.debug(Qak.gid+'Events','::unsub',topic) //¤qakdbg
+        var e = list(topic),
+        i = e.indexOf(handler)
+        if (~i) e.splice(i, 1)
+        unsubscribe(topic, handler)
     }
 
-    // Right box
-    Rectangle {
-        enabled: visible
-        visible: mattes
-        x: viewport.x+viewport.scaledWidth; y: viewport.y
-        width: parent.width - x
-        height: viewport.scaledHeight
-        color: mattesColor
+    function pub(topic, event) {
+        var l = list('*').concat(list(topic))
+        for(var k in l) {
+            Qak.debug(Qak.gid+'Events','::pub',topic) //¤qakdbg
+            l[k](event)
+        }
+        publish(topic, event)
+        if(l.length <= 0) { Qak.debug(Qak.gid+'Events','::pub','no subscribers for',topic) } //¤qakdbg
     }
 
-    // Bottom box
-    Rectangle {
-        enabled: visible
-        visible: mattes
-        x: 0; y: viewport.y+viewport.scaledHeight
-        width: parent.width
-        height: parent.height - y
-        color: mattesColor
-    }
 }
