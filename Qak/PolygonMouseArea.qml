@@ -2,15 +2,12 @@ import QtQuick 2.0
 
 import Qak 1.0
 
-
-
 MouseArea {
     id: mouseArea
-    anchors { fill: parent }
 
-    propagateComposedEvents: true
-
+    // A JavaScript Array of { x: <number>, y: <number> } objects
     property var polygon: ([])
+
     // https://gist.github.com/johannesboyne/5626235
     // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
     function pointInPolygon(point, points) {
@@ -35,16 +32,6 @@ MouseArea {
         return pointInPolygon(mouse,polygon)
     }
 
-    onClicked: {
-        //Qak.debug(Qak.gid+'PolygonMouseArea','Mouse',mouse.x,mouse,y)
-        //Qak.debug(Qak.gid+'PolygonMouseArea',JSON.stringify(polygon))
-        Qak.debug(Qak.gid+'PolygonMouseArea','clicked',mouse.x,mouse,y) //¤qakdbg
-        if(has(mouse)) {
-            mouse.accepted = true
-            return
-        }
-        mouse.accepted = false
-    }
     onPressed: {
         Qak.debug(Qak.gid+'PolygonMouseArea','pressed',mouse.x,mouse,y) //¤qakdbg
         if(has(mouse)) {
@@ -53,4 +40,14 @@ MouseArea {
         }
         mouse.accepted = false
     }
+
+    onClicked: {
+        Qak.debug(Qak.gid+'PolygonMouseArea','clicked',mouse.x,mouse,y) //¤qakdbg
+        if(has(mouse)) {
+            mouse.accepted = true
+            return
+        }
+        mouse.accepted = false
+    }
+
 }
