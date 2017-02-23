@@ -1,5 +1,7 @@
 import QtQuick 2.0
 
+import Qak.Tools 1.0
+
 QtObject {
     id: log
 
@@ -25,10 +27,11 @@ QtObject {
 
     property QtObject internal: QtObject {
         property var history: []
+
         function logGroup(logArgsArray) {
             var s = logArgsArray[0]
             if(typeof s === "string") {
-                if(s.startsWith(gid)) {
+                if(Aid.startsWith(s,gid)) {
                     var groupName = s.replace(gid,"")
                     if(!logGid)
                         logArgsArray.shift()

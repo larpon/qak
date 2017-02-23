@@ -157,14 +157,14 @@ Entity {
             sequencePath = []
             signalGoalSequenceReached = false
             sequenceNameIndex = {}
-            totalAmountOfFrames = 0
+            totalAmountOfFrames = frameContainer.children.length
         }
     }
 
     function restart() {
         reset()
 
-        state.totalAmountOfFrames = frameContainer.children.length
+        //state.totalAmountOfFrames = frameContainer.children.length
 
         running = true
 
@@ -491,6 +491,7 @@ Entity {
         anchors.fill: parent
         id: frameContainer
         property bool balanced: children.length > 0 && state.totalAmountOfFrames === children.length
+        onBalancedChanged: console.log(state.totalAmountOfFrames,children.length,balanced)
     }
 
 
