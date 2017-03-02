@@ -59,7 +59,7 @@ QtObject {
 
     onEnabledChanged: {
         if(enabled) {
-            log.log(gid+"Log","groups",JSON.stringify(groups)) //¤qakdbg
+//            log.log(gid+"Log","groups",JSON.stringify(groups)) //¤qakdbg
 
             // Empty history if any
             var history = internal.history

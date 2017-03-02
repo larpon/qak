@@ -151,14 +151,14 @@ Item {
 
             if(dragging) {
                 if(entity.Drag.drop() !== Qt.IgnoreAction) {
-                    //Qak.debug('drag accepted',entity)
+//                    Qak.debug('drag accepted',entity) //¤qakdbg
                     dragAccepted(mouse)
                 } else {
-                    //Qak.debug('drag rejected',entity)
+//                    Qak.debug('drag rejected',entity) //¤qakdbg
                     dragRejected(mouse)
                     goBack()
                 }
-                //Qak.debug('drag ended',entity)
+//                Qak.debug('drag ended',entity) //¤qakdbg
                 dragEnded(mouse)
                 dragging = false
             }
@@ -172,7 +172,7 @@ Item {
             if(startDrag && dragDistance > activateDistance) {
                 entity.x = map.x-(entity.width/2)+entity.dragDisplaceX
                 entity.y = map.y-(entity.height/2)+entity.dragDisplaceY
-                //Qak.debug('drag started',entity)
+//                Qak.debug('drag started',entity) //¤qakdbg
                 dragging = true
                 startDrag = false
 
@@ -187,7 +187,7 @@ Item {
         function goBack() {
             if(dragReturnOnReject) {
                 dragMoveBackAnimation.running = true
-                //Qak.debug('drag return',entity)
+//                Qak.debug('drag return',entity) //¤qakdbg
                 dragReturn()
                 returning = true
             }
@@ -200,7 +200,7 @@ Item {
                 PropertyAnimation { target: entity; property: "y"; to: drag.oy; easing.type: Easing.InOutQuad }
             }
             ScriptAction { script: {
-                //Qak.debug('drag returned',entity)
+//                Qak.debug('drag returned',entity) //¤qakdbg
                 drag.returning = false
                 entity.dragReturned()
             }}

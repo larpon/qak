@@ -65,16 +65,17 @@ QtObject {
 
     onTargetChanged: {
         if(target && mapSource !== "") {
-            Qak.debug('AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+//            Qak.debug('AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"') //¤qakdbg
             target[targetSourceProperty] = mapSource
         }
     }
 
-    onEnabledChanged: {
-        if(enabled) {
-            //target[targetSourceProperty] = mapSource
-        }
-    }
+
+//    onEnabledChanged: {
+//        if(enabled) {
+//            //target[targetSourceProperty] = mapSource
+//        }
+//    }
 
     function detectMapSource() {
 
@@ -85,8 +86,7 @@ QtObject {
         ignore = false
 
         if(source == "" || !source) {
-            //mapSource = undefined
-            Qak.debug('AdaptiveSource','source for target',target,'is empty')
+//            Qak.debug('AdaptiveSource','source for target',target,'is empty') //¤qakdbg
             return
         }
 
@@ -120,7 +120,7 @@ QtObject {
             return
 
         if(target) {
-            Qak.debug('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"')
+//            Qak.debug('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"') //¤qakdbg
             target[targetSourceProperty] = mapSource
         }// else
          //   Qak.warn('AdaptiveSource','"target" property is not yet sat for',source)

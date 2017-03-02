@@ -45,7 +45,7 @@ Item {
 
     Component.onCompleted: {
         /*
-        Qak.debug('All @',root.tag)
+//        Qak.debug('All @',root.tag) //¤qakdbg
 
         all(root,function(node){
             if(node.isLeaf) {
@@ -53,20 +53,20 @@ Item {
                 backup(node,function(node){
                     path.unshift(node.tag)
                 })
-                Qak.debug('Full path',path.join("/"))
+//                Qak.debug('Full path',path.join("/")) //¤qakdbg
             }
         })
 
 
-        Qak.debug('Flat @',root.tag)
+//        Qak.debug('Flat @',root.tag) //¤qakdbg
         flat(root,function(node){
-            Qak.debug('@',node.tag)
+//            Qak.debug('@',node.tag) //¤qakdbg
         })
 
 
-        Qak.debug('Sequential @',root.tag)
+//        Qak.debug('Sequential @',root.tag) //¤qakdbg
         sequential(root,function(node,sequencer){
-            Qak.debug(node.tag, 'says', node.t)
+//            Qak.debug(node.tag, 'says', node.t) //¤qakdbg
         })
         */
     }

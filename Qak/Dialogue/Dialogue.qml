@@ -10,13 +10,13 @@ Node {
     property alias current: scheduler.current
     property string text: scheduler.text
 
-    onRunningChanged: {
-        if(running) {
-            sequential(node,function(item,text){
-                Qak.debug('Item',item,'says',text)
-            })
-        }
-    }
+//    onRunningChanged: { //¤qakdbg
+//        if(running) { //¤qakdbg
+//            sequential(node,function(item,text){ //¤qakdbg
+//                Qak.debug('Item',item,'says',text) //¤qakdbg
+//            }) //¤qakdbg
+//        } //¤qakdbg
+//    } //¤qakdbg
 
     // Sequential
     function sequential(item,f) {

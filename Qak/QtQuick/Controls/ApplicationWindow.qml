@@ -32,7 +32,7 @@ ApplicationWindow {
             showNormal()
         else
             showNormal()
-        Qak.debug("ApplicationWindow","onScreenModeChanged",screenMode)
+//        Qak.debug("ApplicationWindow","onScreenModeChanged",screenMode) //¤qakdbg
     }
 
     function toggleScreenMode() {
@@ -42,5 +42,5 @@ ApplicationWindow {
            screenMode = "windowed"
     }
 
-    onScreenChanged: Qak.debug("ApplicationWindow","onScreenChanged",screen)
+//    onScreenChanged: Qak.debug("ApplicationWindow","onScreenChanged",screen) //¤qakdbg
 }

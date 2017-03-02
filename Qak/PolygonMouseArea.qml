@@ -22,7 +22,7 @@ MouseArea {
             if (intersect) inside = !inside;
         }
 
-        Qak.debug(Qak.gid+'PolygonMouseArea','point',point.x,point,y,'in polygon',inside) //¤qakdbg
+//        Qak.debug(Qak.gid+'PolygonMouseArea','point',point.x,point,y,'in polygon',inside) //¤qakdbg
         return inside;
     }
 
@@ -33,7 +33,7 @@ MouseArea {
     }
 
     onPressed: {
-        Qak.debug(Qak.gid+'PolygonMouseArea','pressed',mouse.x,mouse,y) //¤qakdbg
+//        Qak.debug(Qak.gid+'PolygonMouseArea','pressed',mouse.x,mouse,y) //¤qakdbg
         if(has(mouse)) {
             mouse.accepted = true
             return
@@ -42,7 +42,7 @@ MouseArea {
     }
 
     onClicked: {
-        Qak.debug(Qak.gid+'PolygonMouseArea','clicked',mouse.x,mouse,y) //¤qakdbg
+//        Qak.debug(Qak.gid+'PolygonMouseArea','clicked',mouse.x,mouse,y) //¤qakdbg
         if(has(mouse)) {
             mouse.accepted = true
             return

@@ -27,13 +27,13 @@ Entity {
         source: "./js/walkMapWorker.js"
 
         onMessage: {
-            Qak.debug('Path was found?',messageObject.found)
+//            Qak.debug('Path was found?',messageObject.found) //¤qakdbg
             if(messageObject.found) {
                 solvesList[messageObject.solveId].onFound(pathToPoints(messageObject.path))
             } else
                 solvesList[messageObject.solveId].onNotFound()
             if('solveId' in messageObject) {
-                Qak.debug('Removing',messageObject.solveId)
+//                Qak.debug('Removing',messageObject.solveId) //¤qakdbg
                 delete solvesList[messageObject.solveId]
             }
         }
@@ -127,9 +127,9 @@ Entity {
         }
 
         if(simplify) {
-            Qak.debug('Simplifing walk path. Before simplify',points.length)
+//            Qak.debug('Simplifing walk path. Before simplify',points.length) //¤qakdbg
             points = simplifyPath(points, 2.5)
-            Qak.debug('after simplify', points.length)
+//            Qak.debug('after simplify', points.length) //¤qakdbg
         }
 
         return points
@@ -185,7 +185,7 @@ Entity {
         child.show = true
         var idx = child.idx
         var times = Math.floor(idx/grid.columns)
-        Qak.debug('start grid box',idx, times)
+//        Qak.debug('start grid box',idx, times) //¤qakdbg
         startPosition.x = idx-(times*grid.columns)
         startPosition.y = times
 
@@ -193,7 +193,7 @@ Entity {
         child.show = true
         idx = child.idx
         times = Math.floor(idx/grid.columns)
-        Qak.debug('end grid box',idx,times)
+//        Qak.debug('end grid box',idx,times) //¤qakdbg
         endPosition.x = idx-(times*grid.columns)
         endPosition.y = times
 
@@ -205,7 +205,7 @@ Entity {
 
 
             if(child.on) {
-                Qak.debug('adding child at index',i,child.idx)
+//                Qak.debug('adding child at index',i,child.idx) //¤qakdbg
                 rs.push(0)
             } else
                 rs.push(1)
@@ -217,7 +217,7 @@ Entity {
             }
         }
 
-        Qak.debug("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y)
+//        Qak.debug("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y) //¤qakdbg
 
         var startPos = { 'x':startPosition.x, 'y': startPosition.y }
         var endPos = { 'x':endPosition.x, 'y': endPosition.y }

@@ -110,7 +110,7 @@ ItemAnimationPrivate {
             return
         }*/
 
-        Qak.debug('ItemAnimation','goalSequence',route.join(' -> '))
+//        Qak.debug('ItemAnimation','goalSequence',route.join(' -> ')) //¤qakdbg
         p.sequencePath = route
     }
 
@@ -121,7 +121,7 @@ ItemAnimationPrivate {
     signal restarted
 
     onSequencesChanged: {
-        Qak.debug('ItemAnimation','reading sequences')
+//        Qak.debug('ItemAnimation','reading sequences') //¤qakdbg
         frameTicker.ready = false
         p.sequenceNameIndex = {}
         for(var i in sequences) {
@@ -130,7 +130,7 @@ ItemAnimationPrivate {
             p.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
-                Qak.debug('ItemAnimation','reversing',s.name)
+//                Qak.debug('ItemAnimation','reversing',s.name) //¤qakdbg
                 sequences[i].frames = sequences[i].frames.reverse()
             }
         }
@@ -289,7 +289,7 @@ ItemAnimationPrivate {
 
             // NOTE stupid trigger if goalSequence is set during init
             if(goalSequence !== "" && p.sequencePath.length <= 0) {
-                Qak.debug('ItemAnimation', 'Correcting goalSequence',goalSequence)
+//                Qak.debug('ItemAnimation', 'Correcting goalSequence',goalSequence) //¤qakdbg
                 setGoalSequence()
             }
 
@@ -316,13 +316,13 @@ ItemAnimationPrivate {
                 else
                     r.frame = activeFrame // this should idealy be emitted as changed even if the same frame?
 
-                Qak.debug('ItemAnimation','showing',p.activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex)
+//                Qak.debug('ItemAnimation','showing',p.activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
 
                 // TODO optimize
                 var endSequenceFrameIndex = p.activeSequence.frames.length-1
 
                 if(p.sequenceFrameIndex == endSequenceFrameIndex) {
-                    Qak.debug('ItemAnimation','end of sequence',p.activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...')
+//                    Qak.debug('ItemAnimation','end of sequence',p.activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...') //¤qakdbg
 
                     var nextSequence = ""
                     if(p.sequencePath.length > 0) {
@@ -330,7 +330,7 @@ ItemAnimationPrivate {
 
                         // TODO fix this mess
                         while(p.sequencePath.length > 0 && nextSequence === p.activeSequence.name) {
-                            Qak.debug('ItemAnimation','already at',nextSequence,'trying next')
+//                            Qak.debug('ItemAnimation','already at',nextSequence,'trying next') //¤qakdbg
                             nextSequence = p.sequencePath.shift()
                         }
 
@@ -369,11 +369,11 @@ ItemAnimationPrivate {
 
                     } else if(endSequenceFrameIndex == 0) {
                         // The sequence only has one frame
-                        Qak.debug('ItemAnimation','Only one frame and nowhere to go next. Stopping...')
+//                        Qak.debug('ItemAnimation','Only one frame and nowhere to go next. Stopping...') //¤qakdbg
                         r.setRunning(false)
                         return
                     } else { // missing to: {...} entry - stop
-                        Qak.debug('ItemAnimation','nowhere to go. Stopping...')
+//                        Qak.debug('ItemAnimation','nowhere to go. Stopping...') //¤qakdbg
                         r.setRunning(false)
                         return
                     }

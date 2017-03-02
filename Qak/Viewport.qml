@@ -13,7 +13,7 @@ Item {
     QtObject {
         id: internal
         property string fillModeString
-        onFillModeStringChanged: Qak.debug('Viewport',viewport,fillModeString)
+//        onFillModeStringChanged: Qak.debug('Viewport',viewport,fillModeString) //¤qakdbg
     }
 
     readonly property alias assetMultiplier: localAssetSizeController.assetMultiplier

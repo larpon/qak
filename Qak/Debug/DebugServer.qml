@@ -111,7 +111,7 @@ WebSocketServer {
         clientId++
         clients['qdbs-'+clientId] = { id: 'qdbs-'+clientId, socket: webSocket }
 
-        console.debug('Qak.Debug.DebugServer','client',clientId,'connected')
+//        console.debug('Qak.Debug.DebugServer','client',clientId,'connected') //¤qakdbg
 
         webSocket.onTextMessageReceived.connect(function(message) {
             var id = getClientId(webSocket)

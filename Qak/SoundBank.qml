@@ -273,9 +273,9 @@ Item {
 
         if(object.group === '') {
             bank[object.tag] = object
-            Qak.debug('SoundBank',soundBank,'Loaded',object.tag)
+//            Qak.debug('SoundBank',soundBank,'Loaded',object.tag) //¤qakdbg
         } else {
-            Qak.debug('SoundBank',soundBank,'Loaded',object.tag,'in group',object.group)
+//            Qak.debug('SoundBank',soundBank,'Loaded',object.tag,'in group',object.group) //¤qakdbg
             if(!groups[object.group])
                 groups[object.group] = {}
             groups[object.group][object.tag] = object

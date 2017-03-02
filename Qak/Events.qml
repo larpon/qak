@@ -17,14 +17,14 @@ QtObject {
     }
 
     function sub(topic, handler) {
-        Qak.debug(Qak.gid+'Events','::sub',topic) //¤qakdbg
+//        Qak.debug(Qak.gid+'Events','::sub',topic) //¤qakdbg
         list(topic).push(handler)
         subscribe(topic, handler)
         return handler
     }
 
     function unsub(topic, handler) {
-        Qak.debug(Qak.gid+'Events','::unsub',topic) //¤qakdbg
+//        Qak.debug(Qak.gid+'Events','::unsub',topic) //¤qakdbg
         var e = list(topic),
         i = e.indexOf(handler)
         if (~i) e.splice(i, 1)
@@ -34,11 +34,11 @@ QtObject {
     function pub(topic, event) {
         var l = list('*').concat(list(topic))
         for(var k in l) {
-            Qak.debug(Qak.gid+'Events','::pub',topic) //¤qakdbg
+//            Qak.debug(Qak.gid+'Events','::pub',topic) //¤qakdbg
             l[k](event)
         }
         publish(topic, event)
-        if(l.length <= 0) { Qak.debug(Qak.gid+'Events','::pub','no subscribers for',topic) } //¤qakdbg
+//        if(l.length <= 0) { Qak.debug(Qak.gid+'Events','::pub','no subscribers for',topic) } //¤qakdbg
     }
 
 }
