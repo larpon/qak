@@ -22,11 +22,15 @@ Item {
     signal stopped
 
     function moveTo(x,y) {
+        if(!x || !y || isNaN(x) || isNaN(y))
+            return
         pushMove(x,y)
         startMoving()
     }
 
     function pushMove(x,y) {
+        if(!x || !y || isNaN(x) || isNaN(y))
+            return
         moveQueue.push(Qt.point(x,y))
         /* Use this for binding to moveQueue changes
         var t = moveQueue
@@ -62,7 +66,12 @@ Item {
             list.push(temp)
             pp = p
         }
-        //Qak.debug('Travel distance',d)
+//        Qak.debug('Travel distance',d) //¤qakdbg
+        if(isNaN(d)) {
+            moveQueue = []
+            return
+        }
+
         pathAnim.duration = d*2*speedModifier
         if(duration > 0) {
             pathAnim.duration = duration
