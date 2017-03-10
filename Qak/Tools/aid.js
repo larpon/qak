@@ -29,6 +29,17 @@ function loopChildren(object,callback) {
     }
 }
 
+function loopParent(object,callback) {
+    if(object !== undefined && object !== null) {
+        var parent = object.parent
+        if(parent) {
+            callback(parent)
+            if(parent.parent)
+                loopParent(parent.parent,callback)
+        }
+    }
+}
+
 function remap(oldValue, oldMin, oldMax, newMin, newMax) {
     // Linear conversion
     // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
