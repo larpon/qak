@@ -41,7 +41,7 @@ Item {
     property string adaptiveSource: ""
     property alias source: adaptive.source
 
-    property Item viewport: findViewport(entity)
+    property Viewport viewport: findViewport(entity)
 
     readonly property MouseArea input: activeInput()
 

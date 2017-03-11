@@ -98,7 +98,7 @@ function get() {
 
                             that.onSuccess(that.incubator.object)
                             if(incubatorInstance.debug)console.info('incubated', that.id, that.incubator.object)
-                            delete incubatorInstance.queue[that.id]
+                                delete incubatorInstance.queue[that.id]
                             if(incubatorInstance.debug) console.info('new size',  incubatorInstance.queueSize())
 
                         } else

@@ -156,8 +156,6 @@ ItemAnimationPrivate {
 
         property int totalAmountOfFrames: _frames.children.length
 
-        readonly property var inc: Incubator.get()
-
         function clearFrames() {
             for(var i in frames) {
                 frames[i].destroy()
@@ -166,25 +164,25 @@ ItemAnimationPrivate {
         }
 
         function spawnFrames() {
-            p.clearFrames()
-            //p.inc.async = false
+            clearFrames()
 
+            // TODO FIXME async wil cause "There are still "x" items in the process of being created at engine destruction."
+            Incubate.asynchronous = false
 
             for(var i = 1; i <= model; i++) {
-                p.inc.later(delegate, _frames, { frame: i }, function(o){
+                Incubate.later(delegate, _frames, { frame: i }, function(o){
                     r.frames[o.frame+""] = o
                 } )
             }
-            p.inc.incubate()
-            //p.inc.async = true
+            Incubate.incubate()
         }
 
 
         function emitFrameSynced() {
-            if(!p.activeSequence)
+            if(!activeSequence)
                 frameSynced(r.frame, '')
             else
-                frameSynced(r.frame, p.currentActiveSequence)
+                frameSynced(r.frame, currentActiveSequence)
         }
 
         function reset() {
@@ -274,13 +272,16 @@ ItemAnimationPrivate {
         property bool ready: false
         property bool paused: r.paused
 
+        property alias __activeSequence: p.activeSequence
+
+        property var __activeFrame
         onTriggered: {
 
             // For inital frame
-            if(!p.activeSequence) {
-                p.activeSequence = sequences[p.activeSequenceIndex]
+            if(!__activeSequence) {
+                __activeSequence = sequences[p.activeSequenceIndex]
 
-                if(p.activeSequence === undefined) {
+                if(__activeSequence === undefined) {
                     Qak.error('ItemAnimation','No active sequence can be set. Stopping...')
                     r.setRunning(false)
                     return
@@ -307,34 +308,34 @@ ItemAnimationPrivate {
             }
 
             // Figure out next frame
-            if('frames' in p.activeSequence && Aid.isObject( p.activeSequence.frames )) {
+            if('frames' in __activeSequence && Aid.isObject( __activeSequence.frames )) {
 
-                var activeFrame = p.activeSequence.frames[p.sequenceFrameIndex]
+                __activeFrame = __activeSequence.frames[p.sequenceFrameIndex]
                 // Show the active frame
-                if(r.frame === activeFrame) // NOTE Hack (again) to work around of variable user assignment
+                if(r.frame === __activeFrame) // NOTE Hack (again) to work around of variable user assignment
                     p.emitFrameSynced()
                 else
-                    r.frame = activeFrame // this should idealy be emitted as changed even if the same frame?
+                    r.frame = __activeFrame // this should idealy be emitted as changed even if the same frame?
 
-//                Qak.debug('ItemAnimation','showing',p.activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
+//                Qak.debug('ItemAnimation','showing',__activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
 
                 // TODO optimize
-                var endSequenceFrameIndex = p.activeSequence.frames.length-1
+                var endSequenceFrameIndex = __activeSequence.frames.length-1
 
                 if(p.sequenceFrameIndex == endSequenceFrameIndex) {
-//                    Qak.debug('ItemAnimation','end of sequence',p.activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...') //¤qakdbg
+//                    Qak.debug('ItemAnimation','end of sequence',__activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...') //¤qakdbg
 
                     var nextSequence = ""
                     if(p.sequencePath.length > 0) {
                         nextSequence = p.sequencePath.shift()
 
                         // TODO fix this mess
-                        while(p.sequencePath.length > 0 && nextSequence === p.activeSequence.name) {
+                        while(p.sequencePath.length > 0 && nextSequence === __activeSequence.name) {
 //                            Qak.debug('ItemAnimation','already at',nextSequence,'trying next') //¤qakdbg
                             nextSequence = p.sequencePath.shift()
                         }
 
-                        if(nextSequence === p.activeSequence.name)
+                        if(nextSequence === __activeSequence.name)
                             nextSequence = ""
                         else {
                             p.nextActiveSequence = nextSequence
@@ -343,8 +344,8 @@ ItemAnimationPrivate {
                                 p.signalGoalSequenceReached = true
                             }
                         }
-                    } else if('to' in p.activeSequence) {
-                        var seqTo = p.activeSequence.to
+                    } else if('to' in __activeSequence) {
+                        var seqTo = __activeSequence.to
 
                         var totalWeight = 0, cumWeight = 0
                         for(var seqName in seqTo) {
