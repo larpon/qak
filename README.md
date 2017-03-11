@@ -12,3 +12,7 @@ Although Qak is in use in a couple of published games (and run quite well) - it'
 Qak's codebase in general is stable but right now it can be used in ways that can break performance or stability - thus - not really ready for production use.
 
 It's also poorly documented - sorry, I need more spare time :)
+
+Currently used in these games
+* [Dead Ascend](http://games.blackgrain.dk/deadascend)
+* [Hammer Bees](http://games.blackgrain.dk/hammerbees)
