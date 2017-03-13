@@ -26,6 +26,7 @@ ItemAnimationPrivate {
     property int defaultFrameDelay: 60
 
     property var sequences: []
+    property var __validSequences: []
     readonly property alias sequence: p.activeSequence
     readonly property alias sequenceName: p.currentActiveSequence
 
@@ -122,18 +123,42 @@ ItemAnimationPrivate {
 
     onSequencesChanged: {
 //        Qak.debug('ItemAnimation','reading sequences') //¤qakdbg
+        __validSequences = []
         frameTicker.ready = false
         p.sequenceNameIndex = {}
         for(var i in sequences) {
-            var s = sequences[i]
+            var s = Aid.clone(sequences[i])
+
+            // Validate sequence object
+            if(!('frames' in s && Aid.isObject( s.frames )))
+                continue
+
             // TODO validate each sequence object - or force use of some new QML type e.g. "SequenceItem" ??
             p.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
 //                Qak.debug('ItemAnimation','reversing',s.name) //¤qakdbg
-                sequences[i].frames = sequences[i].frames.reverse()
+                s.frames = s.frames.reverse()
             }
+
+            if('to' in s) {
+                s.__toCum = {}
+                var totalWeight = 0, cumWeight = 0
+                for(var seqName in s.to) {
+                    totalWeight += s.to[seqName]
+
+                    if(s.to[seqName] <= 0)
+                        continue
+
+                    cumWeight += s.to[seqName]
+                    s.__toCum[seqName] = cumWeight
+                }
+                s.toTotalWeight = totalWeight
+            }
+
+            __validSequences.push(s)
         }
+
         frameTicker.ready = true
     }
 
@@ -236,7 +261,7 @@ ItemAnimationPrivate {
         }
 
         p.activeSequenceIndex = p.sequenceNameIndex[name]
-        p.activeSequence = sequences[p.activeSequenceIndex]
+        p.activeSequence = __validSequences[p.activeSequenceIndex]
         if('name' in p.activeSequence) {
             p.currentActiveSequence = p.activeSequence.name
         }
@@ -275,11 +300,18 @@ ItemAnimationPrivate {
         property alias __activeSequence: p.activeSequence
 
         property var __activeFrame
-        onTriggered: {
+        property int __sequencePathLength: p.sequencePath.length
 
+        property int __randomInt: 0
+        property var __mathFloor: Math.floor
+        property var __mathRandom: Math.random
+
+        property var __activeSequenceCum
+
+        onTriggered: {
             // For inital frame
             if(!__activeSequence) {
-                __activeSequence = sequences[p.activeSequenceIndex]
+                __activeSequence = __validSequences[p.activeSequenceIndex]
 
                 if(__activeSequence === undefined) {
                     Qak.error('ItemAnimation','No active sequence can be set. Stopping...')
@@ -289,7 +321,7 @@ ItemAnimationPrivate {
             }
 
             // NOTE stupid trigger if goalSequence is set during init
-            if(goalSequence !== "" && p.sequencePath.length <= 0) {
+            if(goalSequence !== "" && __sequencePathLength <= 0) {
 //                Qak.debug('ItemAnimation', 'Correcting goalSequence',goalSequence) //¤qakdbg
                 setGoalSequence()
             }
@@ -308,85 +340,71 @@ ItemAnimationPrivate {
             }
 
             // Figure out next frame
-            if('frames' in __activeSequence && Aid.isObject( __activeSequence.frames )) {
+            __activeFrame = __activeSequence.frames[p.sequenceFrameIndex]
 
-                __activeFrame = __activeSequence.frames[p.sequenceFrameIndex]
-                // Show the active frame
-                if(r.frame === __activeFrame) // NOTE Hack (again) to work around of variable user assignment
-                    p.emitFrameSynced()
-                else
-                    r.frame = __activeFrame // this should idealy be emitted as changed even if the same frame?
+            // Show the active frame
+            if(r.frame === __activeFrame) // NOTE Hack (again) to work around of variable user assignment
+                p.emitFrameSynced()
+            else
+                r.frame = __activeFrame // this should idealy be emitted as changed even if the same frame?
 
 //                Qak.debug('ItemAnimation','showing',__activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
 
-                // TODO optimize
-                var endSequenceFrameIndex = __activeSequence.frames.length-1
+            // TODO optimize
+            var endSequenceFrameIndex = __activeSequence.frames.length-1
 
-                if(p.sequenceFrameIndex == endSequenceFrameIndex) {
+            if(p.sequenceFrameIndex == endSequenceFrameIndex) {
 //                    Qak.debug('ItemAnimation','end of sequence',__activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...') //¤qakdbg
 
-                    var nextSequence = ""
-                    if(p.sequencePath.length > 0) {
-                        nextSequence = p.sequencePath.shift()
+                var nextSequence = ""
+                if(__sequencePathLength > 0) {
+                    nextSequence = p.sequencePath.shift()
 
-                        // TODO fix this mess
-                        while(p.sequencePath.length > 0 && nextSequence === __activeSequence.name) {
+                    // TODO fix this mess
+                    while(__sequencePathLength > 0 && nextSequence === __activeSequence.name) {
 //                            Qak.debug('ItemAnimation','already at',nextSequence,'trying next') //¤qakdbg
-                            nextSequence = p.sequencePath.shift()
-                        }
-
-                        if(nextSequence === __activeSequence.name)
-                            nextSequence = ""
-                        else {
-                            p.nextActiveSequence = nextSequence
-                            if(p.sequencePath.length === 0) {
-                                r.goalSequence = ""
-                                p.signalGoalSequenceReached = true
-                            }
-                        }
-                    } else if('to' in __activeSequence) {
-                        var seqTo = __activeSequence.to
-
-                        var totalWeight = 0, cumWeight = 0
-                        for(var seqName in seqTo) {
-                            totalWeight += seqTo[seqName]
-                        }
-                        var randInt = Math.floor(Math.random()*totalWeight)
-
-                        for(seqName in seqTo) {
-                            if(seqTo[seqName] <= 0)
-                                continue
-
-                            cumWeight += seqTo[seqName]
-                            if (randInt < cumWeight) {
-                                nextSequence = seqName
-                                break
-                            }
-
-                        }
-
-                        // Instruct state to setActiveSequence() next run
-                        p.nextActiveSequence = nextSequence
-
-                    } else if(endSequenceFrameIndex == 0) {
-                        // The sequence only has one frame
-//                        Qak.debug('ItemAnimation','Only one frame and nowhere to go next. Stopping...') //¤qakdbg
-                        r.setRunning(false)
-                        return
-                    } else { // missing to: {...} entry - stop
-//                        Qak.debug('ItemAnimation','nowhere to go. Stopping...') //¤qakdbg
-                        r.setRunning(false)
-                        return
+                        nextSequence = p.sequencePath.shift()
                     }
 
-                } else
-                    p.sequenceFrameIndex++
+                    if(nextSequence === __activeSequence.name)
+                        nextSequence = ""
+                    else {
+                        p.nextActiveSequence = nextSequence
+                        if(__sequencePathLength === 0) {
+                            r.goalSequence = ""
+                            p.signalGoalSequenceReached = true
+                        }
+                    }
+                } else if('to' in __activeSequence) {
+                    __activeSequenceCum = __activeSequence.__toCum
 
-            } else {
-                Qak.error('No frames. Skipping...')
-                r.setRunning(false)
-                return
-            }
+                    __randomInt = __mathFloor(__mathRandom()*__activeSequence.toTotalWeight)
+
+                    for(var seqName in __activeSequenceCum) {
+
+                        if (__randomInt < __activeSequenceCum[seqName]) {
+                            nextSequence = seqName
+                            break
+                        }
+
+                    }
+
+                    // Instruct state to setActiveSequence() next run
+                    p.nextActiveSequence = nextSequence
+
+                } else if(endSequenceFrameIndex == 0) {
+                    // The sequence only has one frame
+//                        Qak.debug('ItemAnimation','Only one frame and nowhere to go next. Stopping...') //¤qakdbg
+                    r.setRunning(false)
+                    return
+                } else { // missing to: {...} entry - stop
+//                        Qak.debug('ItemAnimation','nowhere to go. Stopping...') //¤qakdbg
+                    r.setRunning(false)
+                    return
+                }
+
+            } else
+                p.sequenceFrameIndex++
 
         }
 
