@@ -252,6 +252,7 @@ ItemAnimationPrivate {
         setRunning(true)
     }
 
+    property alias __activeSequence: p.activeSequence
     function setActiveSequence(name) {
         frameTicker.stop()
 
@@ -261,22 +262,20 @@ ItemAnimationPrivate {
         }
 
         p.activeSequenceIndex = p.sequenceNameIndex[name]
-        p.activeSequence = __validSequences[p.activeSequenceIndex]
-        if('name' in p.activeSequence) {
-            p.currentActiveSequence = p.activeSequence.name
+        __activeSequence = __validSequences[p.activeSequenceIndex]
+        if('name' in __activeSequence) {
+            p.currentActiveSequence = __activeSequence.name
         }
         p.sequenceFrameIndex = 0
-        if('frames' in p.activeSequence && Aid.isObject( p.activeSequence.frames )) {
 
-            r.frame = p.activeSequence.frames[p.sequenceFrameIndex]
-        }
+        r.frame = __activeSequence.frames[p.sequenceFrameIndex]
 
         // Figure out frame delay
-        if('duration' in p.activeSequence) {
+        if('duration' in __activeSequence) {
             // NOTE TODO TIMER? once the animation is started parameters can't be changed on it
             // So if anything changes the animation must be restarted
-            if(p.frameDelay !== p.activeSequence.duration)
-                p.frameDelay = p.activeSequence.duration
+            if(p.frameDelay !== __activeSequence.duration)
+                p.frameDelay = __activeSequence.duration
         } else {
             if(p.frameDelay != defaultFrameDelay)
                 p.frameDelay = defaultFrameDelay
@@ -298,6 +297,7 @@ ItemAnimationPrivate {
         property bool paused: r.paused
 
         property alias __activeSequence: p.activeSequence
+        property alias __nextActiveSequence: p.nextActiveSequence
 
         property var __activeFrame
         property int __sequencePathLength: p.sequencePath.length
@@ -307,6 +307,10 @@ ItemAnimationPrivate {
         property var __mathRandom: Math.random
 
         property var __activeSequenceCum
+        property string __nextSequence: ""
+
+        property string __seqName: ""
+        property int __endSequenceFrameIndex: 0
 
         onTriggered: {
             // For inital frame
@@ -327,16 +331,16 @@ ItemAnimationPrivate {
             }
 
             // If instructed to set a new active sequence
-            if(p.nextActiveSequence != '') {
+            if(__nextActiveSequence != '') {
                 //Qak.debug('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
-                setActiveSequence(p.nextActiveSequence)
+                setActiveSequence(__nextActiveSequence)
 
                 if(p.signalGoalSequenceReached) {
                     p.signalGoalSequenceReached = false
                     r.goalSequenceReached()
                 }
 
-                p.nextActiveSequence = ""
+                __nextActiveSequence = ""
             }
 
             // Figure out next frame
@@ -351,25 +355,25 @@ ItemAnimationPrivate {
 //                Qak.debug('ItemAnimation','showing',__activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
 
             // TODO optimize
-            var endSequenceFrameIndex = __activeSequence.frames.length-1
+            __endSequenceFrameIndex = __activeSequence.frames.length-1
 
-            if(p.sequenceFrameIndex == endSequenceFrameIndex) {
+            if(p.sequenceFrameIndex == __endSequenceFrameIndex) {
 //                    Qak.debug('ItemAnimation','end of sequence',__activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...') //¤qakdbg
 
-                var nextSequence = ""
+                __nextSequence = ""
                 if(__sequencePathLength > 0) {
-                    nextSequence = p.sequencePath.shift()
+                    __nextSequence = p.sequencePath.shift()
 
                     // TODO fix this mess
-                    while(__sequencePathLength > 0 && nextSequence === __activeSequence.name) {
+                    while(__sequencePathLength > 0 && __nextSequence === __activeSequence.name) {
 //                            Qak.debug('ItemAnimation','already at',nextSequence,'trying next') //¤qakdbg
-                        nextSequence = p.sequencePath.shift()
+                        __nextSequence = p.sequencePath.shift()
                     }
 
-                    if(nextSequence === __activeSequence.name)
-                        nextSequence = ""
+                    if(__nextSequence === __activeSequence.name)
+                        __nextSequence = ""
                     else {
-                        p.nextActiveSequence = nextSequence
+                        __nextActiveSequence = __nextSequence
                         if(__sequencePathLength === 0) {
                             r.goalSequence = ""
                             p.signalGoalSequenceReached = true
@@ -380,19 +384,19 @@ ItemAnimationPrivate {
 
                     __randomInt = __mathFloor(__mathRandom()*__activeSequence.toTotalWeight)
 
-                    for(var seqName in __activeSequenceCum) {
+                    for(__seqName in __activeSequenceCum) {
 
-                        if (__randomInt < __activeSequenceCum[seqName]) {
-                            nextSequence = seqName
+                        if (__randomInt < __activeSequenceCum[__seqName]) {
+                            __nextSequence = __seqName
                             break
                         }
 
                     }
 
                     // Instruct state to setActiveSequence() next run
-                    p.nextActiveSequence = nextSequence
+                    __nextActiveSequence = __nextSequence
 
-                } else if(endSequenceFrameIndex == 0) {
+                } else if(__endSequenceFrameIndex == 0) {
                     // The sequence only has one frame
 //                        Qak.debug('ItemAnimation','Only one frame and nowhere to go next. Stopping...') //¤qakdbg
                     r.setRunning(false)
@@ -418,7 +422,8 @@ ItemAnimationPrivate {
         on: 1
         off: 0
 
-        toggle: r.frame
+        property alias frame: r.frame
+        toggle: frame
         property bool balanced: children.length > 0 && p.totalAmountOfFrames === children.length
 
     }
