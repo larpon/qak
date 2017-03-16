@@ -8,6 +8,7 @@
 #include <QMetaProperty>
 #include <QStandardPaths>
 #include <QDir>
+#include <QSaveFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>

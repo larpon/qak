@@ -194,12 +194,15 @@ void Store::save()
     }
     json.setObject(rootItem);
     QByteArray bJson = json.toJson(QJsonDocument::Indented);
-    QFile file(path);
+
+    QSaveFile file(path);
     if(file.open(QIODevice::WriteOnly))
         file.write(bJson);
-    else
+    else {
+        file.cancelWriting();
         qWarning() << "Store" << _name << "warning: Couldn't save to" << path;
-    file.close();
+    }
+    file.commit();
 
     //qDebug() << "Store saved" << bJson << "in" << path;
     emit saved();
