@@ -22,14 +22,14 @@ Item {
     signal stopped
 
     function moveTo(x,y) {
-        if(!x || !y || isNaN(x) || isNaN(y))
+        if((x === undefined || x === null || y === undefined || y === null) || isNaN(x) || isNaN(y))
             return
         pushMove(x,y)
         startMoving()
     }
 
     function pushMove(x,y) {
-        if(!x || !y || isNaN(x) || isNaN(y))
+        if((x === undefined || x === null || y === undefined || y === null) || isNaN(x) || isNaN(y))
             return
         moveQueue.push(Qt.point(x,y))
         /* Use this for binding to moveQueue changes
@@ -68,6 +68,8 @@ Item {
             list.push(temp)
             pp = p
         }
+
+        console.log('Mover d',d)
 //        Qak.debug('Travel distance',d) //¤qakdbg
         if(isNaN(d)) {
             moveQueue = []
