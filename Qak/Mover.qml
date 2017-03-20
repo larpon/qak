@@ -50,8 +50,10 @@ Item {
     }
 
     function startMoving() {
-        if(locked)
+        if(locked) {
+//        Qak.debug(Qak.gid+'Mover','::startMoving target is locked') //¤qakdbg
             return
+        }
 
         pathAnim.stop()
 

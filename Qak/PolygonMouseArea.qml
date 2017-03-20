@@ -5,6 +5,9 @@ import Qak 1.0
 MouseArea {
     id: mouseArea
 
+    // If no polygon is sat or it's empty - be a normal mouse area
+    property bool normalWhenEmpty: true
+
     // A JavaScript Array of { x: <number>, y: <number> } objects
     property var polygon: ([])
 
@@ -29,6 +32,8 @@ MouseArea {
     function has(mouse) {
         if(!enabled)
             return false
+        if(normalWhenEmpty && (!polygon || polygon.length <= 0))
+            return contains(mouse)
         return pointInPolygon(mouse,polygon)
     }
 
