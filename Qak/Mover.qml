@@ -69,7 +69,6 @@ Item {
             pp = p
         }
 
-        console.log('Mover d',d)
 //        Qak.debug('Travel distance',d) //¤qakdbg
         if(isNaN(d)) {
             moveQueue = []
