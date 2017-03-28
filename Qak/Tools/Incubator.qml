@@ -75,7 +75,7 @@ QtObject {
         qo.component = component
         qo.incubator = undefined
         qo.parent = parent
-        qo.attributes = attributes
+        qo.attributes = attributes || {}
         qo.onSuccess = successCallback || function(){}
 
         qo.componentStatusCallback = function(){
