@@ -1,7 +1,7 @@
 # Qak - the QML aid kit
 Qak aims to provide a set of helpful and reusable (Qt5) QML components.
 
-Right now qak, as a whole, are centered around components useful for 2D game making.
+Right now Qak, as a whole, are centered around components useful for 2D game making.
 The master plan, however, is to break it up into smaller dedicated areas/modules.
 
 Qak uses code from this project
@@ -14,5 +14,5 @@ Qak's codebase in general is stable but right now it can be used in ways that ca
 It's also poorly documented - sorry, I need more spare time :)
 
 Currently used in these games
-* [Dead Ascend](http://games.blackgrain.dk/deadascend)
+* [Dead Ascend](http://games.blackgrain.dk/deadascend) (Open source)
 * [Hammer Bees](http://games.blackgrain.dk/hammerbees)
