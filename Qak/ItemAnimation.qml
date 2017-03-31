@@ -192,7 +192,7 @@ ItemAnimationPrivate {
             clearFrames()
 
             // TODO FIXME async wil cause "There are still "x" items in the process of being created at engine destruction."
-            Incubate.asynchronous = false
+            //Incubate.asynchronous = false
 
             for(var i = 1; i <= model; i++) {
                 Incubate.later(delegate, _frames, { frame: i }, function(o){

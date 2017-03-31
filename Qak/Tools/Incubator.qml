@@ -1,42 +1,42 @@
 import QtQuick 2.0
 
-// NOTE "import Qak 1.0" and "import ".." " // <- will cause stall
-import "."
-
 pragma Singleton
 
 // TODO make proper debug output and optimize
 QtObject {
     id: incubator
 
-    property var queue: ({})
+    property int __batch: 0
+    property var queue: ([])
+    property var running: ([])
+    property var done: ([])
     property bool asynchronous: true
 
-    function queueSize() {
-        var size = 0, key
-        for(key in queue) {
-            if (key in queue) size++
-        }
-        return size
-    }
-
     function now(input, parent, attributes, successCallback) {
-        var queueObject = _toQueue(input, parent, attributes, successCallback)
-        queueObject.go()
+        __toQueue(input, parent, attributes, successCallback)
+        incubate()
     }
 
     function later(input, parent, attributes, successCallback){
-        _toQueue(input, parent, attributes, successCallback)
+        __toQueue(input, parent, attributes, successCallback)
     }
 
     function incubate() {
         for(var qid in queue) {
-            if(queue[qid])
+            if(queue[qid]) {
+                running.push(queue[qid])
                 queue[qid].go()
+            }
         }
+        queue = []
+        __batch++
     }
 
-    function _toQueue(input, parent, attributes, successCallback) {
+    function __done(id) {
+        done.push(id)
+    }
+
+    function __toQueue(input, parent, attributes, successCallback) {
 
         //console.log('input is?',input.toString(),typeof input,Object.prototype.toString.call(input))
 
@@ -54,7 +54,7 @@ QtObject {
             }
         } else if(type == 'object') {
             type = input.toString()
-            if(Aid.startsWith(type,"QQmlComponent"))
+            if(startsWith(type,"QQmlComponent"))
                 queueObject = this.fromComponent(input,parent,attributes,successCallback)
             else
                 throw 'Unknown input "'+input+'" of type "'+type+'"'
@@ -71,7 +71,8 @@ QtObject {
         var incubatorInstance = this
 
         var qo = {}
-        qo.id = incubator.queueSize()
+        qo.id = incubator.queue.length
+        qo.batch = __batch
         qo.component = component
         qo.incubator = undefined
         qo.parent = parent
@@ -99,7 +100,7 @@ QtObject {
 
                         that.onSuccess(that.incubator.object)
 //                      console.debug('incubated', that.id, that.incubator.object) //¤qakdbg
-                        incubator.queue[that.id] = undefined
+                        incubator.__done(that.id)
                         //delete incubator.queue[that.id]
 //                      console.debug('new size',  incubatorInstance.queueSize()) //¤qakdbg
                     } else
@@ -120,6 +121,8 @@ QtObject {
         }
 
         qo.go = function() {
+            //console.debug('Incubator','go', this.id, this.batch) //¤qakdbg
+
             if(this.component.status === Component.Ready)
                 this.componentStatusCallback()
             else {
@@ -134,7 +137,7 @@ QtObject {
             }
         }
 
-        incubator.queue[qo.id] = qo
+        incubator.queue.push(qo)
 
         return qo
     }
@@ -143,6 +146,10 @@ QtObject {
         qml = qml.replace(/([A-Z]+\S+ *\{[^}]+\})/, "Component { $1 ")+'}'
         //console.log(qml)
         return qml
+    }
+
+    function startsWith (haystack, needle) {
+        return haystack.lastIndexOf(needle, 0) === 0
     }
 
 }
