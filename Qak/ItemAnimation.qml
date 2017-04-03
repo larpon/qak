@@ -51,6 +51,7 @@ ItemAnimationPrivate {
     property string goalSequence: ""
 
     property var frames: ({})
+    readonly property alias count: p.totalAmountOfFramesSpawned
 
     property int frame: 1
     onFrameChanged: p.emitFrameSynced()
@@ -180,9 +181,12 @@ ItemAnimationPrivate {
         property var sequenceNameIndex: ({})
 
         property int totalAmountOfFrames: _frames.children.length
+        property int totalAmountOfFramesSpawned: 0
+
 
         function clearFrames() {
             for(var i in frames) {
+                totalAmountOfFramesSpawned--
                 frames[i].destroy()
             }
             frames = {}
@@ -194,6 +198,7 @@ ItemAnimationPrivate {
             for(var i = 1; i <= model; i++) {
                 Incubate.later(delegate, _frames, { frame: i }, function(o){
                     r.frames[o.frame+""] = o
+                    totalAmountOfFramesSpawned++
                 } )
             }
             Incubate.incubate()
@@ -218,6 +223,7 @@ ItemAnimationPrivate {
             sequencePath = []
             signalGoalSequenceReached = false
             sequenceNameIndex = {}
+            //totalAmountOfFramesSpawned = 0
         }
     }
 
