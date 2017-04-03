@@ -97,12 +97,10 @@ QtObject {
                     var status = that.incubator.status
 
                     if(Component && status === Component.Ready) {
-
                         that.onSuccess(that.incubator.object)
 //                      console.debug('incubated', that.id, that.incubator.object) //¤qakdbg
                         incubator.__done(that.id)
                         //delete incubator.queue[that.id]
-//                      console.debug('new size',  incubatorInstance.queueSize()) //¤qakdbg
                     } else
                         throw 'incubation error '+status
                 }
@@ -121,7 +119,7 @@ QtObject {
         }
 
         qo.go = function() {
-            //console.debug('Incubator','go', this.id, this.batch) //¤qakdbg
+//            //console.debug('Incubator','go', this.id, this.batch) //¤qakdbg
 
             if(this.component.status === Component.Ready)
                 this.componentStatusCallback()
@@ -137,7 +135,7 @@ QtObject {
             }
         }
 
-        incubator.queue.push(qo)
+        incubator.queue.unshift(qo)
 
         return qo
     }
