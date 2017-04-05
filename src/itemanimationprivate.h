@@ -11,6 +11,7 @@ class ItemAnimationPrivate : public QQuickItem
     Q_OBJECT
 
     Q_PROPERTY(bool running READ running WRITE setRunning NOTIFY runningChanged)
+    Q_PROPERTY(int frame READ frame WRITE setFrame NOTIFY frameChanged)
 
 public:
     ItemAnimationPrivate(QQuickItem* parent = 0);
@@ -18,9 +19,8 @@ public:
     void componentComplete();
 
     bool running() const;
-
     int frame() const;
-    void setFrame(int frame);
+
 
 signals:
     void runningChanged();
@@ -29,6 +29,7 @@ signals:
 
 public slots:
     void setRunning(bool running);
+    void setFrame(int frame);
     void setDynamicProperty(QObject *object, const QString &name, const QVariant &value);
 
 private:

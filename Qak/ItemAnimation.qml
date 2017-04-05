@@ -30,7 +30,10 @@ ItemAnimationPrivate {
     readonly property alias sequence: p.activeSequence
     readonly property alias sequenceName: p.currentActiveSequence
 
+    readonly property bool __itemAnimationStable: balanced && count == model
+    readonly property bool stable: __itemAnimationStable
     readonly property alias balanced: _frames.balanced
+    onStableChanged: { setFrame(frame+1); setFrame(frame-1) }
 
     property Component delegate
     property int model: 0
@@ -53,7 +56,7 @@ ItemAnimationPrivate {
     property var frames: ({})
     readonly property alias count: p.totalAmountOfFramesSpawned
 
-    property int frame: 1
+    //property int frame: 1
     onFrameChanged: p.emitFrameSynced()
 
     onGoalSequenceChanged: {
@@ -61,10 +64,10 @@ ItemAnimationPrivate {
     }
 
     function jumpTo(sequenceName) {
-        frameTicker.stop()
+        frameTicker.ready = false
         restart()
         setActiveSequence(sequenceName)
-        frameTicker.restart()
+        frameTicker.ready = true
     }
 
     function setGoalSequence() {
@@ -204,11 +207,10 @@ ItemAnimationPrivate {
             Incubate.incubate()
         }
 
-
         function emitFrameSynced() {
-            if(!activeSequence)
-                frameSynced(r.frame, '')
-            else
+            //if(!activeSequence)
+            //    frameSynced(r.frame, '')
+            //else
                 frameSynced(r.frame, currentActiveSequence)
         }
 
@@ -257,7 +259,7 @@ ItemAnimationPrivate {
 
     property alias __activeSequence: p.activeSequence
     function setActiveSequence(name) {
-        frameTicker.stop()
+        frameTicker.ready = false
 
         if(!(name in p.sequenceNameIndex)) {
             Qak.error('ItemAnimation','Can\'t find sequence named',name)
@@ -271,7 +273,7 @@ ItemAnimationPrivate {
         }
         p.sequenceFrameIndex = 0
 
-        r.frame = __activeSequence.frames[p.sequenceFrameIndex]
+        r.setFrame(__activeSequence.frames[p.sequenceFrameIndex])
 
         // Figure out frame delay
         if('duration' in __activeSequence) {
@@ -284,9 +286,8 @@ ItemAnimationPrivate {
                 p.frameDelay = defaultFrameDelay
         }
 
-        //Qak.debug('ItemAnimation','active sequence is now',state.activeSequence.name)
-
-        frameTicker.restart()
+//        Qak.debug('ItemAnimation','active sequence is now',state.activeSequence.name) //¤qakdbg
+        frameTicker.ready = true
     }
 
     Timer {
@@ -316,6 +317,10 @@ ItemAnimationPrivate {
         property int __endSequenceFrameIndex: 0
 
         onTriggered: {
+            tick()
+        }
+
+        function tick() {
             // For inital frame
             if(!__activeSequence) {
                 __activeSequence = __validSequences[p.activeSequenceIndex]
@@ -353,7 +358,7 @@ ItemAnimationPrivate {
             if(r.frame === __activeFrame) // NOTE Hack (again) to work around of variable user assignment
                 p.emitFrameSynced()
             else
-                r.frame = __activeFrame // this should idealy be emitted as changed even if the same frame?
+                r.setFrame(__activeFrame) // this should idealy be emitted as changed even if the same frame?
 
 //                Qak.debug('ItemAnimation','showing',__activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
 
@@ -414,7 +419,6 @@ ItemAnimationPrivate {
                 p.sequenceFrameIndex++
 
         }
-
     }
 
     PropertyToggle {
