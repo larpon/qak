@@ -52,6 +52,7 @@ ItemAnimationPrivate {
     Component.onDestruction: p.clearFrames()
 
     property string goalSequence: ""
+    property bool continueFromGoalSequence: false
 
     property var frames: ({})
     readonly property alias count: p.totalAmountOfFramesSpawned
@@ -115,18 +116,19 @@ ItemAnimationPrivate {
             return
         }*/
 
-//        Qak.debug('ItemAnimation','goalSequence',route.join(' -> ')) //¤qakdbg
+//        Qak.debug(Qak.gid+'ItemAnimation','goalSequence',route.join(' -> ')) //¤qakdbg
         p.sequencePath = route
     }
 
     signal goalSequenceReached
+//    onGoalSequenceReached: Qak.debug(Qak.gid+'ItemAnimation','goalSequenceReached',goalSequence) //¤qakdbg
 
     signal frameSynced(int frame, string sequenceName)
 
     signal restarted
 
     onSequencesChanged: {
-//        Qak.debug('ItemAnimation','reading sequences') //¤qakdbg
+//        Qak.debug(Qak.gid+'ItemAnimation','reading sequences') //¤qakdbg
         __validSequences = []
         frameTicker.ready = false
         p.sequenceNameIndex = {}
@@ -141,7 +143,7 @@ ItemAnimationPrivate {
             p.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
-//                Qak.debug('ItemAnimation','reversing',s.name) //¤qakdbg
+//                Qak.debug(Qak.gid+'ItemAnimation','reversing',s.name) //¤qakdbg
                 s.frames = s.frames.reverse()
             }
 
@@ -178,6 +180,7 @@ ItemAnimationPrivate {
         property string currentActiveSequence: ""
         property string nextActiveSequence: ""
         property var sequencePath: ([])
+        function touchSequencePath() { var t = sequencePath; sequencePath = t}
 
         property bool signalGoalSequenceReached: false
 
@@ -286,7 +289,7 @@ ItemAnimationPrivate {
                 p.frameDelay = defaultFrameDelay
         }
 
-//        Qak.debug('ItemAnimation','active sequence is now',state.activeSequence.name) //¤qakdbg
+//        Qak.debug(Qak.gid+'ItemAnimation','active sequence is now',__activeSequence.name) //¤qakdbg
         frameTicker.ready = true
     }
 
@@ -296,6 +299,8 @@ ItemAnimationPrivate {
 
         repeat: true
         running: r.running && !paused && ready && _frames.balanced
+
+        triggeredOnStart: true
 
         property bool ready: false
         property bool paused: r.paused
@@ -320,27 +325,54 @@ ItemAnimationPrivate {
             tick()
         }
 
+        function decideByTo() {
+            if('to' in __activeSequence) {
+                __activeSequenceCum = __activeSequence.__toCum
+                __randomInt = __mathFloor(__mathRandom()*__activeSequence.toTotalWeight)
+
+                for(__seqName in __activeSequenceCum) {
+                    if (__randomInt < __activeSequenceCum[__seqName]) {
+                        __nextSequence = __seqName
+                        break
+                    }
+                }
+
+                if(__nextSequence === "") {
+//                    Qak.debug(Qak.gid+'ItemAnimation','::decideByTo',"to is present but no sequences where valid") //¤qakdbg
+                    return false
+                }
+
+                // Instruct state to setActiveSequence() next run
+                __nextActiveSequence = __nextSequence
+
+//                Qak.debug(Qak.gid+'ItemAnimation','::decideByTo','next active sequence',__nextActiveSequence) //¤qakdbg
+                return true
+            }
+//            Qak.debug(Qak.gid+'ItemAnimation','::decideByTo',"couldn't decide next sequence") //¤qakdbg
+            return false
+        }
+
         function tick() {
             // For inital frame
             if(!__activeSequence) {
                 __activeSequence = __validSequences[p.activeSequenceIndex]
 
                 if(__activeSequence === undefined) {
-                    Qak.error('ItemAnimation','No active sequence can be set. Stopping...')
+                    Qak.error(Qak.gid+'ItemAnimation','::tick','No active sequence can be set. Stopping...')
                     r.setRunning(false)
                     return
                 }
             }
 
-            // NOTE stupid trigger if goalSequence is set during init
-            if(goalSequence !== "" && __sequencePathLength <= 0) {
-//                Qak.debug('ItemAnimation', 'Correcting goalSequence',goalSequence) //¤qakdbg
-                setGoalSequence()
-            }
+            // TODO NOTE stupid trigger if goalSequence is set during init
+            //if(goalSequence !== "" && __sequencePathLength <= 0) {
+//            //    Qak.debug(Qak.gid+'ItemAnimation','::tick', 'Correcting goalSequence',goalSequence) //¤qakdbg
+            //    setGoalSequence()
+            //}
 
             // If instructed to set a new active sequence
             if(__nextActiveSequence != '') {
-                //Qak.debug('Next sequence',nSeq,'('+activeSequenceIndex+')','weight',totalWeight,'randInt',randInt)
+//                Qak.debug(Qak.gid+'ItemAnimation','::tick','next active sequence',__nextActiveSequence) //¤qakdbg
                 setActiveSequence(__nextActiveSequence)
 
                 if(p.signalGoalSequenceReached) {
@@ -360,22 +392,26 @@ ItemAnimationPrivate {
             else
                 r.setFrame(__activeFrame) // this should idealy be emitted as changed even if the same frame?
 
-//                Qak.debug('ItemAnimation','showing',__activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
+//                Qak.debug(Qak.gid+'ItemAnimation','::tick','showing',__activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
 
             // TODO optimize
             __endSequenceFrameIndex = __activeSequence.frames.length-1
 
             if(p.sequenceFrameIndex == __endSequenceFrameIndex) {
-//                    Qak.debug('ItemAnimation','end of sequence',__activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...') //¤qakdbg
+//                Qak.debug(Qak.gid+'ItemAnimation','::tick','end of sequence',__activeSequence.name,'at index',p.sequenceFrameIndex,'- Deciding next sequence...') //¤qakdbg
 
                 __nextSequence = ""
                 if(__sequencePathLength > 0) {
                     __nextSequence = p.sequencePath.shift()
+                    p.touchSequencePath()
+
+//                    Qak.debug(Qak.gid+'ItemAnimation','::tick','deciding from goalSequence',__nextSequence) //¤qakdbg
 
                     // TODO fix this mess
-                    while(__sequencePathLength > 0 && __nextSequence === __activeSequence.name) {
-//                            Qak.debug('ItemAnimation','already at',nextSequence,'trying next') //¤qakdbg
+                    while(p.sequencePath.length > 0 && __nextSequence === __activeSequence.name) {
+//                        Qak.debug(Qak.gid+'ItemAnimation','::tick','already at',__nextSequence,'trying next') //¤qakdbg
                         __nextSequence = p.sequencePath.shift()
+                        p.touchSequencePath()
                     }
 
                     if(__nextSequence === __activeSequence.name)
@@ -385,32 +421,24 @@ ItemAnimationPrivate {
                         if(__sequencePathLength === 0) {
                             r.goalSequence = ""
                             p.signalGoalSequenceReached = true
+                            if(continueFromGoalSequence) {
+//                                Qak.debug(Qak.gid+'ItemAnimation','::tick','continuing from goalSequence') //¤qakdbg
+                                decideByTo()
+                            }
                         }
                     }
                 } else if('to' in __activeSequence) {
-                    __activeSequenceCum = __activeSequence.__toCum
-
-                    __randomInt = __mathFloor(__mathRandom()*__activeSequence.toTotalWeight)
-
-                    for(__seqName in __activeSequenceCum) {
-
-                        if (__randomInt < __activeSequenceCum[__seqName]) {
-                            __nextSequence = __seqName
-                            break
-                        }
-
+                    if(!decideByTo()) {
+//                        Qak.debug(Qak.gid+'ItemAnimation','::tick',"couldn't decide by 'to'. Stopping...") //¤qakdbg
+                        r.setRunning(false)
                     }
-
-                    // Instruct state to setActiveSequence() next run
-                    __nextActiveSequence = __nextSequence
-
                 } else if(__endSequenceFrameIndex == 0) {
                     // The sequence only has one frame
-//                        Qak.debug('ItemAnimation','Only one frame and nowhere to go next. Stopping...') //¤qakdbg
+//                    Qak.debug(Qak.gid+'ItemAnimation','::tick','Only one frame and nowhere to go next. Stopping...') //¤qakdbg
                     r.setRunning(false)
                     return
                 } else { // missing to: {...} entry - stop
-//                        Qak.debug('ItemAnimation','nowhere to go. Stopping...') //¤qakdbg
+//                    Qak.debug(Qak.gid+'ItemAnimation','::tick','nowhere to go. Stopping...') //¤qakdbg
                     r.setRunning(false)
                     return
                 }
