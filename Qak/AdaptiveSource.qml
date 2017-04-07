@@ -65,7 +65,7 @@ QtObject {
 
     onTargetChanged: {
         if(target && mapSource !== "") {
-//            Qak.debug('AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"') //¤qakdbg
+//            Qak.debug(Qak.gid+'AdaptiveSource',target,'Target available. Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"') //¤qakdbg
             target[targetSourceProperty] = mapSource
         }
     }
@@ -86,7 +86,7 @@ QtObject {
         ignore = false
 
         if(source == "" || !source) {
-//            Qak.debug('AdaptiveSource','source for target',target,'is empty') //¤qakdbg
+//            Qak.debug(Qak.gid+'AdaptiveSource','source for target',target,'is empty') //¤qakdbg
             return
         }
 
@@ -120,7 +120,7 @@ QtObject {
             return
 
         if(target) {
-//            Qak.debug('AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"') //¤qakdbg
+//            Qak.debug(Qak.gid+'AdaptiveSource',target,'Resource mapping for source','"'+source+'"','is now','"'+mapSource+'"') //¤qakdbg
             target[targetSourceProperty] = mapSource
         }// else
          //   Qak.warn('AdaptiveSource','"target" property is not yet sat for',source)
