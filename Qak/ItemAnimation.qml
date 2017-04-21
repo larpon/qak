@@ -311,7 +311,7 @@ ItemAnimationPrivate {
         interval: p.frameDelay
 
         repeat: true
-        running: r.running && !paused && ready && _frames.balanced
+        running: r.running && !paused && ready && r.stable
 
         triggeredOnStart: true
 
