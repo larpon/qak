@@ -33,7 +33,18 @@ ItemAnimationPrivate {
     readonly property bool __itemAnimationStable: balanced && count == model
     readonly property bool stable: __itemAnimationStable
     readonly property alias balanced: _frames.balanced
-    onStableChanged: { setFrame(frame+1); setFrame(frame-1) }
+    onStableChanged: {
+        setFrame(frame+1); setFrame(frame-1)
+
+        // NOTE set initial active sequence
+        if(!__activeSequence) {
+            __activeSequence = __validSequences[p.activeSequenceIndex]
+            if(__activeSequence === undefined) {
+                Qak.error(Qak.gid+'ItemAnimation','::tick','No active sequence can be set.')
+            }
+        }
+    }
+
 
     property Component delegate
     property int model: 0
@@ -51,7 +62,6 @@ ItemAnimationPrivate {
     }
     Component.onDestruction: p.clearFrames()
 
-    property string goalSequence: ""
     property bool continueFromGoalSequence: false
 
     property var frames: ({})
@@ -61,6 +71,7 @@ ItemAnimationPrivate {
     onFrameChanged: p.emitFrameSynced()
 
     onGoalSequenceChanged: {
+//        Qak.debug(Qak.gid+'ItemAnimation','.goalSequence',goalSequence) //¤qakdbg
         setGoalSequence()
     }
 
@@ -118,6 +129,8 @@ ItemAnimationPrivate {
 
 //        Qak.debug(Qak.gid+'ItemAnimation','goalSequence',route.join(' -> ')) //¤qakdbg
         p.sequencePath = route
+        if(!r.running)
+            r.setRunning(true)
     }
 
     signal goalSequenceReached
@@ -247,7 +260,7 @@ ItemAnimationPrivate {
 
         p.reset()
 
-        goalSequence = ""
+        setGoalSequence("")
         frameTicker.ready = false
 
     }
@@ -353,16 +366,18 @@ ItemAnimationPrivate {
         }
 
         function tick() {
-            // For inital frame
-            if(!__activeSequence) {
-                __activeSequence = __validSequences[p.activeSequenceIndex]
 
-                if(__activeSequence === undefined) {
-                    Qak.error(Qak.gid+'ItemAnimation','::tick','No active sequence can be set. Stopping...')
-                    r.setRunning(false)
-                    return
-                }
-            }
+            // For inital frame
+            // TODO check if the same code is doing it's job in onStableChanged
+//            if(!__activeSequence) {
+//                __activeSequence = __validSequences[p.activeSequenceIndex]
+
+//                if(__activeSequence === undefined) {
+//                    Qak.error(Qak.gid+'ItemAnimation','::tick','No active sequence can be set. Stopping...')
+//                    r.setRunning(false)
+//                    return
+//                }
+//            }
 
             // TODO NOTE stupid trigger if goalSequence is set during init
             //if(goalSequence !== "" && __sequencePathLength <= 0) {
@@ -383,7 +398,6 @@ ItemAnimationPrivate {
                 __nextActiveSequence = ""
             }
 
-            // Figure out next frame
             __activeFrame = __activeSequence.frames[p.sequenceFrameIndex]
 
             // Show the active frame
@@ -394,6 +408,7 @@ ItemAnimationPrivate {
 
 //                Qak.debug(Qak.gid+'ItemAnimation','::tick','showing',__activeSequence.name,'at frame index',r.frame,'current sequence frame index',p.sequenceFrameIndex) //¤qakdbg
 
+            // Figure out next frame
             // TODO optimize
             __endSequenceFrameIndex = __activeSequence.frames.length-1
 
@@ -419,7 +434,7 @@ ItemAnimationPrivate {
                     else {
                         __nextActiveSequence = __nextSequence
                         if(__sequencePathLength === 0) {
-                            r.goalSequence = ""
+                            r.setGoalSequence("")
                             p.signalGoalSequenceReached = true
                             if(continueFromGoalSequence) {
 //                                Qak.debug(Qak.gid+'ItemAnimation','::tick','continuing from goalSequence') //¤qakdbg

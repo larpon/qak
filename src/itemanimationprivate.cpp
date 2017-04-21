@@ -27,9 +27,24 @@ void ItemAnimationPrivate::setRunning(bool running)
     }
 }
 
+/* TODO
 void ItemAnimationPrivate::setDynamicProperty(QObject *object, const QString &name, const QVariant &value)
 {
     object->setProperty(name.toLatin1().constData(),value);
+}
+*/
+
+QString ItemAnimationPrivate::goalSequence() const
+{
+    return _goalSequence;
+}
+
+void ItemAnimationPrivate::setGoalSequence(const QString &goalSequence)
+{
+    if(_goalSequence != goalSequence) {
+        _goalSequence = goalSequence;
+        emit goalSequenceChanged();
+    }
 }
 
 int ItemAnimationPrivate::frame() const
