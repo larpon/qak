@@ -26,7 +26,7 @@ Item {
 
     signal clicked(var mouse)
 
-    DebugVisual { enabled: mouseArea.enabled; radius: width / 2 }
+//    DebugVisual { enabled: mouseArea.enabled; radius: width / 2 } //¤qakdbg
 
     MouseArea {
         id: mouseArea

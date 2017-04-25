@@ -11,8 +11,8 @@ Item {
     readonly property real aspectRatio: width/height
 
     property bool paused: Qak.paused
-    //onPausedChanged: Qak.log(paused ? 'paused' : 'continued')
+//    onPausedChanged: Qak.log(paused ? 'paused' : 'continued') //¤qakdbg
 
     // Debug visuals
-    DebugVisual { }
+//    DebugVisual { } //¤qakdbg
 }

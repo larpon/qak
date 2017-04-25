@@ -43,6 +43,7 @@ ItemAnimationPrivate {
                 Qak.error(Qak.gid+'ItemAnimation','::tick','No active sequence can be set.')
             }
         }
+        setGoalSequence()
     }
 
 

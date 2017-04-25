@@ -13,5 +13,5 @@ Rectangle {
     property bool paused: Qak.paused
 
     // Debug visuals
-    DebugVisual { }
+//    DebugVisual { } //¤qakdbg
 }

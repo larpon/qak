@@ -25,5 +25,5 @@ Image {
         targetSourceProperty: "__targetSource"
     }
 
-    DebugVisual { }
+//    DebugVisual { } //¤qakdbg
 }
