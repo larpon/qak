@@ -7,6 +7,12 @@ function findRoot(item) {
 }
 */
 
+var __math_abs = Math.abs
+var __math_random = Math.random
+var __math_floor = Math.floor
+var __math_sqrt = Math.sqrt
+var __math_max = Math.max
+
 function loopData(object,callback) {
     if(object !== undefined && object !== null) {
         if('data' in object) {
@@ -21,8 +27,8 @@ function loopData(object,callback) {
 
 function loopChildren(object,callback) {
     if(object !== undefined && object !== null) {
-        var children = object.children
-        for(var i in children) {
+        var children = object.children, i
+        for(i in children) {
             callback(children[i])
             loopChildren(children[i],callback)
         }
@@ -43,7 +49,7 @@ function loopParent(object,callback) {
 function remap(oldValue, oldMin, oldMax, newMin, newMax) {
     // Linear conversion
     // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
-    return (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
+    return (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
 }
 
 function interpolate(x0, x1, alpha) {
@@ -63,7 +69,7 @@ function normalize( value, start, end )
     var width       = end - start
     var offsetValue = value - start // value relative to 0
 
-    return ( offsetValue - ( Math.floor( offsetValue / width ) * width ) ) + start
+    return ( offsetValue - ( __math_floor( offsetValue / width ) * width ) ) + start
     // + start to reset back to start of original range
 }
 
@@ -79,15 +85,15 @@ function normalize0to360(degrees) {
 // Oscillate e.g. "wave" or "ping-pong" between min and max value
 // Integers only
 function oscillate(value, min, max) {
-    var range = max - min ;
-    return min + Math.abs(((value + range) % (range * 2)) - range);
+    var range = max - min
+    return min + __math_abs(((value + range) % (range * 2)) - range)
 }
 
 /**
  * Returns a random number between min and max
  */
 function randomRangeArbitary (min, max) {
-    return Math.random() * (max - min) + min;
+    return __math_random() * (max - min) + min
 }
 
 /**
@@ -95,7 +101,7 @@ function randomRangeArbitary (min, max) {
  * Using Math.round() will give you a non-uniform distribution!
  */
 function randomRangeInt (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return __math_floor(__math_random() * (max - min + 1)) + min
 }
 
 function startsWith (haystack, needle) {
@@ -103,14 +109,14 @@ function startsWith (haystack, needle) {
 }
 
 function endsWith (haystack, needle) {
-    return needle === haystack.substr(0 - needle.length);
+    return needle === haystack.substr(0 - needle.length)
 }
 
 function objectSize(obj) {
     if(isObject(obj)) {
-        var size = 0, key;
+        var size = 0, key
         for (key in obj) {
-            if (key in obj) size++;
+            if (key in obj) size++
         }
         return size
     }
@@ -118,108 +124,108 @@ function objectSize(obj) {
 }
 
 function clone(obj) {
-    var copy;
+    var copy
 
     // Handle the 3 simple types, and null or undefined
-    if (null == obj || "object" != typeof obj) return obj;
+    if (null == obj || "object" != typeof obj) return obj
 
     // Handle Date
     if (obj instanceof Date) {
-        copy = new Date();
-        copy.setTime(obj.getTime());
-        return copy;
+        copy = new Date()
+        copy.setTime(obj.getTime())
+        return copy
     }
 
     // Handle Array
     if (obj instanceof Array) {
-        copy = [];
+        copy = []
         for (var i = 0, len = obj.length; i < len; i++) {
-            copy[i] = clone(obj[i]);
+            copy[i] = clone(obj[i])
         }
-        return copy;
+        return copy
     }
 
     // Handle Object
     if (obj instanceof Object) {
-        copy = {};
+        copy = {}
         for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr])
         }
-        return copy;
+        return copy
     }
 
-    throw new Error("Unable to copy obj! Its type isn't supported.");
+    throw new Error("Unable to copy obj! Its type isn't supported.")
 }
 
 function dump(arr,level) {
-    var dumped_text = "";
-    if(!level) level = 0;
+    var dumped_text = ""
+    if(!level) level = 0
 
     //The padding given at the beginning of the line.
-    var level_padding = "";
-    for(var j=0;j<level+1;j++) level_padding += "    ";
+    var level_padding = ""
+    for(var j=0;j<level+1;j++) level_padding += "    "
 
     if(typeof(arr) == 'object') { //Array/Hashes/Objects
         for(var item in arr) {
-            var value = arr[item];
+            var value = arr[item]
 
             if(typeof(value) == 'object') { //If it is an array,
-                dumped_text += level_padding + "'" + item + "' ...\n";
-                dumped_text += dump(value,level+1);
+                dumped_text += level_padding + "'" + item + "' ...\n"
+                dumped_text += dump(value,level+1)
             } else {
-                dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+                dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n"
             }
         }
     } else { //Stings/Chars/Numbers etc.
-        dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+        dumped_text = "===>"+arr+"<===("+typeof(arr)+")"
     }
-    return dumped_text;
+    return dumped_text
 }
 
 function randomProperty(obj) {
     var keys = Object.keys(obj)
-    return obj[keys[ keys.length * Math.random() << 0]];
+    return obj[keys[ keys.length * __math_random() << 0]]
 }
 
 function randomFromArray(arr) {
-    var key = Math.floor(Math.random() * arr.length);
-    return arr[key];
+    var key = __math_floor(__math_random() * arr.length)
+    return arr[key]
 }
 
 function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex ;
+  var currentIndex = array.length, temporaryValue, randomIndex
 
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
 
     // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
+    randomIndex = __math_floor(__math_random() * currentIndex)
+    currentIndex -= 1
 
     // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+    temporaryValue = array[currentIndex]
+    array[currentIndex] = array[randomIndex]
+    array[randomIndex] = temporaryValue
   }
 
-  return array;
+  return array
 }
 
 function extend(target, source) {
-  target = target || {};
+  target = target || {}
   for (var prop in source) {
     if (typeof source[prop] === 'object') {
-      target[prop] = extend(target[prop], source[prop]);
+      target[prop] = extend(target[prop], source[prop])
     } else {
-      target[prop] = source[prop];
+      target[prop] = source[prop]
     }
   }
-  return target;
+  return target
 }
 
 function pad(number, digits, padChar) {
     padChar = padChar || 0
-    return new Array(Math.max(digits + 1 - String(number).length + 1, 0)).join(padChar) + number
+    return new Array(__math_max(digits + 1 - String(number).length + 1, 0)).join(padChar) + number
 }
 
 function countPad(str, padChar) {
@@ -243,11 +249,11 @@ function gcd (a, b) {
 }
 
 function distance(p1,p2) {
-    return Math.sqrt( (p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y) );
+    return __math_sqrt( (p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y) )
 }
 
 function distance(x1,y1,x2,y2) {
-    return Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
+    return __math_sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 }
 
 function isObject(o) {
@@ -298,26 +304,26 @@ function isArray(a) {
 function isEmpty(obj) {
 
     // null and undefined are "empty"
-    if (obj === null) return true;
+    if (obj === null) return true
 
     // Assume if it has a length property with a non-zero value
     // that that property is correct.
-    if (obj.length > 0)    return false;
-    if (obj.length === 0)  return true;
+    if (obj.length > 0)    return false
+    if (obj.length === 0)  return true
 
     // If it isn't an object at this point
     // it is empty, but it can't be anything *but* empty
     // Is it empty?  Depends on your application.
-    if (typeof obj !== "object") return true;
+    if (typeof obj !== "object") return true
 
     // Otherwise, does it have any properties of its own?
     // Note that this doesn't handle
     // toString and valueOf enumeration bugs in IE < 9
     for (var key in obj) {
-        if (hasOwnProperty.call(obj, key)) return false;
+        if (hasOwnProperty.call(obj, key)) return false
     }
 
-    return true;
+    return true
 }
 
 function isString(v) {
@@ -359,82 +365,82 @@ function basename(path) {
 function findShortestPath(nodes,from,to) {
 
     var extractKeys = function (obj) {
-        var keys = [], key;
+        var keys = [], key
         for (key in obj) {
-            //Object.prototype.hasOwnProperty.call(obj,key) && keys.push(key);
+            //Object.prototype.hasOwnProperty.call(obj,key) && keys.push(key)
             if(Object.prototype.hasOwnProperty.call(obj,key))
-                keys.push(key);
+                keys.push(key)
         }
-        return keys;
+        return keys
     }
 
     var sorter = function (a, b) {
-        return parseFloat (a) - parseFloat (b);
+        return parseFloat (a) - parseFloat (b)
     }
 
     var findPaths = function (map, start, end, infinity) {
-        infinity = infinity || Infinity;
+        infinity = infinity || Infinity
 
         var costs = {},
             open = {'0': [start]},
             predecessors = {},
-            keys;
+            keys
 
         var addToOpen = function (cost, vertex) {
-            var key = "" + cost;
-            if (!open[key]) open[key] = [];
-            open[key].push(vertex);
+            var key = "" + cost
+            if (!open[key]) open[key] = []
+            open[key].push(vertex)
         }
 
-        costs[start] = 0;
+        costs[start] = 0
 
         while (open) {
-            if(!(keys = extractKeys(open)).length) break;
+            if(!(keys = extractKeys(open)).length) break
 
-            keys.sort(sorter);
+            keys.sort(sorter)
 
             var key = keys[0],
                 bucket = open[key],
                 node = bucket.shift(),
                 currentCost = parseFloat(key),
-                adjacentNodes = map[node] || {};
+                adjacentNodes = map[node] || {}
 
-            if (!bucket.length) delete open[key];
+            if (!bucket.length) delete open[key]
 
             for (var vertex in adjacentNodes) {
                 if (Object.prototype.hasOwnProperty.call(adjacentNodes, vertex)) {
                     var cost = adjacentNodes[vertex],
                         totalCost = cost + currentCost,
-                        vertexCost = costs[vertex];
+                        vertexCost = costs[vertex]
 
                     if ((vertexCost === undefined) || (vertexCost > totalCost)) {
-                        costs[vertex] = totalCost;
-                        addToOpen(totalCost, vertex);
-                        predecessors[vertex] = node;
+                        costs[vertex] = totalCost
+                        addToOpen(totalCost, vertex)
+                        predecessors[vertex] = node
                     }
                 }
             }
         }
 
         if (costs[end] === undefined) {
-            return null;
+            return null
         } else {
-            return predecessors;
+            return predecessors
         }
 
     }
 
     var extractShortest = function (predecessors, end) {
         var nodes = [],
-            u = end;
+            u = end
 
         while (u) {
-            nodes.push(u);
-            u = predecessors[u];
+            nodes.push(u)
+            u = predecessors[u]
         }
 
-        nodes.reverse();
-        return nodes;
+        nodes.reverse()
+        return nodes
     }
 
     var findShortestPath = function (map, nodes) {
@@ -442,60 +448,60 @@ function findShortestPath(nodes,from,to) {
             end,
             predecessors,
             path = [],
-            shortest;
+            shortest
 
         while (nodes.length) {
-            end = nodes.shift();
-            predecessors = findPaths(map, start, end);
+            end = nodes.shift()
+            predecessors = findPaths(map, start, end)
 
             if (predecessors) {
-                shortest = extractShortest(predecessors, end);
+                shortest = extractShortest(predecessors, end)
                 if (nodes.length) {
-                    path.push.apply(path, shortest.slice(0, -1));
+                    path.push.apply(path, shortest.slice(0, -1))
                 } else {
-                    return path.concat(shortest);
+                    return path.concat(shortest)
                 }
             } else {
-                return null;
+                return null
             }
 
-            start = end;
+            start = end
         }
     }
 
     var toArray = function (list, offset) {
         try {
-            return Array.prototype.slice.call(list, offset);
+            return Array.prototype.slice.call(list, offset)
         } catch (e) {
-            var a = [];
+            var a = []
             for (var i = offset || 0, l = list.length; i < l; ++i) {
-                a.push(list[i]);
+                a.push(list[i])
             }
-            return a;
+            return a
         }
     }
 
     var Graph = function (map) {
-        this.map = map;
+        this.map = map
     }
 
     Graph.prototype.findShortestPath = function (start, end) {
         if (Object.prototype.toString.call(start) === '[object Array]') {
-            return findShortestPath(this.map, start);
+            return findShortestPath(this.map, start)
         } else if (arguments.length === 2) {
-            return findShortestPath(this.map, [start, end]);
+            return findShortestPath(this.map, [start, end])
         } else {
-            return findShortestPath(this.map, toArray(arguments));
+            return findShortestPath(this.map, toArray(arguments))
         }
     }
 
     Graph.findShortestPath = function (map, start, end) {
         if (Object.prototype.toString.call(start) === '[object Array]') {
-            return findShortestPath(map, start);
+            return findShortestPath(map, start)
         } else if (arguments.length === 3) {
-            return findShortestPath(map, [start, end]);
+            return findShortestPath(map, [start, end])
         } else {
-            return findShortestPath(map, toArray(arguments, 1));
+            return findShortestPath(map, toArray(arguments, 1))
         }
     }
 
