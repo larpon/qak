@@ -13,7 +13,7 @@ Item {
 
     property point anchorPoint: Qt.point(0,0)
 
-    property double speedModifier: 1
+    property real speedModifier: 1
     property int duration: 0
 
     property var moveQueue: []
