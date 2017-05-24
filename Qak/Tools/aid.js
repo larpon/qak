@@ -47,6 +47,8 @@ function loopParent(object,callback) {
 }
 
 function remap(oldValue, oldMin, oldMax, newMin, newMax) {
+    if(oldMin === newMin && oldMax === newMax)
+        return oldValue
     // Linear conversion
     // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
     return (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
