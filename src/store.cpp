@@ -4,6 +4,7 @@
 
 Store::Store(QQuickItem* parent):QQuickItem(parent)
 {
+    _onDisk = false;
     _loaded = false;
 
     //_autoLoad = true;
@@ -30,7 +31,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
 
     while(sub.endsWith( QDir::separator() )) sub.chop(1);
 
-    _store_path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+QDir::separator()+sub;
+    _storePath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+QDir::separator()+sub;
 
     _ensureStorePath();
     #ifdef QAK_DEBUG
@@ -48,6 +49,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
     //_blacklist.append("autoLoad");
     //_blacklist.append("autoSave");
     _blacklist.append("isLoaded");
+    _blacklist.append("onDisk");
     const QMetaObject *metaobject = qi->metaObject();
     int count = metaobject->propertyCount();
     for (int i=0; i<count; ++i) {
@@ -57,6 +59,8 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
     }
     delete qi;
     qi = 0;
+
+    setOnDisk(existOnDisk());
 }
 /*
 Store::~Store()
@@ -91,6 +95,19 @@ bool Store::isLoaded()
     return _loaded;
 }
 
+bool Store::onDisk()
+{
+    return _onDisk;
+}
+
+void Store::setOnDisk(bool onDisk)
+{
+    if(_onDisk != onDisk) {
+        _onDisk = onDisk;
+        emit onDiskChanged();
+    }
+}
+
 
 bool Store::existOnDisk()
 {
@@ -100,7 +117,7 @@ bool Store::existOnDisk()
 
 QString Store::fullPath()
 {
-    return _store_path + QDir::separator() + _name;
+    return _storePath + QDir::separator() + _name;
 }
 
 void Store::setName(const QString &n)
@@ -120,7 +137,7 @@ void Store::setName(const QString &n)
             QStringList parts = _name.split('/');
             if(!parts.isEmpty())
                 parts.removeLast();
-            QString new_path = _store_path + QDir::separator() + parts.join(QDir::separator());
+            QString new_path = _storePath + QDir::separator() + parts.join(QDir::separator());
             _ensurePath(new_path);
             #ifdef QAK_DEBUG
             qDebug() << "Store using name fragments as paths" << _name << new_path;
@@ -158,7 +175,7 @@ void Store::save()
 
     _ensureStorePath();
 
-    QString path = _store_path + QDir::separator() + _name;
+    QString path = _storePath + QDir::separator() + _name;
     QJsonDocument json = QJsonDocument();
     QJsonObject rootItem = QJsonObject();
 
@@ -204,6 +221,8 @@ void Store::save()
     }
     file.commit();
 
+    setOnDisk(existOnDisk());
+
     //qDebug() << "Store saved" << bJson << "in" << path;
     emit saved();
 }
@@ -217,7 +236,7 @@ void Store::load()
         return;
     }
 
-    QString path = _store_path + QDir::separator() + _name;
+    QString path = _storePath + QDir::separator() + _name;
 
     QString bJson;
     QFile file;
@@ -234,6 +253,8 @@ void Store::load()
         qWarning() << "Store" << _name << "warning: Couldn't load from" << path;
         #endif
         emit error("Could not load store from: \""+path+"\"");
+        setOnDisk(existOnDisk());
+
         _loaded = true;
         emit isLoadedChanged();
         emit loaded();
@@ -273,6 +294,7 @@ void Store::load()
         }
     }
 
+    setOnDisk(existOnDisk());
     //qDebug() << "Store loaded" << bJson << "from" << path;
     _loaded = true;
     emit isLoadedChanged();
@@ -288,7 +310,7 @@ void Store::clear()
         return;
     }
 
-    QString path = _store_path + QDir::separator() + _name;
+    QString path = _storePath + QDir::separator() + _name;
     bool result = QFile::remove(path);
 
     if(!result)
@@ -297,6 +319,8 @@ void Store::clear()
     else
         qDebug() << "Store clear" << path << result;
     #endif
+
+    setOnDisk(existOnDisk());
 
     emit cleared();
 }
@@ -310,7 +334,7 @@ void Store::clear(const QString &name)
         return;
     }
 
-    QString path = _store_path + QDir::separator() + name;
+    QString path = _storePath + QDir::separator() + name;
     bool result = QFile::remove(path);
 
     if(!result)
@@ -320,18 +344,22 @@ void Store::clear(const QString &name)
         qDebug() << "Store" << name << "clear" << path << result;
     #endif
 
+    setOnDisk(existOnDisk());
+
     emit cleared();
 }
 
 void Store::clearAll()
 {
-    QDir dir(_store_path);
+    QDir dir(_storePath);
     if (dir.exists()) {
         dir.removeRecursively();
 
         #ifdef QAK_DEBUG
         qDebug() << "Store clearAll" << _store_path;
         #endif
+
+        setOnDisk(existOnDisk());
 
         emit cleared();
     }
@@ -344,7 +372,7 @@ void Store::_ensureStorePath()
     if(_name == "")
         return;
 
-    _ensurePath(_store_path);
+    _ensurePath(_storePath);
 }
 
 void Store::_ensurePath(const QString &path)
