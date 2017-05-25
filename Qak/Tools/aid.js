@@ -175,7 +175,7 @@ function dump(arr,level) {
                 dumped_text += level_padding + "'" + item + "' ...\n"
                 dumped_text += dump(value,level+1)
             } else {
-                dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n"
+                dumped_text += level_padding + "'" + item + "' => \"" + value + "\" "+'('+typeof value+')'+"\n"
             }
         }
     } else { //Stings/Chars/Numbers etc.
