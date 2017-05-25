@@ -35,6 +35,34 @@ function loopChildren(object,callback) {
     }
 }
 
+// These will loop Loader types as well as 'normal' QML objects
+function loopDataDeep(object,callback) {
+    console.warn('Aid','::loopDataDeep','UNTESTED FUNCTION')
+    if('item' in object && qtypeof(object) === "QQmlTimer")
+        object = object.item
+    if(object !== undefined && object !== null) {
+        if('data' in object) {
+            var data = object.data
+            for(var i in data) {
+                callback(data[i])
+                loopDataDeep(data[i],callback)
+            }
+        }
+    }
+}
+
+function loopChildrenDeep(object,callback) {
+    if('item' in object && qtypeof(object) === "QQmlTimer")
+        object = object.item
+    if(object !== undefined && object !== null) {
+        var children = object.children, i
+        for(i in children) {
+            callback(children[i])
+            loopChildrenDeep(children[i],callback)
+        }
+    }
+}
+
 function loopParent(object,callback) {
     if(object !== undefined && object !== null) {
         var parent = object.parent
@@ -284,12 +312,12 @@ function qtypeof(object) {
     if(type === "object") {
         if('toString' in object && isFunction(object.toString)) {
             type = object.toString()
-            if(type.match(/.*_QMLTYPE_.*/i)) {
+            //if(type.match(/.*_QMLTYPE_.*/i)) {
                 type = type.replace(/_QMLTYPE_.*/i,'')
-            } else if(type.match(/QQuick.*/i)) {
+            //} else if(type.match(/QQuick.*/i)) {
                 type = type.replace(/\(0x.*\)$/i,'')
                 type = type.replace(/_QML_\d+$/i,'')
-            }
+            //}
         }
     }
     return type
