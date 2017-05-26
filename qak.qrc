@@ -44,5 +44,6 @@
         <file>Qak/PolygonMouseArea.qml</file>
         <file>Qak/Events.qml</file>
         <file>Qak/Tools/Incubator.qml</file>
+        <file>Qak/GridMouseArea.qml</file>
     </qresource>
 </RCC>

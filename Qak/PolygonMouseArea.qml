@@ -1,6 +1,6 @@
 import QtQuick 2.0
 
-import Qak 1.0
+//import Qak 1.0 //¤qakdbg
 
 MouseArea {
     id: mouseArea
