@@ -42,5 +42,5 @@ ApplicationWindow {
            screenMode = "windowed"
     }
 
-//    onScreenChanged: Qak.debug("ApplicationWindow","onScreenChanged",screen) //¤qakdbg
+    //onScreenChanged: Qak.debug("ApplicationWindow","onScreenChanged",screen) //-¤qakdbg (only available from Qt 5.9)
 }

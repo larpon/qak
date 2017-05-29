@@ -51,7 +51,7 @@ Item {
 
     function startMoving() {
         if(locked) {
-//        Qak.debug(Qak.gid+'Mover','::startMoving target is locked') //¤qakdbg
+//            Qak.debug(Qak.gid+'Mover','::startMoving','target is locked') //¤qakdbg
             return
         }
 
@@ -69,7 +69,7 @@ Item {
             pp = p
         }
 
-//        Qak.debug('Travel distance',d) //¤qakdbg
+//        Qak.debug(Qak.gid+'Mover','::startMoving','Travel distance',d) //¤qakdbg
         if(isNaN(d)) {
             moveQueue = []
             return

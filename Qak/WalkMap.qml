@@ -2,24 +2,17 @@ import QtQuick 2.0
 
 import Qak 1.0
 
-Entity {
+GridMouseArea {
 
     id: walkMap
 
-    property alias grid: grid
-    property alias columns: grid.columns
-    property alias rows: grid.rows
-
-    property bool edit: false
-    property bool visualize: false
-
-    property point startPosition: Qt.point(0,0)
-    property point endPosition: Qt.point(0,0)
+    //property point startPosition: Qt.point(0,0)
+    //property point endPosition: Qt.point(0,0)
 
     property bool simplify: true
 
-    property var solvesList: ({})
-    property int nextSolveId: 0
+    property var __solvesList: ({})
+    property int __nextSolveId: 0
 
     // Functionality
     WorkerScript {
@@ -27,14 +20,15 @@ Entity {
         source: "./js/walkMapWorker.js"
 
         onMessage: {
-//            Qak.debug('Path was found?',messageObject.found) //¤qakdbg
+//            Qak.debug(Qak.gid+'WalkMap','>solverWorker.onMessage','path was',messageObject.found ? 'found' : 'not found') //¤qakdbg
             if(messageObject.found) {
-                solvesList[messageObject.solveId].onFound(pathToPoints(messageObject.path))
+                __solvesList[messageObject.solveId].onFound(pathToPoints(messageObject.path))
             } else
-                solvesList[messageObject.solveId].onNotFound()
+                __solvesList[messageObject.solveId].onNotFound()
             if('solveId' in messageObject) {
-//                Qak.debug('Removing',messageObject.solveId) //¤qakdbg
-                delete solvesList[messageObject.solveId]
+//                Qak.debug(Qak.gid+'WalkMap','>solverWorker.onMessage','removing',messageObject.solveId) //¤qakdbg
+                //delete __solvesList[messageObject.solveId]
+                __solvesList[messageObject.solveId] = undefined
             }
         }
     }
@@ -112,9 +106,10 @@ Entity {
     }
 
     // Convert x,y values from the grid to actual pixel coordinates
+    // TODO do this in the worker script
     function pathToPoints(path) {
         //var referenceChild = grid.children[0]
-        var offset = Qt.point(grid.cellWidth,grid.cellHeight)
+        var offset = Qt.point(cellWidth,cellHeight)
         var points = []
         for(var i in path) {
             var pos = path[i]
@@ -127,9 +122,9 @@ Entity {
         }
 
         if(simplify) {
-//            Qak.debug('Simplifing walk path. Before simplify',points.length) //¤qakdbg
+//            Qak.debug(Qak.gid+'WalkMap','::pathToPoints','simplifing walk path. Before simplify',points.length) //¤qakdbg
             points = simplifyPath(points, 2.5)
-//            Qak.debug('after simplify', points.length) //¤qakdbg
+//            Qak.debug(Qak.gid+'WalkMap','::pathToPoints','after simplify', points.length) //¤qakdbg
         }
 
         return points
@@ -181,6 +176,7 @@ Entity {
             endPoint.y = endPoint.y - walkMap.y
         }
 
+        /*
         var child = grid.childAt(startPoint.x,startPoint.y)
         child.show = true
         var idx = child.idx
@@ -196,7 +192,9 @@ Entity {
 //        Qak.debug('end grid box',idx,times) //¤qakdbg
         endPosition.x = idx-(times*grid.columns)
         endPosition.y = times
+*/
 
+        /*
         var cs = []
         var rs = []
         for(var i = 0; i < grid.children.length-1; i++) {
@@ -216,17 +214,18 @@ Entity {
                 rs = []
             }
         }
+*/
 
-//        Qak.debug("Start position",startPosition.x,startPosition.y,"end position",endPosition.x,endPosition.y) //¤qakdbg
+        var startPos = cellIndex(startPoint) //{ 'x':startPosition.x, 'y': startPosition.y }
+        var endPos = cellIndex(endPoint) //{ 'x':endPosition.x, 'y': endPosition.y }
 
-        var startPos = { 'x':startPosition.x, 'y': startPosition.y }
-        var endPos = { 'x':endPosition.x, 'y': endPosition.y }
+//        Qak.debug(Qak.gid+'WalkMap','::findPath',"start (cell)",startPos.x,startPos.y,"end (cell)",endPos.x,endPos.y,' - ','start (point)',startPoint.x,startPoint.y,'end (point)',endPoint.x,endPoint.y) //¤qakdbg
 
-        solvesList[nextSolveId] = { 'onFound':onFound, 'onNotFound':onNotFound }
-        solverWorker.sendMessage( { 'solveId': nextSolveId, 'grid': cs, 'startPosition': startPos, 'endPosition': endPos } )
-        nextSolveId++
+        __solvesList[__nextSolveId] = { 'onFound':onFound, 'onNotFound':onNotFound }
+        solverWorker.sendMessage( { 'solveId': __nextSolveId, 'grid': grid, 'startPosition': startPos, 'endPosition': endPos } )
+        __nextSolveId++
     }
-
+/*
     // Visualization
     Grid {
         id: grid
@@ -270,4 +269,5 @@ Entity {
         }
     }
 
+    */
 }

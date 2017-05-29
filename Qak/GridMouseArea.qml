@@ -21,13 +21,14 @@ MouseArea {
     // [
     //    [ false, false, false ],
     //    [ false, true, false ],
-    //    [ false, false, false ],
+    //    [ false, false, false ]
     // ]
     property var grid
 
     property var __math_ceil: Math.ceil
 
     function pointInGrid(point,grid) {
+        grid = grid || mouseArea.grid
         if(!validGrid)
             return false
         if(!(point))
@@ -40,6 +41,7 @@ MouseArea {
     }
 
     function cellIndex(point) {
+//        Qak.debug(Qak.gid+'GridMouseArea','::cellIndex',point.x,point.y,(point.y < 0 || point.y > height),height) //¤qakdbg
         if(!validGrid)
             return null
         if(!(point))
@@ -56,11 +58,11 @@ MouseArea {
             return false
         if(normalWhenEmpty && (!grid || grid.length <= 0))
             return contains(mouse)
-        return pointInGrid(mouse,grid)
+        return pointInGrid(mouse)
     }
 
     onPressed: {
-//        Qak.debug(Qak.gid+'GridMouseArea','pressed',mouse.x,mouse,y) //¤qakdbg
+//        Qak.debug(Qak.gid+'GridMouseArea','.onPressed',mouse.x,mouse.y) //¤qakdbg
         if(has(mouse)) {
             mouse.accepted = true
             return
@@ -69,7 +71,7 @@ MouseArea {
     }
 
     onClicked: {
-//        Qak.debug(Qak.gid+'GridMouseArea','clicked',mouse.x,mouse,y) //¤qakdbg
+//        Qak.debug(Qak.gid+'GridMouseArea','.onClicked',mouse.x,mouse.y) //¤qakdbg
         if(has(mouse)) {
             mouse.accepted = true
             return

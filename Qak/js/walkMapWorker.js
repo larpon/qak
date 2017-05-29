@@ -688,14 +688,14 @@ WorkerScript.onMessage = function(message) {
     var startPosition = message.startPosition
     var endPosition = message.endPosition
 
-    pathFinder.enableSync()
+    pathFinder.enableSync() // Important as WorkerScript and QML don't have 'setTimeout' and WorkerScript is async
 
     pathFinder.enableDiagonals()
     pathFinder.enableCornerCutting()
 
     pathFinder.setGrid(grid)
 
-    pathFinder.setAcceptableTiles([0])
+    pathFinder.setAcceptableTiles([true])
 
     pathFinder.findPath(startPosition.x, startPosition.y, endPosition.x, endPosition.y, function( path ) {
         if(path !== null && grid[0][0] > 0 && (path[0].x == 0 && path[0].y == 0)) {
