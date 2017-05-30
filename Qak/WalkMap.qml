@@ -9,7 +9,7 @@ GridMouseArea {
     //property point startPosition: Qt.point(0,0)
     //property point endPosition: Qt.point(0,0)
 
-    property bool simplify: true
+    property bool simplify: false
 
     property var __remappedGrid
     property var __solvesList: ({})
