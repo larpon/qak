@@ -11,8 +11,26 @@ GridMouseArea {
 
     property bool simplify: true
 
+    property var __remappedGrid
     property var __solvesList: ({})
     property int __nextSolveId: 0
+
+    onValidGridChanged: {
+        if(validGrid) {
+            __remappedGrid = []
+            var i ,j
+            for(i in grid) {
+                var r = []
+                for(j in grid[i]) {
+                    if(grid[i][j])
+                        r[j] = 0
+                    else
+                        r[j] = 1
+                }
+                __remappedGrid[i] = r
+            }
+        }
+    }
 
     // Functionality
     WorkerScript {
@@ -26,7 +44,7 @@ GridMouseArea {
             } else
                 __solvesList[messageObject.solveId].onNotFound()
             if('solveId' in messageObject) {
-//                Qak.debug(Qak.gid+'WalkMap','>solverWorker.onMessage','removing',messageObject.solveId) //¤qakdbg
+//                Qak.debug(Qak.gid+'WalkMap','>solverWorker.onMessage','removing solve id',messageObject.solveId) //¤qakdbg
                 //delete __solvesList[messageObject.solveId]
                 __solvesList[messageObject.solveId] = undefined
             }
@@ -106,7 +124,7 @@ GridMouseArea {
     }
 
     // Convert x,y values from the grid to actual pixel coordinates
-    // TODO do this in the worker script
+    // TODO do this in the worker script?
     function pathToPoints(path) {
         //var referenceChild = grid.children[0]
         var offset = Qt.point(cellWidth,cellHeight)
@@ -132,6 +150,7 @@ GridMouseArea {
 
     function findPath(startPoint, endPoint, onFound, onNotFound) {
 
+        /*
         // Fix point extremes
         if(startPoint.x <= 0) {
             Qak.warn('Fixed start point.x 0')
@@ -176,6 +195,8 @@ GridMouseArea {
             endPoint.y = endPoint.y - walkMap.y
         }
 
+        */
+
         /*
         var child = grid.childAt(startPoint.x,startPoint.y)
         child.show = true
@@ -219,55 +240,12 @@ GridMouseArea {
         var startPos = cellIndex(startPoint) //{ 'x':startPosition.x, 'y': startPosition.y }
         var endPos = cellIndex(endPoint) //{ 'x':endPosition.x, 'y': endPosition.y }
 
+        // NOTE endPoint values might be undefined in debug output - this is because the refence can be a 'mouse' event - which gets garbage collected before debug outputs is buffer.
 //        Qak.debug(Qak.gid+'WalkMap','::findPath',"start (cell)",startPos.x,startPos.y,"end (cell)",endPos.x,endPos.y,' - ','start (point)',startPoint.x,startPoint.y,'end (point)',endPoint.x,endPoint.y) //¤qakdbg
 
         __solvesList[__nextSolveId] = { 'onFound':onFound, 'onNotFound':onNotFound }
-        solverWorker.sendMessage( { 'solveId': __nextSolveId, 'grid': grid, 'startPosition': startPos, 'endPosition': endPos } )
+        solverWorker.sendMessage( { 'solveId': __nextSolveId, 'grid': __remappedGrid, 'startPosition': startPos, 'endPosition': endPos } )
         __nextSolveId++
     }
-/*
-    // Visualization
-    Grid {
-        id: grid
 
-        anchors.fill: parent
-        columns: 10
-        rows: Math.floor(columns*(height/width))
-
-        readonly property real cellWidth: (width/columns)
-        readonly property real cellHeight: (height/rows)
-
-        Repeater {
-            model: (parent.columns*parent.rows)
-            Rectangle {
-
-                width: grid.cellWidth
-                height: grid.cellHeight
-
-                opacity: 0.15
-
-                color: on ? "green" : "red"
-
-                border.width: 1
-                border.color: "yellow"
-
-                property bool on: false
-                property bool show: false
-
-                property int idx: index
-
-                Rectangle {
-                    id: mixer
-                    anchors.fill: parent
-
-                    visible: parent.show
-                    opacity: 0.5
-
-                    color: "blue"
-                }
-            }
-        }
-    }
-
-    */
 }

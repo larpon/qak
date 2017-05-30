@@ -37,11 +37,12 @@ MouseArea {
             return false
         if(point.y < 0 || point.y > height)
             return false
-        return grid[__math_ceil((point.y * rows) / height)-1][__math_ceil((point.x * columns) / width)-1]
+        // NOTE the input grid is "row major" thus we need to look up as grid[y][x]
+        var cellIdx = cellIndex(point)
+        return grid[cellIdx.y][cellIdx.x]
     }
 
     function cellIndex(point) {
-//        Qak.debug(Qak.gid+'GridMouseArea','::cellIndex',point.x,point.y,(point.y < 0 || point.y > height),height) //¤qakdbg
         if(!validGrid)
             return null
         if(!(point))
@@ -50,7 +51,7 @@ MouseArea {
             return null
         if(point.y < 0 || point.y > height)
             return null
-        return Qt.point(__math_ceil((point.y * rows) / height)-1,__math_ceil((point.x * columns) / width)-1)
+        return Qt.point(__math_ceil((point.x * columns) / width)-1,__math_ceil((point.y * rows) / height)-1)
     }
 
     function has(mouse) {
@@ -65,18 +66,22 @@ MouseArea {
 //        Qak.debug(Qak.gid+'GridMouseArea','.onPressed',mouse.x,mouse.y) //¤qakdbg
         if(has(mouse)) {
             mouse.accepted = true
+//            Qak.debug(Qak.gid+'GridMouseArea','.onPressed',mouse.accepted ? 'accepted' : 'not accepted') //¤qakdbg
             return
         }
         mouse.accepted = false
+//        Qak.debug(Qak.gid+'GridMouseArea','.onPressed',mouse.accepted ? 'accepted' : 'not accepted') //¤qakdbg
     }
 
     onClicked: {
 //        Qak.debug(Qak.gid+'GridMouseArea','.onClicked',mouse.x,mouse.y) //¤qakdbg
         if(has(mouse)) {
             mouse.accepted = true
+//            Qak.debug(Qak.gid+'GridMouseArea','.onClicked',mouse.accepted ? 'accepted' : 'not accepted') //¤qakdbg
             return
         }
         mouse.accepted = false
+//        Qak.debug(Qak.gid+'GridMouseArea','.onClicked',mouse.accepted ? 'accepted' : 'not accepted') //¤qakdbg
     }
 
 }

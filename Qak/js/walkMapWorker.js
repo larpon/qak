@@ -680,10 +680,10 @@ WorkerScript.onMessage = function(message) {
     var solveId = message.solveId
     var grid = message.grid
 
-    for(var i in grid) {
-        var d = grid[i]
-        console.debug('WalkMap',d)
-    }
+//    for(var i in grid) { //¤qakdbg
+//        var d = grid[i] //¤qakdbg
+//        console.debug('WalkMap',d) //¤qakdbg
+//    } //¤qakdbg
 
     var startPosition = message.startPosition
     var endPosition = message.endPosition
@@ -695,17 +695,17 @@ WorkerScript.onMessage = function(message) {
 
     pathFinder.setGrid(grid)
 
-    pathFinder.setAcceptableTiles([true])
+    pathFinder.setAcceptableTiles([0])
 
     pathFinder.findPath(startPosition.x, startPosition.y, endPosition.x, endPosition.y, function( path ) {
         if(path !== null && grid[0][0] > 0 && (path[0].x == 0 && path[0].y == 0)) {
-            console.debug("Path was found but encountered a 0,0 bug")
+            console.warn("Path was found but encountered a 0,0 bug")
             WorkerScript.sendMessage( { 'found': false, 'solveId':solveId } )
         } else if (path === null || ('length' in path && path.length <= 0)) {
-            console.debug("Path was not found")
+            //console.debug("Path was not found")
             WorkerScript.sendMessage( { 'found': false, 'solveId':solveId } )
         } else {
-            console.debug("Path was found",path)
+            //console.debug("Path was found",path)
             WorkerScript.sendMessage( { 'found': true, 'path':path, 'solveId':solveId } )
         }
     });
