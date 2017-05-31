@@ -37,7 +37,6 @@ function loopChildren(object,callback) {
 
 // These will loop Loader types as well as 'normal' QML objects
 function loopDataDeep(object,callback) {
-    console.warn('Aid','::loopDataDeep','UNTESTED FUNCTION')
     if('item' in object && qtypeof(object) === "QQmlTimer")
         object = object.item
     if(object !== undefined && object !== null) {

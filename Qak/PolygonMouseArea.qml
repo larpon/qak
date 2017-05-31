@@ -1,6 +1,7 @@
 import QtQuick 2.0
 
 //import Qak 1.0 //¤qakdbg
+import Qak.Tools 1.0
 
 MouseArea {
     id: mouseArea
@@ -10,6 +11,8 @@ MouseArea {
 
     // A JavaScript Array of { x: <number>, y: <number> } objects
     property var polygon: ([])
+
+    readonly property bool validPolygon: polygon && Aid.isArray(polygon) && polygon.length > 2 && polygon[0] && ('x' in polygon[0]) && ('y' in polygon[0])
 
     // https://gist.github.com/johannesboyne/5626235
     // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
@@ -32,7 +35,7 @@ MouseArea {
     function has(mouse) {
         if(!enabled)
             return false
-        if(normalWhenEmpty && (!polygon || polygon.length <= 0))
+        if(normalWhenEmpty && !validPolygon)
             return contains(mouse)
         return pointInPolygon(mouse,polygon)
     }
