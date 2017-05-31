@@ -236,7 +236,7 @@ Item {
     }
 
     function startMoving() {
-        mover.startMoving()
+        mover.start()
     }
 
     property alias mover: mover
