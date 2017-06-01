@@ -20,6 +20,7 @@ Item {
 
     property bool smoothed: false
 
+    signal beforeStart
     signal started
     signal stopped
 
@@ -59,6 +60,7 @@ Item {
 
         pathAnim.stop()
 
+        beforeStart()
         var list = []
         var d = 0
         // TODO make an anchor point option
