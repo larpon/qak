@@ -10,6 +10,11 @@ QML_IMPORT_PATH += $$PWD
     SOURCES += $$PWD/qak.cpp
 }
 
+contains(QAK_CONFIG,"nowarnings") {
+    DEFINES += QAK_NO_WARNINGS
+    message("Qak supressing warnings")
+}
+
 INCLUDEPATH += \
     $$PWD \
     $$PWD/src

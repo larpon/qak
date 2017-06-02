@@ -168,7 +168,7 @@ void Store::save()
 {
     if(_name == "")
     {
-        qCritical() << "Store error: Property \"name\" not set";
+        qCritical() << "Store::save error: Property \"name\" not set";
         emit error("Store error: Property \"name\" not set");
         return;
     }
@@ -231,7 +231,9 @@ void Store::load()
 {
     if(_name == "")
     {
-        qCritical() << "Store error: Property \"name\" not set";
+        #if !defined(QAK_NO_WARNINGS)
+        qWarning() << "Store::load() error: Property \"name\" not set";
+        #endif
         emit error("Store error: Property \"name\" not set");
         return;
     }
@@ -305,7 +307,7 @@ void Store::clear()
 {
     if(_name == "")
     {
-        qCritical() << "Store error: Property \"name\" not set";
+        qCritical() << "Store::clear error: Property \"name\" not set";
         emit error("Property \"name\" not set");
         return;
     }
@@ -329,7 +331,7 @@ void Store::clear(const QString &name)
 {
     if(name == "")
     {
-        qCritical() << "Store error: Argument \"name\" not set";
+        qCritical() << "Store::clear(name) error: Argument \"name\" not set";
         emit error("Argument \"name\" not set");
         return;
     }
