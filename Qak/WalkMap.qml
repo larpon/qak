@@ -15,6 +15,8 @@ GridMouseArea {
     property var __solvesList: ({})
     property int __nextSolveId: 0
 
+    signal sameCell
+
     onValidGridChanged: {
         if(validGrid) {
             __remappedGrid = []
@@ -239,6 +241,12 @@ GridMouseArea {
 
         var startPos = cellIndex(startPoint) //{ 'x':startPosition.x, 'y': startPosition.y }
         var endPos = cellIndex(endPoint) //{ 'x':endPosition.x, 'y': endPosition.y }
+
+        if(startPos.x === endPos.x && startPos.y === endPos.y) {
+//                Qak.info(Qak.gid+'WalkMap','::findPath','start and end point are in same cell') //¤qakdbg
+            sameCell()
+            return
+        }
 
         // NOTE endPoint values might be undefined in debug output - this is because the refence can be a 'mouse' event - which gets garbage collected before debug outputs is buffer.
 //        Qak.debug(Qak.gid+'WalkMap','::findPath',"start (cell)",startPos.x,startPos.y,"end (cell)",endPos.x,endPos.y,' - ','start (point)',startPoint.x,startPoint.y,'end (point)',endPoint.x,endPoint.y) //¤qakdbg

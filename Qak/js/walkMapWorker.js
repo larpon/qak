@@ -698,7 +698,7 @@ WorkerScript.onMessage = function(message) {
     pathFinder.setAcceptableTiles([0])
 
     pathFinder.findPath(startPosition.x, startPosition.y, endPosition.x, endPosition.y, function( path ) {
-        if(path !== null && grid[0][0] > 0 && (path[0].x == 0 && path[0].y == 0)) {
+        if(path && grid[0][0] > 0 && (path[0] && path[0].x == 0 && path[0].y == 0)) {
             console.warn("Path was found but encountered a 0,0 bug")
             WorkerScript.sendMessage( { 'found': false, 'solveId':solveId } )
         } else if (path === null || ('length' in path && path.length <= 0)) {
