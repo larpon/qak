@@ -1,8 +1,8 @@
 module Qak.QtQuick
 Image 2.0 Image.qml
-Image 2.1 Image.2.1.qml
-Image 2.2 Image.2.2.qml
-Image 2.3 Image.2.3.qml
+Image 2.1 Image_2_1.qml
+Image 2.2 Image_2_2.qml
+Image 2.3 Image_2_3.qml
 Item 2.0 Item.qml
 Rectangle 2.0 Rectangle.qml
 depends Qak 1.0

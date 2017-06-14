@@ -37,13 +37,13 @@
         <file>Qak/Debug/DebugClient.qml</file>
         <file>Qak/SoundBank.qml</file>
         <file>Qak/RoundMouseArea.qml</file>
-        <file>Qak/QtQuick/Image.2.1.qml</file>
-        <file>Qak/QtQuick/Image.2.2.qml</file>
-        <file>Qak/QtQuick/Image.2.3.qml</file>
         <file>Qak/ItemAnimation.qml</file>
         <file>Qak/PolygonMouseArea.qml</file>
         <file>Qak/Events.qml</file>
         <file>Qak/Tools/Incubator.qml</file>
         <file>Qak/GridMouseArea.qml</file>
+        <file>Qak/QtQuick/Image_2_1.qml</file>
+        <file>Qak/QtQuick/Image_2_2.qml</file>
+        <file>Qak/QtQuick/Image_2_3.qml</file>
     </qresource>
 </RCC>
