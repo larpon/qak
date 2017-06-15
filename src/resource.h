@@ -11,6 +11,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QCryptographicHash>
 
 #include "qqml.h"
 
@@ -27,7 +28,7 @@ class Resource : public QObject
         QString prefix();
         void setPrefix(const QString &prefix);
 
-signals:
+    signals:
         void loaded(const QString &name);
         void unloaded(const QString &name);
         void error(const QString& msg);
@@ -46,6 +47,7 @@ signals:
         QString appPath();
         QString dataPath();
         QString cachePath();
+        QString fileMD5Hash(const QUrl &url);
         QString url(const QString &relativePath);
 
     private slots:

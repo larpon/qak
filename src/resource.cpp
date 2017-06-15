@@ -193,6 +193,13 @@ QString Resource::cachePath()
     return _cachePath;
 }
 
+QString Resource::fileMD5Hash(const QUrl &url)
+{
+    QFile file(url.toString().replace("qrc://",":"));
+    file.open(QIODevice::ReadOnly);
+    return QString(QCryptographicHash::hash(file.readAll(),QCryptographicHash::Md5).toHex());
+}
+
 QString Resource::url(const QString &relativePath)
 {
     QString const prefixed = _prefix + relativePath;
@@ -200,15 +207,9 @@ QString Resource::url(const QString &relativePath)
 
     #if defined(Q_OS_ANDROID)
         fullPath = "assets:/" + relativePath;
-    //#elif defined(Q_OS_OSX) // Fix loading of specific files
-    //    if(relativePath.endsWith('.mp3'))
-    //        fullPath = "file://"+appPath()+'/'+relativePath;
     #else
         fullPath = "qrc:///"+prefixed;
     #endif
-
-    //fullPath = fullPath.replace("qrc://",":");
-    //fullPath = fullPath.replace("file://","");
 
     return fullPath;
 }
