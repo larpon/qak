@@ -196,6 +196,8 @@ QString Resource::cachePath()
 QString Resource::fileMD5Hash(const QUrl &url)
 {
     QFile file(url.toString().replace("qrc://",":"));
+    if(!file.exists())
+        return "deadbeef";
     file.open(QIODevice::ReadOnly);
     return QString(QCryptographicHash::hash(file.readAll(),QCryptographicHash::Md5).toHex());
 }
