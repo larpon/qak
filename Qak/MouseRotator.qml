@@ -14,8 +14,33 @@ MouseArea {
     //property variant handle: parent
 
     property bool paused: false
+    property bool continuous: false
 
-    property real startRotation: 0
+    readonly property real startRotation: internal.startRotation
+    readonly property real angle: internal.rotation
+
+    /*
+    Connections {
+        target: target ? target : null
+        onRotationChanged: {
+            if(continuous) {
+                var v = target.rotation - internal.lastRotationValue
+                console.debug(':::',v)
+                if(Math.abs(v) <= 358)
+                    internal.rotation += v
+                internal.lastRotationValue = target.rotation
+            } else
+                internal.rotation = target.rotation
+        }
+    }*/
+
+    QtObject {
+        id: internal
+        property real rotation: 0
+        property real startRotation: 0
+
+        property real lastRotationValue: 0
+    }
 
     signal rotate(real degree)
 
@@ -75,11 +100,13 @@ MouseArea {
         if(!enabled || paused)
             return
 
+        internal.lastRotationValue = 0
+
         var point = mapToItem(target.parent, mouse.x, mouse.y)
 
         var rotation = calculateRotation(point)
 
-        startRotation = rotation - target.rotation
+        internal.startRotation = rotation - target.rotation
     }
 
     onPositionChanged: {
@@ -90,10 +117,23 @@ MouseArea {
 
         var rotation = calculateRotation(point)
 
-        rotation -= startRotation
+        var r = rotation - internal.startRotation
+
+        if(continuous) {
+            var v = rotation - internal.lastRotationValue
+            console.debug(':::',v,Math.abs(rotation))
+            //if(v) {
+
+
+            //}
+            internal.rotation += v
+            internal.lastRotationValue = internal.rotation
+            //internal.lastRotationValue = internal.rotation
+        } else
+            internal.rotation = r
 
         if(!paused)
-            target.rotation = rotation
+            target.rotation = internal.rotation
 
         //Qak.debug(rotation)
 
