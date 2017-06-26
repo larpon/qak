@@ -14,23 +14,24 @@ class MouseRotatePrivate : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(qreal tick READ getTick WRITE setTick NOTIFY tick)
-    Q_PROPERTY(qreal previousTick READ getPreviousTick NOTIFY previousTickChanged)
+    Q_PROPERTY(qreal rotation READ getRotation WRITE setRotation NOTIFY rotated)
+    Q_PROPERTY(qreal previousRotation READ getPreviousRotation NOTIFY previousRotationChanged)
 
     Q_PROPERTY(qreal normalized READ getNormalized NOTIFY normalizedChanged)
     Q_PROPERTY(int rounds READ getRounds NOTIFY roundsChanged)
 
     Q_PROPERTY(bool flipping READ isFlipping WRITE setFlipping NOTIFY flippingChanged)
-    Q_PROPERTY(bool wrapTicks READ getWrapTicks WRITE setWrapTicks NOTIFY wrapTicksChanged)
+    Q_PROPERTY(bool wrap READ getWrap WRITE setWrap NOTIFY wrapChanged)
+    Q_PROPERTY(bool continuous READ getContinuous WRITE setContinuous NOTIFY continuousChanged)
 
 public:
     explicit MouseRotatePrivate(QObject *parent = 0);
 
-    qreal getTick() const;
-    void setTick(qreal tick);
+    qreal getRotation() const;
 
-    qreal getPreviousTick() const;
-    void setPreviousTick(const qreal &previousTick);
+
+    qreal getPreviousRotation() const;
+    void setPreviousRotation(const qreal &previousRotation);
 
     qreal getNormalized() const;
 
@@ -39,37 +40,42 @@ public:
     bool isFlipping() const;
     void setFlipping(bool flipping);
 
-    bool getWrapTicks() const;
-    void setWrapTicks(bool wrapTicks);
+    bool getWrap() const;
+    void setWrap(bool wrapTicks);
+
+    bool getContinuous() const;
+    void setContinuous(bool continuous);
 
 signals:
 
-    void tick();
-    void previousTickChanged();
+    void rotated();
+    void previousRotationChanged();
 
     void normalizedChanged();
 
     void roundsChanged();
 
     void flippingChanged();
-    void wrapTicksChanged();
+    void wrapChanged();
+    void continuousChanged();
 
 public slots:
-    void doTick();
+    void setRotation(qreal rotation);
 
 protected:
     //void timerEvent(QTimerEvent *event);
 
 private:
 
-    qreal _tick;
-    qreal _previousTick;
+    qreal _rotation;
+    qreal _previousRotation;
 
     qreal _normalized;
     int _rounds;
 
     bool _flipping;
-    bool _wrapTicks;
+    bool _wrap;
+    bool _continuous;
 
     void recalculateNormalized();
     qreal normalize(qreal value, qreal start, qreal end);

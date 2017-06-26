@@ -1,6 +1,7 @@
 import QtQuick 2.0
 
 import Qak 1.0
+import Qak.Private 1.0
 
 MouseArea {
     id: rotator
@@ -9,37 +10,32 @@ MouseArea {
 
     enabled: true
 
-    //readonly property var container: target.parent
     property var target: parent
-    //property variant handle: parent
+
+    Binding {
+        target: rotator.target ? rotator.target : null
+        property: "rotation"
+        value: internal.rotation
+        when: rotator.pressed
+    }
+
+    Connections {
+        target: rotator.target ? rotator.target : null
+        onRotationChanged: if(!rotator.pressed) internal.setRotation(target.rotation)
+    }
 
     property bool paused: false
-    property bool continuous: false
+    property alias continuous: internal.continuous
+    property alias wrap: internal.wrap
 
     readonly property real startRotation: internal.startRotation
     readonly property real angle: internal.rotation
 
-    /*
-    Connections {
-        target: target ? target : null
-        onRotationChanged: {
-            if(continuous) {
-                var v = target.rotation - internal.lastRotationValue
-                console.debug(':::',v)
-                if(Math.abs(v) <= 358)
-                    internal.rotation += v
-                internal.lastRotationValue = target.rotation
-            } else
-                internal.rotation = target.rotation
-        }
-    }*/
-
-    QtObject {
+    MouseRotatePrivate {
         id: internal
-        property real rotation: 0
-        property real startRotation: 0
 
-        property real lastRotationValue: 0
+        property real prevHandleRotation: 0
+        property real startRotation: 0
     }
 
     signal rotate(real degree)
@@ -100,13 +96,12 @@ MouseArea {
         if(!enabled || paused)
             return
 
-        internal.lastRotationValue = 0
-
         var point = mapToItem(target.parent, mouse.x, mouse.y)
 
         var rotation = calculateRotation(point)
 
-        internal.startRotation = rotation - target.rotation
+        internal.prevHandleRotation = rotation
+        internal.startRotation = rotation - internal.rotation //target.rotation
     }
 
     onPositionChanged: {
@@ -117,25 +112,16 @@ MouseArea {
 
         var rotation = calculateRotation(point)
 
-        var r = rotation - internal.startRotation
-
         if(continuous) {
-            var v = rotation - internal.lastRotationValue
-            console.debug(':::',v,Math.abs(rotation))
-            //if(v) {
-
-
-            //}
-            internal.rotation += v
-            internal.lastRotationValue = internal.rotation
-            //internal.lastRotationValue = internal.rotation
-        } else
-            internal.rotation = r
-
-        if(!paused)
-            target.rotation = internal.rotation
-
-        //Qak.debug(rotation)
+            var traveled = rotation - internal.prevHandleRotation
+            internal.prevHandleRotation = rotation
+            if(Math.abs(traveled) > 180) // NOTE Safe-guard when the rotation calculation flips from 360 to 0
+                return
+            internal.setRotation(internal.rotation + traveled)
+        } else {
+            var r = rotation - internal.startRotation
+            internal.setRotation(r)
+        }
 
         rotate(rotation)
     }

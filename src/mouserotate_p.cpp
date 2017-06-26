@@ -5,56 +5,75 @@ MouseRotatePrivate::MouseRotatePrivate(QObject *parent) : QObject(parent)
     _normalized = 0;
 
     _flipping = false;
-    _wrapTicks = false;
+    _wrap = true;
+    _continuous = false;
 
-    _tick = 0;
-    _previousTick = 0;
+    _rotation = 0;
+    _previousRotation = 0;
 
     recalculateNormalized();
 
     _rounds = 0;
 }
 
-qreal MouseRotatePrivate::getTick() const
+qreal MouseRotatePrivate::getRotation() const
 {
-    return _tick;
+    return _rotation;
 }
 
-void MouseRotatePrivate::setTick(qreal tick)
+void MouseRotatePrivate::setRotation(qreal rotation)
 {
-    if(tick != _tick) {
 
-        if(_wrapTicks) {
-            if(tick < 0 || tick > 360) {
-                tick = normalize(tick,0,360);
-                if(tick == _tick)
-                    return;
+    if(rotation != _rotation) {
+
+        if(!_continuous) {
+            setFlipping(false);
+            if(rotation < 0) {
+                setFlipping(true);
+                _rounds--;
+                emit roundsChanged();
             }
-        } else {
-            if(tick < 0)
-                tick = 0;
-            if(tick > 360)
-                tick = 360;
+            if(rotation > 360) {
+                setFlipping(true);
+                _rounds++;
+                emit roundsChanged();
+            }
         }
 
-        qreal pTick = _tick;
-        _tick = tick;
-        emit this->tick();
+        if(_wrap) {
+            if(rotation < 0 || rotation > 360) {
+                rotation = normalize(rotation,0,360);
+                if(rotation == _rotation)
+                    return;
+            }
+        } else if(_continuous) {
+            // Not needed
+        } else {
+            if(rotation < 0)
+                rotation = 0;
+            if(rotation > 360)
+                rotation = 360;
+        }
+
+        qreal previousRotation = _rotation;
+        _rotation = rotation;
+        emit this->rotated();
         recalculateNormalized();
-        setPreviousTick(pTick);
+        setPreviousRotation(previousRotation);
     }
+
 }
 
-qreal MouseRotatePrivate::getPreviousTick() const
+qreal MouseRotatePrivate::getPreviousRotation() const
 {
-    return _previousTick;
+    return _previousRotation;
 }
 
-void MouseRotatePrivate::setPreviousTick(const qreal &previousTick)
+void MouseRotatePrivate::setPreviousRotation(const qreal &previousRotation)
 {
-    if(_previousTick != previousTick) {
-        _previousTick = previousTick;
-        emit previousTickChanged();
+    if(_previousRotation != previousRotation) {
+        _previousRotation = previousRotation;
+        emit previousRotationChanged();
     }
 }
 
@@ -68,43 +87,33 @@ int MouseRotatePrivate::getRounds() const
     return _rounds;
 }
 
-void MouseRotatePrivate::doTick()
+bool MouseRotatePrivate::getContinuous() const
 {
-    //qDebug() << "" << doTick();
-
-    qreal tick = _tick;// + _advance;
-
-    if(tick < 0) {
-        setFlipping(true);
-        tick = 360;
-        setTick(tick);
-        _rounds--;
-        emit roundsChanged();
-        return;
-    }
-    if(tick > 360) {
-        setFlipping(true);
-        tick = 0;
-        setTick(tick);
-        _rounds++;
-        emit roundsChanged();
-        return;
-    }
-    setFlipping(false);
-    setTick(tick);
-
+    return _continuous;
 }
 
-bool MouseRotatePrivate::getWrapTicks() const
+void MouseRotatePrivate::setContinuous(bool continuous)
 {
-    return _wrapTicks;
+    if(_continuous != continuous) {
+        _continuous = continuous;
+        if(_continuous)
+            setWrap(false);
+        emit continuousChanged();
+    }
 }
 
-void MouseRotatePrivate::setWrapTicks(bool wrapTicks)
+bool MouseRotatePrivate::getWrap() const
 {
-    if(_wrapTicks != wrapTicks) {
-        _wrapTicks = wrapTicks;
-        emit wrapTicksChanged();
+    return _wrap;
+}
+
+void MouseRotatePrivate::setWrap(bool wrap)
+{
+    if(_wrap != wrap) {
+        _wrap = wrap;
+        if(_wrap)
+            setContinuous(false);
+        emit wrapChanged();
     }
 }
 
@@ -123,7 +132,7 @@ void MouseRotatePrivate::setFlipping(bool flipping)
 
 void MouseRotatePrivate::recalculateNormalized()
 {
-    qreal normalized = ((_tick - 0) / (360 - 0));
+    qreal normalized = ((_rotation - 0) / (360 - 0));
     if(normalized != _normalized) {
         _normalized = normalized;
         emit normalizedChanged();
