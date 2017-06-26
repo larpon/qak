@@ -41,7 +41,7 @@ public:
     void setFlipping(bool flipping);
 
     bool getWrap() const;
-    void setWrap(bool wrapTicks);
+    void setWrap(bool wrap);
 
     bool getContinuous() const;
     void setContinuous(bool continuous);
