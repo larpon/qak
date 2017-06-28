@@ -1,3 +1,5 @@
+// TODO make this a utility singleton
+
 /*
 function findRoot(item) {
     if(item.objectName === "QakNode" && item.isRoot)
