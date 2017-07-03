@@ -101,8 +101,13 @@ QtObject {
 //                      console.debug('incubated', that.id, that.incubator.object) //¤qakdbg
                         incubator.__done(that.id)
                         //delete incubator.queue[that.id]
-                    } else
+                    } else {
+                        if(status === Component.Null)
+                            console.error('Incubator','status',status,'(Null)',that.incubator.errorString())
+                        if(status === Component.Error)
+                            console.error('Incubator','status',status,'(Error)',that.incubator.errorString())
                         throw 'incubation error '+status
+                    }
                 }
 
                 if(this.incubator.status !== Component.Ready) {
