@@ -43,7 +43,7 @@ ItemAnimationPrivate {
         if(!__activeSequence) {
             __activeSequence = __validSequences[p.activeSequenceIndex]
             if(__activeSequence === undefined) {
-                Qak.error(Qak.gid+'ItemAnimation','::tick','No active sequence can be set.')
+                Qak.error(Qak.gid+'ItemAnimation','onStableChanged','No active sequence can be set.')
             }
         }
         setGoalSequence()
@@ -254,8 +254,8 @@ ItemAnimationPrivate {
 
         setRunning(true)
 
-        var tmpSequneces = sequences
-        sequences = tmpSequneces
+        var tmpSequences = sequences
+        sequences = tmpSequences
         restarted()
     }
 
