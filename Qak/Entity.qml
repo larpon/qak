@@ -248,7 +248,7 @@ Item {
 
     Item {
         id: container
-        anchors.fill: parent
+        anchors { fill: parent }
     }
 
 }

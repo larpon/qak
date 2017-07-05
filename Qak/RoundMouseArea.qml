@@ -30,7 +30,7 @@ Item {
 
     MouseArea {
         id: mouseArea
-        anchors.fill: parent
+        anchors { fill: parent }
         enabled: roundMouseArea.enabled
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
