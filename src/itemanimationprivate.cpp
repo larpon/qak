@@ -4,6 +4,7 @@
 ItemAnimationPrivate::ItemAnimationPrivate(QQuickItem* parent)
     : QQuickItem(parent)
 {
+    _frame = 0;
     _running = false;
     setFlag(ItemHasContents);
 }

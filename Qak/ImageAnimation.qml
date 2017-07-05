@@ -495,7 +495,7 @@ Entity {
     }
 
     Item {
-        anchors.fill: parent
+        anchors { fill: parent }
         id: frameContainer
         property bool balanced: children.length > 0 && state.totalAmountOfFrames === children.length
     }

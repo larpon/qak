@@ -5,6 +5,7 @@ PropertyToggle::PropertyToggle(QQuickItem* parent) : QQuickItem(parent)
 {
     _toggle = 0;
     _lastToggled = 0;
+    _children = childItems();
     setFlag(ItemHasContents);
 }
 

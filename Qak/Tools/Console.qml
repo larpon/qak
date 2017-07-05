@@ -7,7 +7,7 @@ import "console.js" as Util
 Item {
     id: root
     ColumnLayout {
-        anchors.fill: parent
+        anchors { fill: parent }
         anchors.margins: 9
         RowLayout {
             Layout.fillWidth: true
@@ -32,7 +32,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Rectangle {
-                anchors.fill: parent
+                anchors { fill: parent }
                 color: '#333'
                 border.color: Qt.darker(color)
                 opacity: 0.2
@@ -41,7 +41,7 @@ Item {
 
             ScrollView {
                 id: scrollView
-                anchors.fill: parent
+                anchors { fill: parent }
                 anchors.margins: 9
                 ListView {
                     id: resultView
