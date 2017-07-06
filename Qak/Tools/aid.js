@@ -14,6 +14,7 @@ var __math_random = Math.random
 var __math_floor = Math.floor
 var __math_sqrt = Math.sqrt
 var __math_max = Math.max
+var __math_round = Math.round
 
 function loopData(object,callback) {
     if(object !== undefined && object !== null) {
@@ -257,6 +258,13 @@ function extend(target, source) {
 function pad(number, digits, padChar) {
     padChar = padChar || 0
     return new Array(__math_max(digits + 1 - String(number).length + 1, 0)).join(padChar) + number
+}
+
+function readDuration(text, wpm) {
+    wpm = wpm || 160
+    var wc = text.split(' ').length
+    if(wc <= 2) wc = 3
+    return __math_round((wc/wpm)*60*1000)
 }
 
 function countPad(str, padChar) {
