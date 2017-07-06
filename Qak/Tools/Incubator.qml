@@ -103,9 +103,9 @@ QtObject {
                         //delete incubator.queue[that.id]
                     } else {
                         if(status === Component.Null)
-                            console.error('Incubator','status',status,'(Null)',that.incubator.errorString())
+                            console.error('Incubator','status',status,'(Null)',that.component.errorString())
                         if(status === Component.Error)
-                            console.error('Incubator','status',status,'(Error)',that.incubator.errorString())
+                            console.error('Incubator','status',status,'(Error)',that.component.errorString())
                         throw 'incubation error '+status
                     }
                 }
