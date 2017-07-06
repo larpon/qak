@@ -103,9 +103,9 @@ QtObject {
                         //delete incubator.queue[that.id]
                     } else {
                         if(status === Component.Null)
-                            console.error('Incubator','status',status,'(Null)',that.component.errorString())
+                            console.error('Incubator','status',status,'(Null)',that.incubator.errorString)
                         if(status === Component.Error)
-                            console.error('Incubator','status',status,'(Error)',that.component.errorString())
+                            console.error('Incubator','status',status,'(Error)',that.incubator.errorString)
                         throw 'incubation error '+status
                     }
                 }
@@ -132,8 +132,9 @@ QtObject {
                 if(this.component.status === Component.Error) {
                     throw "Error loading component "+this.component.errorString()
                 }
-                if(this.component.statusChanged === undefined) {
-                    throw "Error loading component "+this.component
+
+                if(this.component.status === undefined) {
+                    throw "Error loading component (status undefined) "+this.component.status
                 }
 
                 this.component.statusChanged.connect(this.componentStatusCallback);
