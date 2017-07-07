@@ -9,7 +9,6 @@ import "."
 Item {
     id: soundBank
 
-    property var incubator: Incubator.get()
     property var bank: ({})
     property var groups: ({})
 
@@ -44,13 +43,13 @@ Item {
                 path = tag
                 tag = group
             } else {
-                Qak.warn('SoundBank','Seems like',path,'sound file doesn\'t exist? Not added...')
+                Qak.warn(Qak.gid+'SoundBank','Seems like',path,'sound file doesn\'t exist? Not added...')
                 return
             }
         }
 
         if(tag === '') {
-            Qak.warn('SoundBank','Tag is empty for sound "'+path+'". Not added...')
+            Qak.warn(Qak.gid+'SoundBank','Tag is empty for sound "'+path+'". Not added...')
             return
         }
 
@@ -58,10 +57,10 @@ Item {
             var sound = bank[tag]
             if('source' in sound) {
                 if(sound.source === path) {
-                    //Qak.info('SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
+                    Qak.info(Qak.gid+'SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
                     return
                 } else
-                    Qak.info('SoundBank','Updating',tag,'from',sound.source,'to',path)
+                    Qak.info(Qak.gid+'SoundBank','Updating',tag,'from',sound.source,'to',path)
             }
         }
 
@@ -71,7 +70,7 @@ Item {
         }
 
         try {
-            incubator.now(soundEffectComponent, soundBank, attributes, function(obj){
+            Incubate.now(soundEffectComponent, soundBank, attributes, function(obj){
                 registerSoundReady(obj)
             })
         } catch(e) {
@@ -83,17 +82,17 @@ Item {
     function addGroup(group, tag, path) {
 
         if(!Qak.resource.exists(path)) {
-            Qak.warn('SoundBank','Seems like',path,'sound file doesn\'t exist? Not added...')
+            Qak.warn(Qak.gid+'SoundBank','Seems like',path,'sound file doesn\'t exist? Not added...')
             return
         }
 
         if(group === '') {
-            Qak.warn('SoundBank','Group is empty for sound "'+path+'". Not added...')
+            Qak.warn(Qak.gid+'SoundBank','Group is empty for sound "'+path+'". Not added...')
             return
         }
 
         if(tag === '') {
-            Qak.warn('SoundBank','Tag is empty for sound "'+path+'". Not added...')
+            Qak.warn(Qak.gid+'SoundBank','Tag is empty for sound "'+path+'". Not added...')
             return
         }
 
@@ -104,10 +103,10 @@ Item {
             var sound = groups[group][tag]
             if('source' in sound) {
                 if(sound.source === path) {
-                    //Qak.info('SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
+                    Qak.info(Qak.gid+'SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
                     return
                 } else
-                    Qak.info('SoundBank','Updating',tag,'in group',group,'from',sound.source,'to',path)
+                    Qak.info(Qak.gid+'SoundBank','Updating',tag,'in group',group,'from',sound.source,'to',path)
             }
         }
 
@@ -118,7 +117,7 @@ Item {
         }
 
         try {
-            incubator.now(soundEffectComponent, soundBank, attributes, function(obj){
+            Incubate.now(soundEffectComponent, soundBank, attributes, function(obj){
                 registerSoundReady(obj)
             })
         } catch(e) {
@@ -202,7 +201,7 @@ Item {
         var tag
 
         if(group !== undefined && groupExists(group)) {
-            Qak.info('SoundBank','clearing group',group)
+            Qak.info(Qak.gid+'SoundBank','::clear','clearing group',group)
             for(tag in groups[group]) {
                 groups[group][tag].destroy()
             }
@@ -212,7 +211,7 @@ Item {
 
         tag = group
         if(tag in bank) { // See if group matches a tag
-            Qak.info('SoundBank','clearing tag',tag)
+            Qak.info(Qak.gid+'SoundBank','::clear','clearing tag',tag)
             bank[tag].destroy()
             bank[tag] = undefined
         }
@@ -220,7 +219,7 @@ Item {
         // If called without arguments
         if(group === undefined) {
 
-            Qak.info('SoundBank','clearing bank')
+            Qak.info(Qak.gid+'SoundBank','::clear','clearing bank')
 
             for(tag in bank) {
                 bank[tag].destroy()
@@ -247,11 +246,11 @@ Item {
             sound = bank[object.tag]
             if('source' in sound) {
                 if(sound.source === object.source) {
-                    Qak.info('SoundBank','Skipping',object.tag,'with sound',object.source,'it\'s already loaded')
+                    Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Skipping',object.tag,'with sound',object.source,'it\'s already loaded')
                     object.destroy()
                     return
                 } else {
-                    Qak.info('SoundBank','Updating',object.tag,'from',sound.source,'to',object.source)
+                    Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Updating',object.tag,'from',sound.source,'to',object.source)
                     sound.destroy()
                 }
             }
@@ -260,11 +259,11 @@ Item {
                 sound = groups[object.group][object.tag]
                 if('source' in sound) {
                     if(sound.source === object.source) {
-                        Qak.info('SoundBank','Skipping',object.tag,'in group',object.group,'with sound',object.source,'it\'s already loaded')
+                        Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Skipping',object.tag,'in group',object.group,'with sound',object.source,'it\'s already loaded')
                         object.destroy()
                         return
                     } else {
-                        Qak.info('SoundBank','Updating',object.tag,'in group',object.group,'from',sound.source,'to',object.source)
+                        Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Updating',object.tag,'in group',object.group,'from',sound.source,'to',object.source)
                         sound.destroy()
                     }
                 }
@@ -273,9 +272,9 @@ Item {
 
         if(object.group === '') {
             bank[object.tag] = object
-//            Qak.debug('SoundBank',soundBank,'Loaded',object.tag) //¤qakdbg
+//            Qak.debug(Qak.gid+'SoundBank','::registerSoundReady',soundBank,'Loaded',object.tag) //¤qakdbg
         } else {
-//            Qak.debug('SoundBank',soundBank,'Loaded',object.tag,'in group',object.group) //¤qakdbg
+//            Qak.debug(Qak.gid+'SoundBank','::registerSoundReady',soundBank,'Loaded',object.tag,'in group',object.group) //¤qakdbg
             if(!groups[object.group])
                 groups[object.group] = {}
             groups[object.group][object.tag] = object
@@ -346,7 +345,7 @@ Item {
             }
         }
 
-        Qak.error('SoundBank','play','no valid combinations of arguments',tag,group,loops)
+        Qak.error(Qak.gid+'SoundBank','::play','no valid combinations of arguments',tag,group,loops)
 
     }
 
@@ -390,7 +389,7 @@ Item {
             // NOTE if index is out of bounds play() will play the whole bank
             tag = keys[getRandomInt(0,keys.length-1)]
 
-            //Qak.debug('SoundBank playRandom',tag)
+//            Qak.debug(Qak.gid+'SoundBank','::playRandom',tag) //¤qakdbg
             play(tag)
             return
         }
@@ -406,7 +405,7 @@ Item {
             // NOTE if index is out of bounds play() will play the whole bank
             tag = keys[getRandomInt(0,keys.length-1)]
 
-            //Qak.debug('SoundBank playRandom',tag)
+//            Qak.debug(Qak.gid+'SoundBank','::playRandom',tag) //¤qakdbg
             play(tag)
             return
         }
