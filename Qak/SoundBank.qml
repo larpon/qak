@@ -25,6 +25,7 @@ Item {
     signal error (string errorMessage)
 
     signal playing (string tag, var sound)
+    signal stopped (string tag, var sound)
 
     onMutedChanged: mute(muted)
 
@@ -181,6 +182,13 @@ Item {
 
             property string tag: ""
             property string group: ""
+
+            onPlayingChanged: {
+                if(playing)
+                    soundBank.playing(tag,soundEffect)
+                else
+                    soundBank.stopped(tag,soundEffect)
+            }
 
             /*
             onStatusChanged: {
@@ -359,10 +367,8 @@ Item {
             if(!safePlay && sound.playing) {
                 sound.stop()
                 sound.play()
-                playing(sound.tag,sound)
             } else if(!sound.playing) {
                 sound.play()
-                playing(sound.tag,sound)
             }
         }
     }
@@ -440,6 +446,7 @@ Item {
     }
 
     // BUG TODO Ugly horrible fix to let buzzer fix it's windows only sound stutter bug
+    // TODO add group parameter in the small corner case where we have same name tags in different groups
     property var stop: function (tag) {
 
         var i, group
