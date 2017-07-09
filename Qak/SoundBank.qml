@@ -421,24 +421,37 @@ Item {
 
         var i
         if (group === undefined) {
-            if(tag && tag in bank) // Mute tag in bank
+            if(tag && tag in bank) { // Mute tag in bank
+//                Qak.debug(Qak.gid+'SoundBank','::mute','muting tag',tag) //¤qakdbg
                 bank[tag].muted = muted
-            else if (tag in groups) { // Mute group
+            } else if (tag in groups) { // Mute group
+//                Qak.debug(Qak.gid+'SoundBank','::mute','muting group',tag) //¤qakdbg
                 for(i in groups[tag]) {
                     groups[tag][i].muted = muted
                 }
             } else { // Mute whole bank
+//                Qak.debug(Qak.gid+'SoundBank','::mute','muting all') //¤qakdbg
                 // NOTE Don't do something stupid like this: soundBank.muted = muted (property can be binded by user)
-                for(var i in bank) {
+                for(i in bank) {
                     bank[i].muted = muted
+                }
+
+                for(group in groups) {
+                    if(groups[group]) {
+                        for(i in groups[group]) {
+                            groups[group][i].muted = muted
+                        }
+                    }
                 }
             }
             return
         }
 
-        if(tag && groupExists(group) && tag in groups[group]) // Mute tag in group
+        if(tag && groupExists(group) && tag in groups[group]) { // Mute tag in group
+//            Qak.debug(Qak.gid+'SoundBank','::mute','muting tag',tag,'in group',group) //¤qakdbg
             groups[group][tag].muted = muted
-        else if(groupExists(group)) { // Mute group
+        } else if(groupExists(group)) { // Mute group
+//            Qak.debug(Qak.gid+'SoundBank','::mute','muting group',group) //¤qakdbg
             for(i in groups[group]) {
                 groups[group][i].muted = muted
             }
