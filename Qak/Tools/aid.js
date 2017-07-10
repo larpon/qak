@@ -287,12 +287,11 @@ function gcd (a, b) {
     return (b === 0) ? a : gcd (b, a%b)
 }
 
-function distance(p1,p2) {
-    return __math_sqrt( (p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y) )
-}
-
 function distance(x1,y1,x2,y2) {
-    return __math_sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
+    if((x1 && 'x' in x1 && 'y' in x1) && (y1 && 'x' in y1 && 'y' in y1))
+        return __math_sqrt( (x1.x-y1.x)*(x1.x-y1.x) + (x1.y-y1.y)*(x1.y-y1.y) )
+    else
+        return __math_sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 }
 
 function isObject(o) {
