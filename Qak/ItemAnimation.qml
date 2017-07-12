@@ -21,6 +21,7 @@ ItemAnimationPrivate {
     property bool enabled: true
 
     running: true
+//    onRunningChanged: Qak.debug(Qak.gid+'ItemAnimation','.running',running) //¤qakdbg
 
     property alias property: _frames.property
     property alias on: _frames.on
@@ -80,6 +81,7 @@ ItemAnimationPrivate {
     }
 
     function jumpTo(sequenceName) {
+//        Qak.debug(Qak.gid+'ItemAnimation','::jumpTo',sequenceName) //¤qakdbg
         frameTicker.ready = false
         restart()
         setActiveSequence(sequenceName)
@@ -254,6 +256,7 @@ ItemAnimationPrivate {
 
         setRunning(true)
 
+        // TODO fix this some day - should be needed after a reset? Or maybe restart shouldn't call reset at all
         var tmpSequences = sequences
         sequences = tmpSequences
         restarted()
@@ -306,7 +309,7 @@ ItemAnimationPrivate {
                 p.frameDelay = defaultFrameDelay
         }
 
-//        Qak.debug(Qak.gid+'ItemAnimation','active sequence is now',__activeSequence.name) //¤qakdbg
+//        Qak.debug(Qak.gid+'ItemAnimation','active sequence is now',__activeSequence.name,'at frame',__activeSequence.frames[p.sequenceFrameIndex],'index',p.sequenceFrameIndex) //¤qakdbg
         frameTicker.ready = true
     }
 
@@ -316,11 +319,14 @@ ItemAnimationPrivate {
 
         repeat: true
         running: r.running && !paused && ready && r.stable
+//        onRunningChanged: Qak.debug(Qak.gid+'ItemAnimation','frameTicker.running',running) //¤qakdbg
 
         triggeredOnStart: true
 
         property bool ready: false
+//        onReadyChanged: Qak.debug(Qak.gid+'ItemAnimation','frameTicker.ready',ready) //¤qakdbg
         property bool paused: r.paused
+//        onPausedChanged: Qak.debug(Qak.gid+'ItemAnimation','frameTicker.paused',paused) //¤qakdbg
 
         property alias __activeSequence: p.activeSequence
         property alias __nextActiveSequence: p.nextActiveSequence
