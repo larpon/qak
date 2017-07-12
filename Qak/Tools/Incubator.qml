@@ -11,6 +11,7 @@ QtObject {
     property var running: ([])
     property var done: ([])
     property bool asynchronous: true
+    property bool debug: false
 
     function now(input, parent, attributes, successCallback) {
         __toQueue(input, parent, attributes, successCallback)
@@ -47,7 +48,7 @@ QtObject {
         if(type == 'string') {
             // Determine if raw qml string or url
             if(input.indexOf("Component") > -1) {
-                var c = Qt.createQmlObject(input, parent, "incubator.js object_from_string")
+                var c = Qt.createQmlObject(input, parent, "Incubator.qml-object_from_string")
                 queueObject = this.fromComponent(c,parent,attributes,successCallback)
             } else {
                 queueObject = this.fromComponent(Qt.createComponent(input),parent,attributes,successCallback)
@@ -82,7 +83,7 @@ QtObject {
         qo.componentStatusCallback = function(){
             var that = this
 
-//            console.debug('componentStatusCallback',this.id) //¤qakdbg
+//            if(debug) console.debug('Incubator','queue object','componentStatusCallback',this.id) //¤qakdbg
 
             if(this.component.status === Component.Ready) {
                 var sync = Qt.Asynchronous
@@ -92,13 +93,13 @@ QtObject {
                 this.incubator = this.component.incubateObject(this.parent, this.attributes, sync)
 
                 var incubatorStatusCallback = function(){
-//                    console.debug('incubatorStatusCallback',that.id) //¤qakdbg
+//                    if(debug) console.debug('Incubator','queue object','incubatorStatusCallback',that.id) //¤qakdbg
 
                     var status = that.incubator.status
 
                     if(Component && status === Component.Ready) {
                         that.onSuccess(that.incubator.object)
-//                      console.debug('incubated', that.id, that.incubator.object) //¤qakdbg
+//                        if(debug) console.debug('Incubator','queue object','incubated', that.id, that.incubator.object) //¤qakdbg
                         incubator.__done(that.id)
                         //delete incubator.queue[that.id]
                     } else {
@@ -124,7 +125,7 @@ QtObject {
         }
 
         qo.go = function() {
-//            //console.debug('Incubator','go', this.id, this.batch) //¤qakdbg
+//            if(debug) console.debug('Incubator','queue object','.go', this.id, this.batch) //¤qakdbg
 
             if(this.component.status === Component.Ready)
                 this.componentStatusCallback()
