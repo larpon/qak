@@ -237,7 +237,7 @@ ItemAnimationPrivate {
         }
 
         function reset() {
-            //Qak.debug('ItemAnimation','state reset')
+//            Qak.debug(Qak.gid+'ItemAnimation','p::reset') //¤qakdbg
             sequenceFrameIndex = 0
             frameDelay = defaultFrameDelay
             activeSequenceIndex = 0
@@ -252,6 +252,7 @@ ItemAnimationPrivate {
     }
 
     function restart() {
+//        Qak.debug(Qak.gid+'ItemAnimation','::restart') //¤qakdbg
         reset()
 
         setRunning(true)
@@ -263,8 +264,7 @@ ItemAnimationPrivate {
     }
 
     function reset() {
-        //Qak.debug('ItemAnimation','reset')
-
+//        Qak.debug(Qak.gid+'ItemAnimation','::reset') //¤qakdbg
         p.reset()
 
         setGoalSequence("")
