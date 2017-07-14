@@ -299,6 +299,10 @@ function isObject(o) {
     return o !== null && typeof o === 'object'
 }
 
+function hasProperty(o,prop) {
+    return isObject(o) && isString(prop) && (prop in o)
+}
+
 function isInteger(value) {
   var x
   if (isNaN(value))
