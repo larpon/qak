@@ -1,3 +1,4 @@
+.pragma library
 // TODO make this a utility singleton
 
 /*
