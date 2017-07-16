@@ -8,6 +8,8 @@ Item {
 
     // bool to identify this object as a Qak Viewport
     readonly property bool qakViewport: true
+
+    readonly property real aspectRatio: width/height
     //clip: true
 
     QtObject {
