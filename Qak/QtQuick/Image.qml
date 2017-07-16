@@ -8,6 +8,7 @@ Image {
     readonly property real halfWidth: width*0.5
     readonly property real halfHeight: height*0.5
 
+    // NOTE kept here for historical reasons
     //readonly property real aspectRatio: width/height
 
     //sourceSize: optimize ? Qt.size(width,0) : undefined

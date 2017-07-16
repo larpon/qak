@@ -8,8 +8,6 @@ Rectangle {
     readonly property real halfWidth: width*0.5
     readonly property real halfHeight: height*0.5
 
-    //readonly property real aspectRatio: width/height
-
     property bool paused: Qak.paused
 
 //    DebugVisual { } //¤qakdbg
