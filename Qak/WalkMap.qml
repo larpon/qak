@@ -17,6 +17,23 @@ GridMouseArea {
 
     signal sameCell
 
+    onGridChanged: {
+        if(validGrid) {
+            __remappedGrid = []
+            var i ,j
+            for(i in grid) {
+                var r = []
+                for(j in grid[i]) {
+                    if(grid[i][j])
+                        r[j] = 0
+                    else
+                        r[j] = 1
+                }
+                __remappedGrid[i] = r
+            }
+        }
+    }
+
     onValidGridChanged: {
         if(validGrid) {
             __remappedGrid = []

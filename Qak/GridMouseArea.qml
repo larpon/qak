@@ -27,6 +27,31 @@ MouseArea {
 
     property var __math_ceil: Math.ceil
 
+    function setGridValue(cellPoint, value) {
+        if(!validGrid)
+            return false
+        if(!(cellPoint))
+            return false
+        if(cellPoint.y < 0 || cellPoint.y > grid.length-1)
+            return false
+        if(cellPoint.x < 0 || cellPoint.x > grid[cellPoint.y].length-1)
+            return false
+        grid[cellPoint.y][cellPoint.x] = value
+        var t = grid; grid = t
+    }
+
+    function getGridValue(cellPoint, value) {
+        if(!validGrid)
+            return false
+        if(!(cellPoint))
+            return false
+        if(cellPoint.y < 0 || cellPoint.y > grid.length-1)
+            return false
+        if(cellPoint.x < 0 || cellPoint.x > grid[cellPoint.y].length-1)
+            return false
+        return grid[cellPoint.y][cellPoint.x]
+    }
+
     function pointInGrid(point,grid) {
         grid = grid || mouseArea.grid
         if(!validGrid)
