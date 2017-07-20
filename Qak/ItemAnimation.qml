@@ -155,7 +155,7 @@ ItemAnimationPrivate {
             var s = Aid.clone(sequences[i])
 
             // Validate sequence object
-            if(!('frames' in s && Aid.isObject( s.frames )))
+            if(!('frames' in s) || !Aid.isArray( s.frames ))
                 continue
 
             // TODO validate each sequence object - or force use of some new QML type e.g. "SequenceItem" ??
@@ -318,7 +318,7 @@ ItemAnimationPrivate {
         interval: p.frameDelay
 
         repeat: true
-        running: r.running && !paused && ready && r.stable
+        running: r.running && !frameTicker.paused && ready && r.stable
 //        onRunningChanged: Qak.debug(Qak.gid+'ItemAnimation','frameTicker.running',running) //¤qakdbg
 
         triggeredOnStart: true
