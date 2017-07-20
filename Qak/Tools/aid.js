@@ -296,7 +296,7 @@ function distance(x1,y1,x2,y2) {
 }
 
 function isObject(o) {
-    return o !== null && typeof o === 'object'
+    return o !== null && typeof o === 'object' && !isArray(o)
 }
 
 function hasProperty(o,prop) {
@@ -309,6 +309,44 @@ function isInteger(value) {
     return false
   x = parseFloat(value)
   return (x | 0) === x
+}
+
+function isFunction(v) {
+    return (typeof v === "function")
+}
+
+function isArray(a) {
+    return (a instanceof Array)
+}
+
+function isEmpty(obj) {
+
+    // null and undefined are "empty"
+    if (obj === null) return true
+    if (obj === undefined) return true
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0)    return false
+    if (obj.length === 0)  return true
+
+    // If it isn't an object at this point
+    // it is empty, but it can't be anything *but* empty
+    // Is it empty?  Depends on your application.
+    if (typeof obj !== "object") return true
+
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false
+    }
+
+    return true
+}
+
+function isString(v) {
+    return (typeof v === 'string' || v instanceof String)
 }
 
 // NOTE WARNING There is currently no official Qt way of getting the QML type of an object as a string - so this might break someday!
@@ -334,43 +372,6 @@ function qtypeof(object) {
         }
     }
     return type
-}
-
-function isFunction(v) {
-    return (typeof v === "function")
-}
-
-function isArray(a) {
-    return (a instanceof Array)
-}
-
-function isEmpty(obj) {
-
-    // null and undefined are "empty"
-    if (obj === null) return true
-
-    // Assume if it has a length property with a non-zero value
-    // that that property is correct.
-    if (obj.length > 0)    return false
-    if (obj.length === 0)  return true
-
-    // If it isn't an object at this point
-    // it is empty, but it can't be anything *but* empty
-    // Is it empty?  Depends on your application.
-    if (typeof obj !== "object") return true
-
-    // Otherwise, does it have any properties of its own?
-    // Note that this doesn't handle
-    // toString and valueOf enumeration bugs in IE < 9
-    for (var key in obj) {
-        if (hasOwnProperty.call(obj, key)) return false
-    }
-
-    return true
-}
-
-function isString(v) {
-    return (typeof v === 'string' || v instanceof String)
 }
 
 function basename(path) {
