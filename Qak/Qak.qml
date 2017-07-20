@@ -51,11 +51,36 @@ QtObject {
             })
             timer.start()
         }
+
+        function setInterval(callback, timeout, loops)
+        {
+            var timer = timerComponent.createObject(qak)
+            var iloops = loops || -1
+            timer.interval = timeout || 0
+            timer.repeat = true
+            timer.running = true
+            timer.triggered.connect(function()
+            {
+                if(iloops === 0) {
+                    timer.stop()
+                    timer.destroy()
+                }
+                if(iloops > 0)
+                    iloops--
+                callback()
+            })
+            timer.start()
+        }
     }
 
     function setTimeout(callback, timeout)
     {
-        qak.setTimeout(callback,timeout)
+        qak.setTimeout(callback, timeout)
+    }
+
+    function setInterval(callback, timeout, loops)
+    {
+        qak.setInterval(callback, timeout, loops)
     }
 
     function log() {
