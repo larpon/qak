@@ -32,9 +32,9 @@ MouseArea {
             return false
         if(!(cellPoint))
             return false
-        if(cellPoint.y < 0 || cellPoint.y > grid.length-1)
+        if(grid && cellPoint.y < 0 || cellPoint.y > grid.length-1)
             return false
-        if(cellPoint.x < 0 || cellPoint.x > grid[cellPoint.y].length-1)
+        if(cellPoint.x < 0 || !grid[cellPoint.y] || cellPoint.x > grid[cellPoint.y].length-1)
             return false
         grid[cellPoint.y][cellPoint.x] = value
         var t = grid; grid = t

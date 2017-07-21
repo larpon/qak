@@ -19,6 +19,7 @@ GridMouseArea {
 
     onGridChanged: {
         if(validGrid) {
+//            Qak.debug(Qak.gid+'WalkMap','onGridChanged','reading to remapped grid') //¤qakdbg
             __remappedGrid = []
             var i ,j
             for(i in grid) {
@@ -36,6 +37,7 @@ GridMouseArea {
 
     onValidGridChanged: {
         if(validGrid) {
+//            Qak.debug(Qak.gid+'WalkMap','onValidGridChanged','reading to remapped grid') //¤qakdbg
             __remappedGrid = []
             var i ,j
             for(i in grid) {
