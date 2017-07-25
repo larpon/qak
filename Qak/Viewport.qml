@@ -24,7 +24,7 @@ Item {
         offTargetPercent: ((viewport.widthDiff/viewport.width)*100)
     }
 
-    property Item container: parent
+    property var container: parent
     readonly property real containerAspect: containerWidth/containerHeight
     onContainerAspectChanged: viewport.fix()
     readonly property real containerWidth: container.width
