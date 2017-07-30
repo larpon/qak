@@ -316,7 +316,7 @@ void Store::clear()
     bool result = QFile::remove(path);
 
     if(!result)
-        emit error("Failed removing store directory "+path);
+        emit error("Failed removing store "+path);
     #ifdef QAK_DEBUG
     else
         qDebug() << "Store clear" << path << result;
@@ -340,7 +340,7 @@ void Store::clear(const QString &name)
     bool result = QFile::remove(path);
 
     if(!result)
-        emit error("Failed removing store directory "+path);
+        emit error("Failed removing store "+path);
     #ifdef QAK_DEBUG
     else
         qDebug() << "Store" << name << "clear" << path << result;
