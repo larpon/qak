@@ -106,9 +106,7 @@ function normalize( value, start, end )
     // + start to reset back to start of original range
 }
 
-// NOTE untested
 function normalize0to360(degrees) {
-    console.warn('Utility','using untested function normalize0to360')
     degrees = degrees % 360
     if (degrees < 0)
         degrees += 360
