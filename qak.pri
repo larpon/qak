@@ -20,6 +20,7 @@ INCLUDEPATH += \
     $$PWD/src
 
 HEADERS += \
+    $$PWD/src/aid_p.h \
     $$PWD/src/maskedmousearea.h \
     $$PWD/src/resource.h \
     $$PWD/src/store.h \
@@ -28,6 +29,7 @@ HEADERS += \
     $$PWD/src/itemanimationprivate.h
 
 SOURCES += \
+    $$PWD/src/aid_p.cpp \
     $$PWD/src/maskedmousearea.cpp \
     $$PWD/src/resource.cpp \
     $$PWD/src/store.cpp \

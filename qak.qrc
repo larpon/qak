@@ -45,5 +45,6 @@
         <file>Qak/QtQuick/Image_2_1.qml</file>
         <file>Qak/QtQuick/Image_2_2.qml</file>
         <file>Qak/QtQuick/Image_2_3.qml</file>
+        <file>Qak/Tools/Aid.qml</file>
     </qresource>
 </RCC>

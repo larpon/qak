@@ -11,9 +11,9 @@ class PropertyToggle : public QQuickItem
     Q_OBJECT
 
     Q_PROPERTY(QString property READ property WRITE setProperty NOTIFY propertyChanged)
-    Q_PROPERTY(QVariant on READ onValue() WRITE setOnValue NOTIFY onChanged)
-    Q_PROPERTY(QVariant off READ offValue() WRITE setOffValue NOTIFY offChanged)
-    Q_PROPERTY(int toggle READ toggle() WRITE setToggle NOTIFY toggleChanged)
+    Q_PROPERTY(QVariant on READ onValue WRITE setOnValue NOTIFY onChanged)
+    Q_PROPERTY(QVariant off READ offValue WRITE setOffValue NOTIFY offChanged)
+    Q_PROPERTY(int toggle READ toggle WRITE setToggle NOTIFY toggleChanged)
 public:
     PropertyToggle(QQuickItem* parent = 0);
 
