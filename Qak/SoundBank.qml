@@ -171,39 +171,6 @@ Item {
         return (group in groups && groups[group])
     }
 
-    Component {
-        id: soundEffectComponent
-        SoundEffect {
-            id: soundEffect
-            muted: false
-            volume: soundBank.volume
-
-            category: group !== "" ? group : "SoundEffects"
-
-            property string tag: ""
-            property string group: ""
-
-            onPlayingChanged: {
-                if(playing)
-                    soundBank.playing(tag,soundEffect)
-                else
-                    soundBank.stopped(tag,soundEffect)
-            }
-
-            /*
-            onStatusChanged: {
-                if(status == SoundEffect.Ready) {
-                    registerSoundReady(soundEffect)
-                }
-            }*/
-            onStatusChanged: {
-                if(status == SoundEffect.Error) {
-                    soundBank.error("SoundEffect error",group,tag)
-                }
-            }
-        }
-    }
-
     function clear(group) {
 
         var tag
@@ -522,5 +489,36 @@ Item {
         }
     }
 
+    Component {
+        id: soundEffectComponent
+        SoundEffect {
+            id: soundEffect
+            muted: false
+            volume: soundBank.volume
 
+            category: group !== "" ? group : "SoundEffects"
+
+            property string tag: ""
+            property string group: ""
+
+            onPlayingChanged: {
+                if(playing)
+                    soundBank.playing(tag,soundEffect)
+                else
+                    soundBank.stopped(tag,soundEffect)
+            }
+
+            /*
+            onStatusChanged: {
+                if(status == SoundEffect.Ready) {
+                    registerSoundReady(soundEffect)
+                }
+            }*/
+            onStatusChanged: {
+                if(status == SoundEffect.Error) {
+                    soundBank.error("SoundEffect error",group,tag)
+                }
+            }
+        }
+    }
 }
