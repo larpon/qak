@@ -434,13 +434,15 @@ Item {
         // Stop everything, also the world from spinning
         if(!tag) {
             for(i in bank) {
-                bank[i].stop()
+                if(bank[i].playing)
+                    bank[i].stop()
             }
 
             for(group in groups) {
                 if(groups[group]) {
                     for(i in groups[group]) {
-                        groups[group][i].stop()
+                        if(groups[group][i].playing)
+                            groups[group][i].stop()
                     }
                 }
             }
@@ -450,14 +452,15 @@ Item {
         // Stop group
         if (tag in groups) {
             for(i in groups[tag]) {
-                groups[tag][i].stop()
+                if(groups[tag][i].playing)
+                    groups[tag][i].stop()
             }
             return
         }
 
         // Stop tag in group
         for(group in groups) {
-            if(groups[group] && tag in groups[group]) {
+            if(groups[group] && tag in groups[group] && groups[group][tag].playing) {
                 groups[group][tag].stop()
                 return
             }
@@ -465,7 +468,8 @@ Item {
 
         // Stop tag in bank
         if(tag && tag in bank) {
-            bank[tag].stop()
+            if(bank[tag].playing)
+                bank[tag].stop()
         }
     }
 
