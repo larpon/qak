@@ -79,12 +79,12 @@ QtObject {
 
     function setTimeout(callback, timeout)
     {
-        qak.setTimeout(callback, timeout)
+        return qak.setTimeout(callback, timeout)
     }
 
     function setInterval(callback, timeout, loops)
     {
-        qak.setInterval(callback, timeout, loops)
+        return qak.setInterval(callback, timeout, loops)
     }
 
     function log() {
