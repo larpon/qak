@@ -1,6 +1,10 @@
 QT += qml quick multimedia gui
 !no_desktop: QT += widgets
 
+QAK_VERSION = 0.1.2
+include(gitversion.pri)
+message("Qak $$QAK_VERSION git $$QAK_GIT_VERSION/$$QAK_GIT_BRANCH_NAME")
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH += $$PWD
 
@@ -43,10 +47,3 @@ RESOURCES += \
 DISTFILES += \
     $$PWD/README.md \
     $$PWD/LICENSE
-
-exists(.git) {
-    unix {
-        GIT_BRANCH_NAME = $$system(git rev-parse --abbrev-ref HEAD)
-        message("Qak branch $$GIT_BRANCH_NAME")
-    }
-}
