@@ -47,9 +47,11 @@ QtObject {
             {
                 timer.stop()
                 timer.destroy()
+                timer = null
                 callback()
             })
             timer.start()
+            return timer
         }
 
         function setInterval(callback, timeout, loops)
@@ -64,12 +66,14 @@ QtObject {
                 if(iloops === 0) {
                     timer.stop()
                     timer.destroy()
+                    timer = null
                 }
                 if(iloops > 0)
                     iloops--
                 callback()
             })
             timer.start()
+            return timer
         }
     }
 
