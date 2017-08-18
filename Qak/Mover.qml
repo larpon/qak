@@ -1,6 +1,7 @@
 import QtQuick 2.0
 
 import Qak 1.0
+import Qak.Tools 1.0
 
 Item {
     id: mover
@@ -27,14 +28,23 @@ Item {
     function moveTo(x,y) {
         if((x === undefined || x === null || y === undefined || y === null) || isNaN(x) || isNaN(y))
             return
-        pushMove(x,y)
+
+        if(Aid.isObject(x) && 'x' in x && 'y' in x) {
+            pushMove(x.x,x.y)
+        } else
+            pushMove(x,y)
         start()
     }
 
     function pushMove(x,y) {
         if((x === undefined || x === null || y === undefined || y === null) || isNaN(x) || isNaN(y))
             return
-        moveQueue.push(Qt.point(x,y))
+
+        if(Aid.isObject(x) && 'x' in x && 'y' in x) {
+            moveQueue.push(x)
+        } else
+            moveQueue.push(Qt.point(x,y))
+
         /* Use this for binding to moveQueue changes
         var t = moveQueue
         t.push(Qt.point(x,y))
