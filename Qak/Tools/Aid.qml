@@ -10,6 +10,8 @@ AidPrivate {
     property var __math_sqrt: Math.sqrt
     property var __math_max: Math.max
     property var __math_round: Math.round
+    property var __math_atan2: Math.atan2
+    property real __pi: Math.PI
 
     function loopData(object,callback) {
         if(object !== undefined && object !== null) {
@@ -277,6 +279,16 @@ AidPrivate {
             return __math_sqrt( (x1.x-y1.x)*(x1.x-y1.x) + (x1.y-y1.y)*(x1.y-y1.y) )
         else
             return __math_sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
+    }
+
+    function angleBetween(x1,y1,x2,y2) {
+        if((x2 > x1) || y2 > y1) //above 0 to 180 degrees
+            return (__math_atan2((x2 - x1), (y1 - y1)) * 180 / __pi)
+        else if((x2 < x1) || y2 < y1) //above 180 degrees to 360/0
+            return 360 - (__math_atan2((x1 - x2), (y1 - y2)) * 180 / __pi)
+
+        return __math_atan2(0 ,0)
+
     }
 
     function isObject(o) {
