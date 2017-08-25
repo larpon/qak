@@ -73,6 +73,10 @@ AidPrivate {
         }
     }
 
+    function chance(percent) {
+        return ((__math_random() * 100) < percent)
+    }
+
     function interpolate(x0, x1, alpha) {
         return (x0 * (1 - alpha) + alpha * x1)
     }
