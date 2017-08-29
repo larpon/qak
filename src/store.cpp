@@ -46,6 +46,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
     // Run through all the properties
     // This is done to get a list of the QuickItems normal attributes which we don't want to save
     _blacklist.append("name");
+    _blacklist.append("blacklist");
     //_blacklist.append("autoLoad");
     //_blacklist.append("autoSave");
     _blacklist.append("isLoaded");
@@ -105,6 +106,19 @@ void Store::setOnDisk(bool onDisk)
     if(_onDisk != onDisk) {
         _onDisk = onDisk;
         emit onDiskChanged();
+    }
+}
+
+QStringList Store::blacklist()
+{
+    return _userBlacklist;
+}
+
+void Store::setBlacklist(const QStringList &blacklist)
+{
+    if(_userBlacklist != blacklist) {
+        _userBlacklist = blacklist;
+        emit blacklistChanged();
     }
 }
 
@@ -189,8 +203,11 @@ void Store::save()
 
         bool blacklisted = false;
         for (int i = 0; i < _blacklist.size(); ++i) {
-            //qDebug() << _quick_item_names.at(i).toLocal8Bit().constData();
             if(_blacklist.at(i).toLocal8Bit().constData() == QString(name))
+                blacklisted = true;
+        }
+        for (int i = 0; i < _userBlacklist.size(); ++i) {
+            if(_userBlacklist.at(i).toLocal8Bit().constData() == QString(name))
                 blacklisted = true;
         }
 
@@ -277,6 +294,10 @@ void Store::load()
         for (int i = 0; i < _blacklist.size(); ++i) {
             //qDebug() << _quick_item_names.at(i).toLocal8Bit().constData();
             if(_blacklist.at(i).toLocal8Bit().constData() == QString(name))
+                blacklisted = true;
+        }
+        for (int i = 0; i < _userBlacklist.size(); ++i) {
+            if(_userBlacklist.at(i).toLocal8Bit().constData() == QString(name))
                 blacklisted = true;
         }
 

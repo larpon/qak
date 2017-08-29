@@ -23,6 +23,7 @@ class Store : public QQuickItem
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(bool isLoaded READ isLoaded NOTIFY isLoadedChanged)
     Q_PROPERTY(bool onDisk READ onDisk NOTIFY onDiskChanged)
+    Q_PROPERTY(QStringList blacklist READ blacklist WRITE setBlacklist NOTIFY blacklistChanged)
 
     public:
         explicit Store(QQuickItem* parent = 0);
@@ -42,6 +43,9 @@ class Store : public QQuickItem
         bool onDisk();
         void setOnDisk(bool onDisk);
 
+        QStringList blacklist();
+        void setBlacklist(const QStringList &blacklist);
+
         Q_INVOKABLE bool existOnDisk();
         Q_INVOKABLE QString fullPath();
 
@@ -56,6 +60,7 @@ class Store : public QQuickItem
         void error(const QString& msg);
         void nameChanged();
         void onDiskChanged();
+        void blacklistChanged();
         //void autoLoadChanged();
         //void autoSaveChanged();
         void isLoadedChanged();
@@ -71,6 +76,7 @@ class Store : public QQuickItem
         QString _name;
         QString _storePath;
         QStringList _blacklist;
+        QStringList _userBlacklist;
 
         bool _onDisk;
         //bool _autoLoad;
