@@ -21,6 +21,8 @@ Item {
 
     property bool smoothed: false
 
+    property alias easing: pathAnim.easing
+
     signal beforeStart
     signal started
     signal stopped
@@ -93,9 +95,9 @@ Item {
             return
         }
 
-        pathAnim.duration = d*2*speedModifier
+        pathAnim.userDuration = d
         if(duration > 0) {
-            pathAnim.duration = duration
+            pathAnim.__duration = duration
         }
 
         if(list.length > 0) {
@@ -197,7 +199,9 @@ Item {
 
         paused: running && mover.paused
 
-        duration: 2000
+        property real userDuration: 2000
+        property real __duration: 0
+        duration: __duration > 0 ? __duration : userDuration * 2 * speedModifier
 
         target: mover.target
         anchorPoint: mover.anchorPoint
