@@ -46,7 +46,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
     // Run through all the properties
     // This is done to get a list of the QuickItems normal attributes which we don't want to save
     _blacklist.append("name");
-    _blacklist.append("blacklist");
+    _blacklist.append("skip");
     //_blacklist.append("autoLoad");
     //_blacklist.append("autoSave");
     _blacklist.append("isLoaded");
@@ -109,16 +109,16 @@ void Store::setOnDisk(bool onDisk)
     }
 }
 
-QStringList Store::blacklist()
+QStringList Store::skiplist()
 {
-    return _userBlacklist;
+    return _skiplist;
 }
 
-void Store::setBlacklist(const QStringList &blacklist)
+void Store::setSkiplist(const QStringList &skiplist)
 {
-    if(_userBlacklist != blacklist) {
-        _userBlacklist = blacklist;
-        emit blacklistChanged();
+    if(_skiplist != skiplist) {
+        _skiplist = skiplist;
+        emit skiplistChanged();
     }
 }
 
@@ -201,17 +201,17 @@ void Store::save()
         QMetaProperty metaproperty = metaobject->property(i);
         const char *name = metaproperty.name();
 
-        bool blacklisted = false;
+        bool shouldSkip = false;
         for (int i = 0; i < _blacklist.size(); ++i) {
             if(_blacklist.at(i).toLocal8Bit().constData() == QString(name))
-                blacklisted = true;
+                shouldSkip = true;
         }
-        for (int i = 0; i < _userBlacklist.size(); ++i) {
-            if(_userBlacklist.at(i).toLocal8Bit().constData() == QString(name))
-                blacklisted = true;
+        for (int i = 0; i < _skiplist.size(); ++i) {
+            if(_skiplist.at(i).toLocal8Bit().constData() == QString(name))
+                shouldSkip = true;
         }
 
-        if(!blacklisted) {
+        if(!shouldSkip) {
             QVariant value = this->property(name);
 
             if(value.canConvert<QJSValue>())
@@ -296,8 +296,8 @@ void Store::load()
             if(_blacklist.at(i).toLocal8Bit().constData() == QString(name))
                 blacklisted = true;
         }
-        for (int i = 0; i < _userBlacklist.size(); ++i) {
-            if(_userBlacklist.at(i).toLocal8Bit().constData() == QString(name))
+        for (int i = 0; i < _skiplist.size(); ++i) {
+            if(_skiplist.at(i).toLocal8Bit().constData() == QString(name))
                 blacklisted = true;
         }
 
