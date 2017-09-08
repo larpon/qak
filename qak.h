@@ -7,6 +7,7 @@
 #include "qqml.h"
 
 #include "src/aid_p.h"
+#include "src/shutdowncheck.h"
 #include "src/store.h"
 #include "src/resource.h"
 #include "src/propertytoggle.h"
@@ -24,6 +25,8 @@ static void registerQak() {
     qmlRegisterType<AidPrivate>("Qak.Private", 1, 0, "AidPrivate");
     qmlRegisterType<ItemAnimationPrivate>("Qak.Private", 1, 0, "ItemAnimationPrivate");
     qmlRegisterType<MouseRotatePrivate>("Qak.Private", 1, 0, "MouseRotatePrivate");
+
+    qmlRegisterType<ShutdownCheck>("Qak", 1, 0, "ShutdownCheck");
     //qmlRegisterSingletonType<Resource>("Qak", 1, 0, "Resources", ResourceQmlInstance);
 }
 

@@ -2,7 +2,6 @@
 #define QAK_AID_PRIVATE_H
 
 #include <QDebug>
-#include <QQuickItem>
 
 class AidPrivate : public QObject
 {
