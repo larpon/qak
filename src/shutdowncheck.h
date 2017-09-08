@@ -21,6 +21,8 @@ public:
     };
     Q_ENUM(Status)
 
+    Q_PROPERTY(int status READ status NOTIFY statusChanged)
+
     explicit ShutdownCheck(QObject* parent = 0);
     ~ShutdownCheck();
 

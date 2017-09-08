@@ -4,10 +4,10 @@ ShutdownCheck::ShutdownCheck(QObject *parent) : QObject(parent)
 {
     _dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     _mark = _dataPath+"/.mark";
+    _status = OK;
 
     if(!markExists()) {
         writeMark();
-        setStatus(OK);
     } else {
         setStatus(FAILED);
     }
@@ -36,14 +36,15 @@ void ShutdownCheck::writeMark()
     QFile file(_mark);
     if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
         setStatus(Error);
-        QDebug() << "error writing" << file.fileName();
+        qDebug() << "error writing" << file.fileName();
         return;
     }
 
     QTextStream out(&file);
-    out << QDateTime::toMSecsSinceEpoch();
+    out << QDateTime::currentMSecsSinceEpoch();
 
     file.close();
+    setStatus(OK);
 }
 
 void ShutdownCheck::removeMark()
