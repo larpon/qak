@@ -25,7 +25,27 @@ ApplicationWindow {
 
     property string screenMode: "windowed"
 
+    property bool resizable: true
+    onResizableChanged: {
+        if(!resizable) {
+            maximumWidth = width
+            maximumHeight = height
+
+            minimumWidth = width
+            minimumHeight = height
+        } else {
+            maximumWidth = 16777215
+            maximumHeight = 16777215
+
+            minimumWidth = 0
+            minimumHeight = 0
+        }
+    }
+
+    signal beforeScreenModeChange
+
     onScreenModeChanged: {
+        beforeScreenModeChange()
         if(screenMode == "full")
             showFullScreen()
         else if(screenMode == "windowed")
