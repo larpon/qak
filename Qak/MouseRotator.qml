@@ -1,6 +1,7 @@
 import QtQuick 2.0
 
 import Qak 1.0
+import Qak.Tools 1.0
 import Qak.Private 1.0
 
 MouseArea {
@@ -26,7 +27,14 @@ MouseArea {
 
     property bool paused: false
     property alias continuous: internal.continuous
+    property alias continuousInfinite: internal.continuousInfinite
+    property alias continuousMin: internal.continuousMin
+    property alias continuousMax: internal.continuousMax
+
     property alias wrap: internal.wrap
+
+    property alias min: internal.min
+    property alias max: internal.max
 
     readonly property real startRotation: internal.startRotation
     readonly property real angle: internal.rotation
@@ -77,6 +85,7 @@ MouseArea {
         var rotation = 0
 
         if (diffX > 0 && diffY > 0) {
+            //rotation += 90 - Math.abs (deg)
             rotation += 90 - Math.abs (deg)
         }
         else if (diffX > 0 && diffY < 0) {
@@ -89,6 +98,8 @@ MouseArea {
             rotation += 270 - Math.abs (deg)
         }
 
+        if(min !== 0 || max !== 360)
+            rotation = Aid.remap(rotation,0,360,min,max)
         return rotation
     }
 
