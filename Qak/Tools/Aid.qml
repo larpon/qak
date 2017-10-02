@@ -87,10 +87,8 @@ AidPrivate {
 
     //Normalizes any number to an arbitrary range
     //by assuming the range wraps around when going below min or above max
-    // NOTE untested
     function normalize( value, start, end )
     {
-        console.warn('Utility','using untested function normalize')
         var width       = end - start
         var offsetValue = value - start // value relative to 0
 
