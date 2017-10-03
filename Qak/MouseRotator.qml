@@ -7,8 +7,6 @@ import Qak.Private 1.0
 MouseArea {
     id: rotator
 
-    propagateComposedEvents: true
-
     enabled: true
 
     property var target: parent
@@ -17,13 +15,15 @@ MouseArea {
         target: rotator.target ? rotator.target : null
         property: "rotation"
         value: internal.rotation
-        when: rotator.pressed
+        when: sync && rotator.pressed
     }
 
     Connections {
-        target: rotator.target ? rotator.target : null
+        target: sync && rotator.target ? rotator.target : null
         onRotationChanged: if(!rotator.pressed) internal.setRotation(target.rotation)
     }
+
+    property bool sync: true
 
     property bool paused: false
     property alias continuous: internal.continuous
@@ -38,6 +38,8 @@ MouseArea {
 
     readonly property real startRotation: internal.startRotation
     readonly property real angle: internal.rotation
+
+    readonly property var setRotation: internal.setRotation
 
     MouseRotatePrivate {
         id: internal
