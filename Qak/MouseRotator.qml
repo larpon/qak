@@ -15,15 +15,20 @@ MouseArea {
         target: rotator.target ? rotator.target : null
         property: "rotation"
         value: internal.rotation
-        when: sync && rotator.pressed
+        when: syncs.to && rotator.pressed
     }
 
     Connections {
-        target: sync && rotator.target ? rotator.target : null
+        target: syncs.from && rotator.target ? rotator.target : null
         onRotationChanged: if(!rotator.pressed) internal.setRotation(target.rotation)
     }
 
-    property bool sync: true
+    property alias sync: syncs
+    QtObject {
+        id: syncs
+        property bool to: true
+        property bool from: true
+    }
 
     property bool paused: false
     property alias continuous: internal.continuous
@@ -36,8 +41,9 @@ MouseArea {
     property alias min: internal.min
     property alias max: internal.max
 
-    readonly property real startRotation: internal.startRotation
-    readonly property real angle: internal.rotation
+    readonly property alias startRotation: internal.startRotation
+    readonly property alias angle: internal.rotation
+    readonly property alias delta: internal.delta
 
     readonly property var setRotation: internal.setRotation
 
@@ -46,9 +52,10 @@ MouseArea {
 
         property real prevHandleRotation: 0
         property real startRotation: 0
+        property real delta: 0
     }
 
-    signal rotate(real degree)
+    signal rotate(real degree, real delta)
 
     function calculateRotation(point) {
 
@@ -113,6 +120,7 @@ MouseArea {
 
         var rotation = calculateRotation(point)
 
+        internal.delta = 0
         internal.prevHandleRotation = rotation
         internal.startRotation = rotation - internal.rotation //target.rotation
     }
@@ -125,18 +133,20 @@ MouseArea {
 
         var rotation = calculateRotation(point)
 
+        var delta = rotation - internal.prevHandleRotation
+        internal.prevHandleRotation = rotation
         if(continuous) {
-            var traveled = rotation - internal.prevHandleRotation
-            internal.prevHandleRotation = rotation
-            if(Math.abs(traveled) > 180) // NOTE Safe-guard when the rotation calculation flips from 360 to 0
+            if(Math.abs(delta) > 180) // NOTE Safe-guard when the rotation calculation flips from 360 to 0
                 return
-            internal.setRotation(internal.rotation + traveled)
+            internal.delta = delta
+            internal.setRotation(internal.rotation + internal.delta)
+            rotate(rotation, internal.delta)
         } else {
+            internal.delta = delta
             var r = rotation - internal.startRotation
             internal.setRotation(r)
+            rotate(rotation, internal.delta)
         }
-
-        rotate(rotation)
     }
 
 
