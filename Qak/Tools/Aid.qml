@@ -313,12 +313,24 @@ AidPrivate {
       return (x | 0) === x
     }
 
+    function isFloat(value) {
+        return !isNaN(parseFloat(value))
+    }
+
+    function isNumeric(value){
+        return !isNaN(value)
+    }
+
     function isFunction(v) {
         return (typeof v === "function")
     }
 
     function isArray(a) {
         return (a instanceof Array)
+    }
+
+    function isString(v) {
+        return (typeof v === 'string' || v instanceof String)
     }
 
     function isEmpty(obj) {
@@ -345,10 +357,6 @@ AidPrivate {
         }
 
         return true
-    }
-
-    function isString(v) {
-        return (typeof v === 'string' || v instanceof String)
     }
 
     // NOTE WARNING There is currently no official Qt way of getting the QML type of an object as a string - so this might break someday!
