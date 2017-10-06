@@ -207,6 +207,12 @@ AidPrivate {
         return dumped_text
     }
 
+    function inArray(needle, haystack) {
+        if(!isArray(haystack))
+            return false
+        return (haystack.indexOf(needle) > -1)
+    }
+
     function randomProperty(obj) {
         var keys = Object.keys(obj)
         return obj[keys[ keys.length * __math_random() << 0]]
