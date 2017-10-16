@@ -123,7 +123,7 @@ QtObject {
                 if(!incubator.asynchronous) {
                     var createdObject = this.component.createObject(this.parent, this.attributes)
                     that.onSuccess(createdObject)
-//                    if(debug) console.debug('Incubator','queue object','created', that.id, that.incubator.object) //¤qakdbg
+//                    if(debug) console.debug('Incubator','queue object','created', that.id, createdObject) //¤qakdbg
                     incubator.__done(that.id)
                 } else {
                     this.incubator = this.component.incubateObject(this.parent, this.attributes, Qt.Asynchronous)
