@@ -13,6 +13,25 @@ QtObject {
     property bool asynchronous: true
     property bool debug: false
 
+    readonly property Item __private: Item {
+        id: __private
+        Component { id: timerComponent; Timer {} }
+        function setTimeout(callback, timeout)
+        {
+            var timer = timerComponent.createObject(__private)
+            timer.interval = timeout || 0
+            timer.triggered.connect(function()
+            {
+                timer.stop()
+                timer.destroy()
+                timer = null
+                callback()
+            })
+            timer.start()
+            return timer
+        }
+    }
+
     function now(input, parent, attributes, successCallback) {
         __toQueue(input, parent, attributes, successCallback)
         incubate()
@@ -26,15 +45,29 @@ QtObject {
         for(var qid in queue) {
             if(queue[qid]) {
                 running.push(queue[qid])
-                queue[qid].go()
+                if(asynchronous)
+                    queue[qid].go()
             }
         }
+
+        if(!asynchronous && running.length > 0) {
+            // NOTE nasty hack to avoid "QQmlComponent: Cannot create new component instance before completing the previous" error messages - when things get hot.
+            __private.setTimeout(function(){
+                if(incubator.running.length > 0)
+                    incubator.running.pop().go()
+            },1)
+        }
+
         queue = []
         __batch++
     }
 
     function __done(id) {
         done.push(id)
+        if(!asynchronous && running.length > 0) {
+
+            running.pop().go()
+        }
     }
 
     function __toQueue(input, parent, attributes, successCallback) {
@@ -86,35 +119,39 @@ QtObject {
 //            if(debug) console.debug('Incubator','queue object','componentStatusCallback',this.id) //¤qakdbg
 
             if(this.component.status === Component.Ready) {
-                var sync = Qt.Asynchronous
-                if(!incubator.asynchronous)
-                    sync = Qt.Synchronous
 
-                this.incubator = this.component.incubateObject(this.parent, this.attributes, sync)
-
-                var incubatorStatusCallback = function(){
-//                    if(debug) console.debug('Incubator','queue object','incubatorStatusCallback',that.id) //¤qakdbg
-
-                    var status = that.incubator.status
-
-                    if(Component && status === Component.Ready) {
-                        that.onSuccess(that.incubator.object)
-//                        if(debug) console.debug('Incubator','queue object','incubated', that.id, that.incubator.object) //¤qakdbg
-                        incubator.__done(that.id)
-                        //delete incubator.queue[that.id]
-                    } else {
-                        if(status === Component.Null)
-                            console.error('Incubator','status',status,'(Null)',that.incubator.errorString)
-                        if(status === Component.Error)
-                            console.error('Incubator','status',status,'(Error)',that.incubator.errorString)
-                        throw 'incubation error '+status
-                    }
-                }
-
-                if(this.incubator.status !== Component.Ready) {
-                    this.incubator.onStatusChanged = incubatorStatusCallback
+                if(!incubator.asynchronous) {
+                    var createdObject = this.component.createObject(this.parent, this.attributes)
+                    that.onSuccess(createdObject)
+//                    if(debug) console.debug('Incubator','queue object','created', that.id, that.incubator.object) //¤qakdbg
+                    incubator.__done(that.id)
                 } else {
-                    incubatorStatusCallback()
+                    this.incubator = this.component.incubateObject(this.parent, this.attributes, Qt.Asynchronous)
+
+                    var incubatorStatusCallback = function(){
+//                        if(debug) console.debug('Incubator','queue object','incubatorStatusCallback',that.id) //¤qakdbg
+
+                        var status = that.incubator.status
+
+                        if(Component && status === Component.Ready) {
+                            that.onSuccess(that.incubator.object)
+//                            if(debug) console.debug('Incubator','queue object','incubated', that.id, that.incubator.object) //¤qakdbg
+                            incubator.__done(that.id)
+                            //delete incubator.queue[that.id]
+                        } else {
+                            if(status === Component.Null)
+                                console.error('Incubator','status',status,'(Null)',that.incubator.errorString)
+                            if(status === Component.Error)
+                                console.error('Incubator','status',status,'(Error)',that.incubator.errorString)
+                            throw 'incubation error '+status
+                        }
+                    }
+
+                    if(this.incubator.status !== Component.Ready) {
+                        this.incubator.onStatusChanged = incubatorStatusCallback
+                    } else {
+                        incubatorStatusCallback()
+                    }
                 }
 
             } else if (this.component.status === Component.Error) {
