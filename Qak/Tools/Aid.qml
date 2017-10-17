@@ -8,6 +8,7 @@ AidPrivate {
     property var __math_random: Math.random
     property var __math_floor: Math.floor
     property var __math_sqrt: Math.sqrt
+    property var __math_pow: Math.pow
     property var __math_max: Math.max
     property var __math_round: Math.round
     property var __math_atan2: Math.atan2
@@ -83,6 +84,15 @@ AidPrivate {
 
     function lerp(x0, x1, alpha) {
         return interpolate(x0,x1,alpha)
+    }
+
+    function roundTo(n, digits) {
+        if (digits === undefined)
+            digits = 0
+
+        var multiplicator = __math_pow(10, digits)
+        n = parseFloat((n * multiplicator).toFixed(11))
+        return +((Math.round(n) / multiplicator).toFixed(digits))
     }
 
     //Normalizes any number to an arbitrary range
