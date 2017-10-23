@@ -107,7 +107,7 @@ Entity {
     signal restarted
 
     onSequencesChanged: {
-        //Qak.debug(Qak.gid+'ImageAnimation','reading sequences')
+        Qak.debug(Qak.gid+'ImageAnimation','reading sequences')
         animControl.canRun = false
         state.sequenceNameIndex = {}
         for(var i in sequences) {
@@ -116,7 +116,7 @@ Entity {
             state.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
-                //Qak.debug(Qak.gid+'ImageAnimation','reversing',s.name)
+                Qak.debug(Qak.gid+'ImageAnimation','reversing',s.name)
                 sequences[i].frames = sequences[i].frames.reverse()
             }
         }
@@ -142,8 +142,6 @@ Entity {
         property var sequenceNameIndex: ({})
 
         property int totalAmountOfFrames: 0
-
-        readonly property var inc: Incubator.get()
 
         function reset() {
 //            Qak.debug(Qak.gid+'ImageAnimation','state reset') //¤qakdbg
@@ -374,7 +372,7 @@ Entity {
                     state.currentSequenceFrameIndex++
 
             } else {
-                Qak.error('No frames. Skipping...')
+                Qak.error(Qak.gid+'ImageAnimation','No frames. Skipping...')
                 imageAnimation.running = false
                 animControl.stop()
                 return
@@ -437,9 +435,11 @@ Entity {
             var startWithDot = (match.charAt(0) === '.') ? "." : ""
 
             // TODO fix this (async = true (which is default) doesn't work in HammerBees?)
-            state.inc.async = false
+            // Incubate.asynchronous = false
             while(Qak.resource.exists(nextSource)) {
-                state.inc.later(imageComponent, frameContainer, {'frame':frame,'source':nextSource,'state':state} )
+                Incubate.later(imageComponent, frameContainer, {'frame':frame,'source':nextSource,'state':state}
+//                    ,function(o){Qak.debug(Qak.gid+'ImageAnimation','Incubated',o.source)} //¤qakdbg
+                )
                 frame++
                 digit++
 
@@ -447,7 +447,7 @@ Entity {
                 nextSource = adaptiveSource.replace(match, startWithDot+next+".") // TODO improve this some day - see NOTE at 'match' start
 
             }
-            state.inc.incubate()
+            Incubate.incubate()
             var lastFrameSource = adaptiveSource.replace(match, startWithDot+pad(frame,padding)+".") // TODO improve this some day - see NOTE at 'match' start
 
             state.totalAmountOfFrames = frame-1
@@ -455,7 +455,7 @@ Entity {
             //Qak.debug('ImageAnimation','Assuming animation source based on match','"'+match+'"','number','"'+number+'"','has',frame,'frames','first frame',adaptiveSource,'last frame',lastFrameSource,'file name has padding',padding)
 
         } else {
-            Qak.warn('ImageAnimation','Assuming single image source')
+            Qak.warn(Qak.gid+'ImageAnimation','Assuming single image source')
             //enabled = false
             return
         }
@@ -469,7 +469,7 @@ Entity {
             id: image
 
             Component.onCompleted: {
-                //Qak.log('Component Image',state,'frame',frame,'source',source)
+                //Qak.log(Qak.gid+'ImageAnimation','Component Image',state,'frame',frame,'source',source)
                 imageAnimation.frames[image.frame+""] = image
             }
 
