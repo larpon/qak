@@ -107,7 +107,7 @@ Entity {
     signal restarted
 
     onSequencesChanged: {
-        Qak.debug(Qak.gid+'ImageAnimation','reading sequences')
+//        Qak.debug(Qak.gid+'ImageAnimation','reading sequences') //¤qakdbg
         animControl.canRun = false
         state.sequenceNameIndex = {}
         for(var i in sequences) {
@@ -116,7 +116,7 @@ Entity {
             state.sequenceNameIndex[s.name] = i
 
             if('reverse' in s && s.reverse && ('frames' in s && Object.prototype.toString.call( s.frames ) === '[object Array]')) {
-                Qak.debug(Qak.gid+'ImageAnimation','reversing',s.name)
+//                Qak.debug(Qak.gid+'ImageAnimation','reversing',s.name) //¤qakdbg
                 sequences[i].frames = sequences[i].frames.reverse()
             }
         }
