@@ -203,7 +203,7 @@ Entity {
             state.currentActiveSequence = state.activeSequence.name
         }
         state.currentSequenceFrameIndex = 0
-        if('frames' in state.activeSequence && Aid.isObject( state.activeSequence.frames )) {
+        if('frames' in state.activeSequence && Aid.isArray( state.activeSequence.frames )) {
             //state.currentFrameIndex = state.activeSequence.frames[state.currentSequenceFrameIndex]
             currentFrame = state.activeSequence.frames[state.currentSequenceFrameIndex]
         }
@@ -283,7 +283,7 @@ Entity {
             }
 
             // Figure out next frame
-            if('frames' in __activeSequence && Aid.isObject( __activeSequence.frames )) {
+            if('frames' in __activeSequence && Aid.isArray( __activeSequence.frames )) {
 
                 var activeFrame = __activeSequence.frames[state.currentSequenceFrameIndex]
                 // Show the active frame
