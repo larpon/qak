@@ -12,8 +12,8 @@ import Qak.QtQuick 2.0
 ItemAnimationPrivate {
     id: r
 
-    readonly property real halfWidth: width/2
-    readonly property real halfHeight: height/2
+    readonly property real halfWidth: width*0.5
+    readonly property real halfHeight: height*0.5
 
     default property alias content: _frames.data
 

@@ -332,6 +332,10 @@ AidPrivate {
         return isObject(o) && (prop in o)
     }
 
+    function hasPropertyWithValue(o,prop,value) {
+        return isObject(o) && (prop in o) && o[prop] === value
+    }
+
     function isInteger(value) {
       var x
       if (isNaN(value))
