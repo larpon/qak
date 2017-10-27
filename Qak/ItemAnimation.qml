@@ -486,7 +486,6 @@ ItemAnimationPrivate {
 
         property alias frame: r.frame
         toggle: _frames.frame
-//        onToggleChanged: Qak.debug(Qak.gid+'ItemAnimation','PropertyToggle.toggle',toggle) //¤qakdbg
         property bool balanced: children.length > 0 && p.totalAmountOfFrames === children.length
 
     }
