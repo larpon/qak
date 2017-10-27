@@ -192,7 +192,8 @@ AidPrivate {
         throw new Error("Unable to copy obj! Its type isn't supported.")
     }
 
-    function dump(arr,level) {
+    function dump(arr,level,filters) {
+        filters = filters || []
         var dumped_text = ""
         if(!level) level = 0
 
@@ -203,6 +204,15 @@ AidPrivate {
         if(typeof(arr) == 'object') { //Array/Hashes/Objects
             for(var item in arr) {
                 var value = arr[item]
+
+                var skip = false
+                for(var fi in filters) {
+                    if(!filters[fi](value)) {
+                        skip = true
+                        break
+                    }
+                }
+                if(skip) continue
 
                 if(typeof(value) == 'object') { //If it is an array,
                     dumped_text += level_padding + "'" + item + "' ...\n"
