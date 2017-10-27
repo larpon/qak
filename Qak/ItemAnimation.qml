@@ -490,4 +490,11 @@ ItemAnimationPrivate {
 
     }
 
+    // TODO weird BUG
+    // Impossible too add an "overlay" visible Item after the PropertyToggle
+    // MouseAreas seem to catch events - but visible entries are only visible if you add them in this element ("r")
+    // If you alias a property, say 'front', and somewhere make that your parent the item is hidden - but mouse events sometimes go through?
+    // property alias front: r
+    // A workaround would be to place your item as a sibling and give it this id reference as a parent
+
 }
