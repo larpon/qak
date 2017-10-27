@@ -100,11 +100,16 @@ void PropertyToggle::setToggle(int toggle)
 
 void PropertyToggle::ensureProperty()
 {
-    if(_toggle-1 < 0 || _toggle > _children.size())
+    if(_toggle-1 < 0 || _toggle > _children.size()) {
+        //qDebug() << this << "::ensureProperty" << _toggle << _toggle-1 << "< 0 ||" << _toggle << ">" << _children.size();
         return;
-    if(_lastToggled != 0)
+    }
+    if(_lastToggled != 0) {
+        //qDebug() << this << "::ensureProperty" << "_lastToggled" << "!= 0" << "setting" << _property.toLatin1().constData() << "to (offValue)" << _offValue;
         _lastToggled->setProperty(_property.toLatin1().constData(),_offValue);
+    }
     QQuickItem *qi = _children.at(_toggle-1);
+    //qDebug() << this << "::ensureProperty" << "setting" << _property.toLatin1().constData() << "to (onValue)" << _onValue;
     qi->setProperty(_property.toLatin1().constData(),_onValue);
     _lastToggled = qi;
 }
