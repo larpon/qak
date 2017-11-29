@@ -207,7 +207,7 @@ AidPrivate {
 
                 var skip = false
                 for(var fi in filters) {
-                    if(!filters[fi](value)) {
+                    if(!filters[fi](item,value)) {
                         skip = true
                         break
                     }
@@ -380,10 +380,12 @@ AidPrivate {
         if (obj === null) return true
         if (obj === undefined) return true
 
+        if (isString(obj) && obj === "") return true
+
         // Assume if it has a length property with a non-zero value
         // that that property is correct.
-        if (obj.length > 0)    return false
-        if (obj.length === 0)  return true
+        if ('length' in obj && obj.length > 0)    return false
+        if ('length' in obj && obj.length === 0)  return true
 
         // If it isn't an object at this point
         // it is empty, but it can't be anything *but* empty
