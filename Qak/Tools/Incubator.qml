@@ -12,16 +12,22 @@ QtObject {
     property var done: ([])
     property bool asynchronous: true
     property bool debug: false
+    property bool enabled: true
 
     readonly property Item __private: Item {
         id: __private
         Component { id: timerComponent; Timer {} }
         function setTimeout(callback, timeout)
         {
+            if(!incubator || !incubator.enabled)
+                return
+
             var timer = timerComponent.createObject(__private)
             timer.interval = timeout || 0
             timer.triggered.connect(function()
             {
+                if(!incubator || !incubator.enabled)
+                    return
                 timer.stop()
                 timer.destroy()
                 timer = null
@@ -114,6 +120,10 @@ QtObject {
         qo.onSuccess = successCallback || function(){}
 
         qo.componentStatusCallback = function(){
+
+            if(!incubator || !incubator.enabled)
+                return
+
             var that = this
 
 //            if(debug) console.debug('Incubator','queue object','componentStatusCallback',this.id) //¤qakdbg
@@ -162,6 +172,10 @@ QtObject {
         }
 
         qo.go = function() {
+
+            if(!incubator || !incubator.enabled)
+                return
+
 //            if(debug) console.debug('Incubator','queue object','.go', this.id, this.batch) //¤qakdbg
 
             if(this.component.status === Component.Ready)
