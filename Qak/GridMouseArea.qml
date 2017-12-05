@@ -32,9 +32,7 @@ MouseArea {
             return false
         if(!(cellPoint))
             return false
-        if(grid && cellPoint.y < 0 || cellPoint.y > grid.length-1)
-            return false
-        if(cellPoint.x < 0 || !grid[cellPoint.y] || cellPoint.x > grid[cellPoint.y].length-1)
+        if(!validCellPoint(cellPoint))
             return false
         grid[cellPoint.y][cellPoint.x] = value
         var t = grid; grid = t
@@ -45,9 +43,7 @@ MouseArea {
             return false
         if(!(cellPoint))
             return false
-        if(cellPoint.y < 0 || cellPoint.y > grid.length-1)
-            return false
-        if(cellPoint.x < 0 || cellPoint.x > grid[cellPoint.y].length-1)
+        if(!validCellPoint(cellPoint))
             return false
         return grid[cellPoint.y][cellPoint.x]
     }
@@ -76,7 +72,22 @@ MouseArea {
             return null
         if(point.y < 0 || point.y > height)
             return null
-        return Qt.point(__math_ceil((point.x * columns) / width)-1,__math_ceil((point.y * rows) / height)-1)
+        var p =  Qt.point(__math_ceil((point.x * columns) / width)-1,__math_ceil((point.y * rows) / height)-1)
+        if(grid && p.y < 0 || p.y > grid.length-1)
+            return false
+        if(p.y < 0 || p.y > height)
+            return false
+        return p
+    }
+
+    function validCellPoint(cellPoint) {
+        if(!validGrid)
+            return false
+        if((cellPoint.y < 0 || cellPoint.y > grid.length-1))
+            return false
+        if(cellPoint.x < 0 || !grid[cellPoint.y] || cellPoint.x > grid[cellPoint.y].length-1)
+            return false
+        return true
     }
 
     function has(mouse) {
