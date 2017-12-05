@@ -245,14 +245,19 @@ Item {
             }
         }
 
+        var tmp
         if(object.group === '') {
-            bank[object.tag] = object
+            tmp = bank
+            tmp[object.tag] = object
+            bank = tmp
 //            Qak.debug(Qak.gid+'SoundBank','::registerSoundReady',soundBank,'Loaded',object.tag) //¤qakdbg
         } else {
 //            Qak.debug(Qak.gid+'SoundBank','::registerSoundReady',soundBank,'Loaded',object.tag,'in group',object.group) //¤qakdbg
             if(!groups[object.group])
                 groups[object.group] = {}
-            groups[object.group][object.tag] = object
+            tmp = groups
+            tmp[object.group][object.tag] = object
+            groups = tmp
         }
         loaded(object.tag , object)
     }
