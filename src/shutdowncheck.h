@@ -29,6 +29,11 @@ public:
     int status() const;
     void setStatus(int status);
 
+public slots:
+    void writeMark();
+    void removeMark();
+    bool markExists();
+
 signals:
     void statusChanged();
 
@@ -37,11 +42,6 @@ private:
     QString _mark;
 
     int _status;
-
-    void writeMark();
-    void removeMark();
-    bool markExists();
-
 };
 
 #endif // QAK_SHUTDOWN_CHECK_H
