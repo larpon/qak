@@ -38,6 +38,13 @@ QtObject {
         }
     }
 
+    function clear() {
+        __batch = 0
+        queue = []
+        running = []
+        done = []
+    }
+
     function now(input, parent, attributes, successCallback) {
         __toQueue(input, parent, attributes, successCallback)
         incubate()
