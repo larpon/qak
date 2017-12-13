@@ -447,7 +447,12 @@ Entity {
                 nextSource = adaptiveSource.replace(match, startWithDot+next+".") // TODO improve this some day - see NOTE at 'match' start
 
             }
-            Incubate.incubate()
+            try {
+                Incubate.incubate()
+            } catch(e) {
+                console.error('Exception on incubating image component',e)
+            }
+
             var lastFrameSource = adaptiveSource.replace(match, startWithDot+pad(frame,padding)+".") // TODO improve this some day - see NOTE at 'match' start
 
             state.totalAmountOfFrames = frame-1

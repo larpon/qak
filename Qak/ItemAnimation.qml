@@ -228,7 +228,11 @@ ItemAnimationPrivate {
                     totalAmountOfFramesSpawned++
                 } )
             }
-            Incubate.incubate()
+            try {
+                Incubate.incubate()
+            } catch(e) {
+                Qak.error('Exception on incubating frames',e)
+            }
         }
 
         function emitFrameSynced() {
