@@ -3,6 +3,7 @@ import QtQuick 2.0
 pragma Singleton
 
 // TODO make proper debug output and optimize
+// TODO fix ugly '__debugTag' solution in future rewrite
 QtObject {
     id: incubator
 
@@ -39,6 +40,7 @@ QtObject {
     }
 
     function clear() {
+//        if(debug) console.debug('Incubator','::clear') //¤qakdbg
         __batch = 0
         queue = []
         running = []
@@ -78,7 +80,6 @@ QtObject {
     function __done(id) {
         done.push(id)
         if(!asynchronous && running.length > 0) {
-
             running.pop().go()
         }
     }
@@ -95,36 +96,42 @@ QtObject {
             // Determine if raw qml string or url
             if(input.indexOf("Component") > -1) {
                 var c = Qt.createQmlObject(input, parent, "Incubator.qml-object_from_string")
-                queueObject = this.fromComponent(c,parent,attributes,successCallback)
+                queueObject = fromComponent(c,parent,attributes,successCallback)
             } else {
-                queueObject = this.fromComponent(Qt.createComponent(input),parent,attributes,successCallback)
+                queueObject = fromComponent(Qt.createComponent(input),parent,attributes,successCallback)
             }
         } else if(type == 'object') {
             type = input.toString()
             if(startsWith(type,"QQmlComponent"))
-                queueObject = this.fromComponent(input,parent,attributes,successCallback)
+                queueObject = fromComponent(input,parent,attributes,successCallback)
             else
                 throw 'Unknown input "'+input+'" of type "'+type+'"'
         } else {
             throw 'Unknown input "'+input+'" of type "'+type+'"'
         }
 
-        return queueObject
+        if(queueObject)
+            queue.unshift(queueObject)
 
+        return queueObject
     }
 
     function fromComponent(component, parent, attributes, successCallback) {
 
-        var incubatorInstance = this
+        //var incubatorInstance = this // TODO find out why this hangs here??
+
+        attributes = attributes || {}
 
         var qo = {}
-        qo.id = incubator.queue.length
+        qo.id = __batch + "-" + incubator.queue.length
         qo.batch = __batch
         qo.component = component
         qo.incubator = undefined
         qo.parent = parent
-        qo.attributes = attributes || {}
+        qo.attributes = attributes
         qo.onSuccess = successCallback || function(){}
+
+//        if(debug && '__debugTag' in attributes) qo.id += "-"+attributes.__debugTag //¤qakdbg
 
         qo.componentStatusCallback = function(){
 
@@ -150,12 +157,18 @@ QtObject {
 
                         var status = that.incubator.status
 
+                        if(that.id in incubator.done) {
+//                            if(debug) console.debug('Incubator','id', that.id, 'already reported as done???!') //¤qakdbg
+                            return
+                        }
+
                         if(Component && status === Component.Ready) {
                             that.onSuccess(that.incubator.object)
 //                            if(debug) console.debug('Incubator','queue object','incubated', that.id, that.incubator.object) //¤qakdbg
                             incubator.__done(that.id)
                             //delete incubator.queue[that.id]
                         } else {
+                            console.error('Incubator',that,'id',that.id,'failed')
                             if(status === Component.Null)
                                 console.error('Incubator','status',status,'(Null)',that.incubator.errorString)
                             if(status === Component.Error)
@@ -199,8 +212,6 @@ QtObject {
                 this.component.statusChanged.connect(this.componentStatusCallback);
             }
         }
-
-        incubator.queue.unshift(qo)
 
         return qo
     }
