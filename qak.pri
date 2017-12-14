@@ -32,6 +32,7 @@ HEADERS += \
     $$PWD/src/mouserotate_p.h \
     $$PWD/src/itemanimation_p.h \
     $$PWD/src/shutdowncheck.h \
+    $$PWD/src/env_p.h \
     \
 
 SOURCES += \
@@ -43,6 +44,7 @@ SOURCES += \
     $$PWD/src/mouserotate_p.cpp \
     $$PWD/src/itemanimation_p.cpp \
     $$PWD/src/shutdowncheck.cpp \
+    $$PWD/src/env_p.cpp \
     \
 
 RESOURCES += \

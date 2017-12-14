@@ -14,6 +14,8 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
+#include "env_p.h"
+
 class Store : public QQuickItem
 {
     Q_OBJECT

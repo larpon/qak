@@ -3,11 +3,13 @@ module Qak.Tools
 singleton Incubate 1.0 Incubator.qml
 Incubator 1.0 incubator.js
 
-
 singleton Aid 1.0 Aid.qml
 singleton Aid 1.1 Aid.qml
 
 Console 1.0 Console.qml
 Console 1.1 Console.qml
+
+singleton Env 1.0 Env.qml
+singleton Env 1.1 Env.qml
 
 # internal MyPrivateType MyPrivateType.qml
