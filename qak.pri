@@ -30,7 +30,7 @@ HEADERS += \
     $$PWD/src/store.h \
     $$PWD/src/propertytoggle.h \
     $$PWD/src/mouserotate_p.h \
-    $$PWD/src/itemanimationprivate.h \
+    $$PWD/src/itemanimation_p.h \
     $$PWD/src/shutdowncheck.h \
     \
 
@@ -41,7 +41,7 @@ SOURCES += \
     $$PWD/src/store.cpp \
     $$PWD/src/propertytoggle.cpp \
     $$PWD/src/mouserotate_p.cpp \
-    $$PWD/src/itemanimationprivate.cpp \
+    $$PWD/src/itemanimation_p.cpp \
     $$PWD/src/shutdowncheck.cpp \
     \
 

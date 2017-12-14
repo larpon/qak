@@ -11,7 +11,7 @@
 #include "src/store.h"
 #include "src/resource.h"
 #include "src/propertytoggle.h"
-#include "src/itemanimationprivate.h"
+#include "src/itemanimation_p.h"
 #include "src/mouserotate_p.h"
 #include "src/maskedmousearea.h"
 

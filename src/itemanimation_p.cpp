@@ -1,4 +1,4 @@
-#include "itemanimationprivate.h"
+#include "itemanimation_p.h"
 
 
 ItemAnimationPrivate::ItemAnimationPrivate(QQuickItem* parent)

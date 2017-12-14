@@ -307,14 +307,14 @@ AidPrivate {
     }
 
     function distance(x1,y1,x2,y2) {
-        if((x1 && 'x' in x1 && 'y' in x1) && (y1 && 'x' in y1 && 'y' in y1))
+        if((isObject(x1) && 'x' in x1 && 'y' in x1) && (isObject(y1) && 'x' in y1 && 'y' in y1))
             return __math_sqrt( (x1.x-y1.x)*(x1.x-y1.x) + (x1.y-y1.y)*(x1.y-y1.y) )
         else
             return __math_sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
     }
 
     function manhattanDistance(x1,y1,x2,y2) {
-        if((x1 && 'x' in x1 && 'y' in x1) && (y1 && 'x' in y1 && 'y' in y1))
+        if((isObject(x1) && 'x' in x1 && 'y' in x1) && (isObject(y1) && 'x' in y1 && 'y' in y1))
             return __math_abs(x1.x-y1.x) + __math_abs(x1.y-y1.y)
         else
             return __math_abs(x1-x2) + __math_abs(y1-y2)
