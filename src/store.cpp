@@ -10,7 +10,7 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
 
     _name = "";
 
-    _storePath = EnvPrivate::config();
+    _storePath = EnvPrivate::configPath();
 
     _ensureStorePath();
     #ifdef QAK_DEBUG
