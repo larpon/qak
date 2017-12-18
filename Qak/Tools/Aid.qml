@@ -144,6 +144,8 @@ AidPrivate {
     }
 
     function endsWith(haystack, needle) {
+        if(!isString(haystack))
+            return false
         return needle === haystack.substr(0 - needle.length)
     }
 

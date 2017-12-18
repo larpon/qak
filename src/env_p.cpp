@@ -78,6 +78,58 @@ bool EnvPrivate::copy(const QString &src, const QString &dst, bool recursively)
     return false;
 }
 
+bool EnvPrivate::remove(const QString &path)
+{
+    if(isFile(path)) {
+        QFile file(path);
+        return file.remove();
+    }
+
+    if(isDir(path)) {
+        QDir dir(path);
+        return dir.removeRecursively();
+    }
+
+    return false;
+}
+
+QStringList EnvPrivate::list(const QString &dir)
+{
+    return list(dir, false);
+}
+
+QStringList EnvPrivate::list(const QString &dir, bool recursively)
+{
+    QStringList entryList;
+
+    if(isDir(dir)) {
+
+        QDir sourceDir(dir);
+
+        QStringList entries = sourceDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot);
+
+        // Files
+        for(int i = 0; i< entries.count(); i++) {
+            entryList.append(sourceDir.absolutePath() + QDir::separator() + entries[i]);
+        }
+
+        if(recursively) {
+            // Decent directories
+            entries.clear();
+            entries = sourceDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
+            for(int i = 0; i< entries.count(); i++)
+            {
+                entryList += list(sourceDir.absolutePath() + QDir::separator() + entries[i], recursively);
+            }
+        }
+
+        return entryList;
+    }
+
+    qWarning() << "Qak" << "Env::list" << dir << "is not a directory";
+    return entryList;
+}
+
 bool EnvPrivate::ensure(const QString &path)
 {
     QDir dir(path);

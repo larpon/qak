@@ -5,6 +5,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QFile>
+#include <QVariant>
 
 #include <QtGui/QGuiApplication>
 
@@ -21,6 +22,11 @@ public:
 
     Q_INVOKABLE static bool copy(const QString &src, const QString &dst);
     Q_INVOKABLE static bool copy(const QString &src, const QString &dst, bool recursively);
+
+    Q_INVOKABLE static bool remove(const QString &path);
+
+    Q_INVOKABLE static QStringList list(const QString &dir);
+    Q_INVOKABLE static QStringList list(const QString &dir, bool recursively);
 
     Q_INVOKABLE static bool ensure(const QString &path);
 

@@ -234,6 +234,10 @@ void Store::load()
         return;
     }
 
+    // TODO make setLoaded() function
+    _loaded = false;
+    emit isLoadedChanged();
+
     QString path = _storePath + QDir::separator() + _name;
 
     QString bJson;
