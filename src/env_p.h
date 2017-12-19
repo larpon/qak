@@ -25,6 +25,11 @@ public:
 
     Q_INVOKABLE static bool remove(const QString &path);
 
+    Q_INVOKABLE QString read(const QString &path);
+
+    Q_INVOKABLE bool write(const QString& data, const QString &path);
+    Q_INVOKABLE bool write(const QString& data, const QString &path, bool overwrite);
+
     Q_INVOKABLE static QStringList list(const QString &dir);
     Q_INVOKABLE static QStringList list(const QString &dir, bool recursively);
 

@@ -93,6 +93,73 @@ bool EnvPrivate::remove(const QString &path)
     return false;
 }
 
+QString EnvPrivate::read(const QString &path)
+{
+    if(!isFile(path)){
+        qWarning() << "Qak" << "Env::read" << "could not read file" << path << "Aborting";
+        return QString();
+    }
+
+    QString source(path);
+    source = source.replace("qrc://",":");
+    source = source.replace("file://","");
+
+    QFile file(source);
+    QString fileContent;
+    if ( file.open(QFile::ReadOnly) ) {
+        QString line;
+        QTextStream t( &file );
+        do {
+            line = t.readLine();
+            fileContent += line;
+         } while (!line.isNull());
+
+        file.close();
+    } else {
+        qWarning() << "Qak" << "Env::read" << "unable to open" << path << "Aborting";
+        return QString();
+    }
+    return fileContent;
+}
+
+bool EnvPrivate::write(const QString &data, const QString &path)
+{
+    return write(data, path, false);
+}
+
+bool EnvPrivate::write(const QString &data, const QString &path, bool overwrite)
+{
+    if(!overwrite && exists(path)) {
+        qWarning() << "Qak" << "Env::write" << path << "already exist";
+        return false;
+    }
+
+    if(overwrite && exists(path)) {
+        if(isFile(path)) {
+            if(!remove(path)) {
+                qWarning() << "Qak" << "Env::write" << "could not remove" << path << "for writing. Aborting";
+                return false;
+            }
+        }
+
+        if(isDir(path)) {
+            qWarning() << "Qak" << "Env::write" << path << "is a directory. Not overwriting";
+            return false;
+        }
+    }
+
+    QFile file(path);
+    if(!file.open(QFile::WriteOnly | QFile::Truncate)) {
+        qWarning() << "Qak" << "Env::write" << path << "could not be opened for writing. Aborting";
+        return false;
+    }
+
+    QTextStream out(&file);
+    out << data;
+    file.close();
+    return true;
+}
+
 QStringList EnvPrivate::list(const QString &dir)
 {
     return list(dir, false);
