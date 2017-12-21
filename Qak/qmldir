@@ -21,6 +21,7 @@ ImageAnimation 1.0 ImageAnimation.qml
 ItemAnimation 1.0 ItemAnimation.qml
 WalkMap 1.0 WalkMap.qml
 SoundBank 1.0 SoundBank.qml
+QakObject 1.0 QakObject.qml
 
 # Test
 Node 1.0 Node.qml

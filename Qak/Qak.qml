@@ -4,7 +4,8 @@ import Qak 1.0
 
 pragma Singleton
 
-QtObject {
+// TODO utilize QakObject - clean up messy code below
+QakObject {
     id : component
 
     property bool doDebug: false
