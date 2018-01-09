@@ -1,9 +1,11 @@
 #ifndef STORE_H
 #define STORE_H
 
-#include <QQuickItem>
-
 #include <QDebug>
+#include <QObject>
+#include <QJSValue>
+#include <QVariant>
+#include <QQmlListProperty>
 #include <QVector>
 #include <QMetaProperty>
 #include <QStandardPaths>
@@ -14,11 +16,15 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
+
+
 #include "env_p.h"
 
-class Store : public QQuickItem
+class Store : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QQmlListProperty<QObject> content READ content)
+    Q_CLASSINFO("DefaultProperty", "content")
 
     //Q_PROPERTY(bool autoLoad READ autoLoad WRITE setAutoLoad NOTIFY autoLoadChanged)
     //Q_PROPERTY(bool autoSave READ autoSave WRITE setAutoSave NOTIFY autoSaveChanged)
@@ -28,7 +34,9 @@ class Store : public QQuickItem
     Q_PROPERTY(QStringList skip READ skiplist WRITE setSkiplist NOTIFY skiplistChanged)
 
     public:
-        explicit Store(QQuickItem* parent = 0);
+        explicit Store(QObject *parent = 0);
+
+        QQmlListProperty<QObject> content();
     /*
         ~Store();
 
@@ -75,6 +83,8 @@ class Store : public QQuickItem
         void clearAll();
 
     private:
+        QList<QObject *> _content;
+
         QString _name;
         QString _storePath;
         QStringList _blacklist;

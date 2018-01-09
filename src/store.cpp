@@ -1,14 +1,13 @@
 #include "store.h"
 
-Store::Store(QQuickItem* parent):QQuickItem(parent)
+Store::Store(QObject* parent):QObject(parent),
+    _name(""),
+    _onDisk(false),
+    _loaded(false)
 {
-    _onDisk = false;
-    _loaded = false;
 
     //_autoLoad = true;
     //_autoSave = true;
-
-    _name = "";
 
     _storePath = EnvPrivate::configPath();
 
@@ -20,16 +19,18 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
     //qDebug() << "Setting objectName";
     //this->setObjectName(QString("Store"));
 
-    QQuickItem *qi = new QQuickItem();
+    QObject *qi = new QObject();
 
     // Run through all the properties
-    // This is done to get a list of the QuickItems normal attributes which we don't want to save
+    // This is done to get a list of the QObjects normal attributes which we don't want to save
+    _blacklist.append("content");
     _blacklist.append("name");
     _blacklist.append("skip");
     //_blacklist.append("autoLoad");
     //_blacklist.append("autoSave");
     _blacklist.append("isLoaded");
     _blacklist.append("onDisk");
+
     const QMetaObject *metaobject = qi->metaObject();
     int count = metaobject->propertyCount();
     for (int i=0; i<count; ++i) {
@@ -41,6 +42,11 @@ Store::Store(QQuickItem* parent):QQuickItem(parent)
     qi = 0;
 
     setOnDisk(existOnDisk());
+}
+
+QQmlListProperty<QObject> Store::content()
+{
+    return QQmlListProperty<QObject>(this, _content);
 }
 /*
 Store::~Store()
