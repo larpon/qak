@@ -223,6 +223,23 @@ bool EnvPrivate::isDir(const QString &path)
     return check.exists() && check.isDir();
 }
 
+void EnvPrivate::click(const QPointF point)
+{
+    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, point,
+            Qt::LeftButton,
+            Qt::LeftButton,
+            Qt::NoModifier );
+
+    QMouseEvent *releaseEvent = new QMouseEvent(QEvent::MouseButtonRelease, point,
+            Qt::LeftButton,
+            Qt::LeftButton,
+            Qt::NoModifier );
+
+    qDebug() << "Env::click" << point;
+    qApp->postEvent(qApp->focusWindow(), pressEvent);
+    qApp->postEvent(qApp->focusWindow(), releaseEvent);
+}
+
 QString EnvPrivate::subEnvPath()
 {
     QString sub;

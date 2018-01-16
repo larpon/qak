@@ -6,6 +6,9 @@
 #include <QDir>
 #include <QFile>
 #include <QVariant>
+#include <QMoveEvent>
+#include <QWindow>
+#include <QApplication>
 
 #include <QtGui/QGuiApplication>
 
@@ -39,6 +42,8 @@ public:
     Q_INVOKABLE static bool isFile(const QString &path);
     Q_INVOKABLE static bool isDir(const QString &path);
 
+    // TODO move to seperate type / remove ?
+    Q_INVOKABLE static void click(const QPointF point);
 
 private:
     static QString subEnvPath();
