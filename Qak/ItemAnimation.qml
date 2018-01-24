@@ -17,8 +17,10 @@ ItemAnimationPrivate {
 
     default property alias content: _frames.data
 
+    //property bool enabled: true
     property bool paused: false
-    property bool enabled: true
+
+    property bool loadFrames: true
 
     running: true
 //    onRunningChanged: Qak.debug(Qak.gid+'ItemAnimation','.running',running) //¤qakdbg
@@ -40,6 +42,7 @@ ItemAnimationPrivate {
     readonly property bool stable: __itemAnimationStable
     readonly property alias balanced: _frames.balanced
     onStableChanged: {
+        p.spawningFrames = false
         setFrame(frame+1); setFrame(frame-1)
 
         // NOTE set initial active sequence
@@ -56,17 +59,24 @@ ItemAnimationPrivate {
     property Component delegate
     property int model: 0
     onModelChanged: {
-        if(model <= 0 || !delegate)
+        if(model <= 0 || !delegate || !loadFrames)
             return
-
         p.spawnFrames()
     }
 
     onDelegateChanged: {
-        if(model <= 0 || !delegate)
+        if(model <= 0 || !delegate || !loadFrames)
             return
         p.spawnFrames()
     }
+
+    onLoadFramesChanged: {
+//        Qak.debug(Qak.gid+'ItemAnimation','.loadFrames',loadFrames) //¤qakdbg
+        if(model <= 0 || !delegate || !loadFrames)
+            return
+        p.spawnFrames()
+    }
+
     Component.onDestruction: p.clearFrames()
 
     property bool continueFromGoalSequence: false
@@ -210,6 +220,7 @@ ItemAnimationPrivate {
         property int totalAmountOfFrames: _frames.children.length
         property int totalAmountOfFramesSpawned: 0
 
+        property bool spawningFrames: false
 
         function clearFrames() {
             for(var i in frames) {
@@ -220,6 +231,12 @@ ItemAnimationPrivate {
         }
 
         function spawnFrames() {
+            if(spawningFrames) {
+                Qak.warn(Qak.gid+'ItemAnimation','already spawning frames')
+                return
+            }
+            spawningFrames = true
+//            Qak.debug(Qak.gid+'ItemAnimation','spawning frames') //¤qakdbg
             clearFrames()
 
             for(var i = 1; i <= model; i++) {
