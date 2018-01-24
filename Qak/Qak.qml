@@ -16,9 +16,13 @@ QakObject {
     property int assetMultiplier: 1
 //    onAssetMultiplierChanged: debug(gid+'Qak','asset multiplier',assetMultiplier) //¤qakdbg
 
-    property Log logger: Log { enabled: doDebug }
     property QtObject platform: Qt.platform
-    property QtObject resource: Resource { }
+
+    property alias logger: logger
+    Log { id: logger; enabled: doDebug }
+
+    property alias resource: resource
+    Resource { id: resource }
 
     readonly property string gid: logger.gid
 
@@ -37,7 +41,7 @@ QakObject {
     }
 
     // NOTE Hacky 'setTimeout' function based on Timer
-    readonly property Item __qak: Item {
+    QakObject {
         id: qak
         Component { id: timerComponent; Timer {} }
         function setTimeout(callback, timeout)
@@ -57,8 +61,8 @@ QakObject {
 
         function setInterval(callback, timeout, loops)
         {
-            var timer = timerComponent.createObject(qak)
-            var iloops = loops || -1
+            var timer = timerComponent.createObject(qak),
+            iloops = loops || -1
             timer.interval = timeout || 0
             timer.repeat = true
             timer.running = true
