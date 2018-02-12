@@ -8,17 +8,17 @@ EnvPrivate::EnvPrivate(QObject *parent)
 
 QString EnvPrivate::dataPath()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::DataLocation)+QDir::separator()+subEnvPath();
+    return QStandardPaths::writableLocation(QStandardPaths::DataLocation)+QStringLiteral("/")+subEnvPath();
 }
 
 QString EnvPrivate::cachePath()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::CacheLocation)+QDir::separator()+subEnvPath();
+    return QStandardPaths::writableLocation(QStandardPaths::CacheLocation)+QStringLiteral("/")+subEnvPath();
 }
 
 QString EnvPrivate::configPath()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+QDir::separator()+subEnvPath();
+    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+QStringLiteral("/")+subEnvPath();
 }
 
 bool EnvPrivate::copy(const QString &src, const QString &dst)
@@ -52,8 +52,8 @@ bool EnvPrivate::copy(const QString &src, const QString &dst, bool recursively)
 
         // Copy files first
         for(int i = 0; i< entries.count(); i++) {
-            success = QFile::copy(src + QDir::separator() + entries[i],
-                                  dst + QDir::separator() + entries[i]);
+            success = QFile::copy(src + QStringLiteral("/") + entries[i],
+                                  dst + QStringLiteral("/") + entries[i]);
             if(!success)
                 return false;
         }
@@ -64,8 +64,8 @@ bool EnvPrivate::copy(const QString &src, const QString &dst, bool recursively)
             entries = sourceDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
             for(int i = 0; i< entries.count(); i++)
             {
-                success = copy(src + QDir::separator() + entries[i],
-                               dst + QDir::separator() + entries[i],
+                success = copy(src + QStringLiteral("/") + entries[i],
+                               dst + QStringLiteral("/") + entries[i],
                                recursively);
                 if(!success)
                     return false;
@@ -177,7 +177,7 @@ QStringList EnvPrivate::list(const QString &dir, bool recursively)
 
         // Files
         for(int i = 0; i< entries.count(); i++) {
-            entryList.append(sourceDir.absolutePath() + QDir::separator() + entries[i]);
+            entryList.append(sourceDir.absolutePath() + QStringLiteral("/") + entries[i]);
         }
 
         if(recursively) {
@@ -186,7 +186,7 @@ QStringList EnvPrivate::list(const QString &dir, bool recursively)
             entries = sourceDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
             for(int i = 0; i< entries.count(); i++)
             {
-                entryList += list(sourceDir.absolutePath() + QDir::separator() + entries[i], recursively);
+                entryList += list(sourceDir.absolutePath() + QStringLiteral("/") + entries[i], recursively);
             }
         }
 
@@ -244,21 +244,21 @@ QString EnvPrivate::subEnvPath()
 {
     QString sub;
     if(QGuiApplication::organizationName() != "")
-        sub += QGuiApplication::organizationName() + QDir::separator();
+        sub += QGuiApplication::organizationName() + QStringLiteral("/");
     if(QGuiApplication::organizationDomain() != "")
-        sub += QGuiApplication::organizationDomain() + QDir::separator();
+        sub += QGuiApplication::organizationDomain() + QStringLiteral("/");
     if(QGuiApplication::applicationName() != "")
-        sub += QGuiApplication::applicationName() + QDir::separator();
+        sub += QGuiApplication::applicationName() + QStringLiteral("/");
     #ifdef QAK_STORE_VERSION_PATH
     if(QGuiApplication::applicationVersion() != "")
-        sub += QGuiApplication::applicationVersion() + QDir::separator() ;
+        sub += QGuiApplication::applicationVersion() + QStringLiteral("/") ;
     #endif
     if(sub == "") {
          qWarning() << "Qak" << "Env" << "Couldn't resolve" << sub << "as a valid path. Using generic directory: \"Qak\"";
          sub = "Qak";
     }
 
-    while(sub.endsWith( QDir::separator() )) sub.chop(1);
+    while(sub.endsWith( QStringLiteral("/") )) sub.chop(1);
 
     return sub;
 }

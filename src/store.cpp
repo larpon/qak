@@ -116,7 +116,7 @@ bool Store::existOnDisk()
 
 QString Store::fullPath()
 {
-    return _storePath + QDir::separator() + _name;
+    return _storePath + QStringLiteral("/") + _name;
 }
 
 void Store::setName(const QString &n)
@@ -136,7 +136,7 @@ void Store::setName(const QString &n)
             QStringList parts = _name.split('/');
             if(!parts.isEmpty())
                 parts.removeLast();
-            QString new_path = _storePath + QDir::separator() + parts.join(QDir::separator());
+            QString new_path = _storePath + QStringLiteral("/") + parts.join(QStringLiteral("/"));
             _ensurePath(new_path);
             #ifdef QAK_DEBUG
             qDebug() << "Store using name fragments as paths" << _name << new_path;
@@ -174,7 +174,7 @@ void Store::save()
 
     _ensureStorePath();
 
-    QString path = _storePath + QDir::separator() + _name;
+    QString path = _storePath + QStringLiteral("/") + _name;
     QJsonDocument json = QJsonDocument();
     QJsonObject rootItem = QJsonObject();
 
@@ -244,7 +244,7 @@ void Store::load()
     _loaded = false;
     emit isLoadedChanged();
 
-    QString path = _storePath + QDir::separator() + _name;
+    QString path = _storePath + QStringLiteral("/") + _name;
 
     QString bJson;
     QFile file;
@@ -322,7 +322,7 @@ void Store::clear()
         return;
     }
 
-    QString path = _storePath + QDir::separator() + _name;
+    QString path = _storePath + QStringLiteral("/") + _name;
     bool result = QFile::remove(path);
 
     if(!result)
@@ -346,7 +346,7 @@ void Store::clear(const QString &name)
         return;
     }
 
-    QString path = _storePath + QDir::separator() + name;
+    QString path = _storePath + QStringLiteral("/") + name;
     bool result = QFile::remove(path);
 
     if(!result)
