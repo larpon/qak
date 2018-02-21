@@ -168,10 +168,35 @@ AidPrivate {
         return Object.keys(obj).map(function(key) { return obj[key] })
     }
 
+    function clean(v,cl) {
+        cl = cl || undefined
+        // TODO enable to use cl as a value you want to clean out
+        // so if undefined clean falsy vales else clean for user specified
+        if(isArray(v)) {
+            var newArray = []
+            for (var i = 0; i < v.length; i++) {
+                if(v[i])
+                    newArray.push(v[i])
+            }
+            return newArray
+        }
+
+        if(isObject(v)) {
+            var pruned = {}
+            for(var k in v) {
+                if(v[k])
+                    pruned[k] = pruneObject(v[k])
+            }
+            return pruned
+        }
+
+    }
+
     function equals(i1,i2) {
         // TODO support other types
         // Compare two arrays
         if (isArray(i1) && isArray(i2)) {
+            // From https://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript
             // if the other array is a falsy value, return
             if (!i2)
                 return false
