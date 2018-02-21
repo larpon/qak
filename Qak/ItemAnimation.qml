@@ -101,11 +101,14 @@ ItemAnimationPrivate {
     }
 
     function setGoalSequence() {
+//        Qak.debug(Qak.gid+'ItemAnimation','goalSequence',goalSequence === "" ? "is blank!" : goalSequence) //¤qakdbg
         if(!p.activeSequence)
             return
 
-        if(goalSequence === "")
+        if(goalSequence === "") {
+            Qak.warn(Qak.gid+'ItemAnimation','goalSequence is blank')
             return
+        }
 
         p.sequencePath = []
 
@@ -133,6 +136,7 @@ ItemAnimationPrivate {
         }
 
         if(route.length > 1 && route[0] === from) {
+//            Qak.debug(Qak.gid+'ItemAnimation','goalSequence','already at',from,'removing from path') //¤qakdbg
             //Qak.info('ItemAnimation','already at',from,'removing from path')
             route.shift()
         }
