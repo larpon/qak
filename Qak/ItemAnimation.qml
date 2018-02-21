@@ -101,12 +101,14 @@ ItemAnimationPrivate {
     }
 
     function setGoalSequence() {
-//        Qak.debug(Qak.gid+'ItemAnimation','goalSequence',goalSequence === "" ? "is blank!" : goalSequence) //¤qakdbg
-        if(!p.activeSequence)
+
+        if(!p.activeSequence) {
+//            Qak.debug(Qak.gid+'ItemAnimation','setGoalSequence','no current activeSequence') //¤qakdbg
             return
+        }
 
         if(goalSequence === "") {
-            Qak.warn(Qak.gid+'ItemAnimation','goalSequence is blank')
+//            Qak.debug(Qak.gid+'ItemAnimation','setGoalSequence','goalSequence is blank') //¤qakdbg
             return
         }
 
