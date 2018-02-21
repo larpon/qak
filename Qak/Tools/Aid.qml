@@ -139,6 +139,10 @@ AidPrivate {
         return __math_floor(__math_random() * (max - min + 1)) + min
     }
 
+    function contains(haystack, needle) {
+        return haystack.indexOf(needle) !== -1;
+    }
+
     function startsWith(haystack, needle) {
         return haystack.lastIndexOf(needle, 0) === 0
     }
