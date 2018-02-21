@@ -168,6 +168,34 @@ AidPrivate {
         return Object.keys(obj).map(function(key) { return obj[key] })
     }
 
+    function equals(i1,i2) {
+        // TODO support other types
+        // Compare two arrays
+        if (isArray(i1) && isArray(i2)) {
+            // if the other array is a falsy value, return
+            if (!i2)
+                return false
+
+            // compare lengths - can save a lot of time
+            if (i1.length !== i2.length)
+                return false;
+
+            for (var i = 0, l=i1.length; i < l; i++) {
+                // Check if we have nested arrays
+                if (isArray(i1[i]) && isArray(i2[i])) {
+                    // recurse into the nested arrays
+                    if (!equals(i1[i],i2[i]))
+                        return false
+                }
+                else if (i1[i] !== i2[i]) {
+                    // Warning - two different object instances will never be equal: {x:20} != {x:20}
+                    return false
+                }
+            }
+            return true
+        }
+    }
+
     function clone(obj) {
         var copy
 
