@@ -164,6 +164,10 @@ AidPrivate {
         return 0
     }
 
+    function toArray(obj) {
+        return Object.keys(obj).map(function(key) { return obj[key] })
+    }
+
     function clone(obj) {
         var copy
 
