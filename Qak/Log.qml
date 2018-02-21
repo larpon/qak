@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 import Qak.Tools 1.0
 
-QtObject {
+QakObject {
     id: log
 
     // TODO
@@ -15,7 +15,21 @@ QtObject {
     property var groups: ({"*":true})
     property bool logGid: true
 
-    property QtObject settings: QtObject {
+    property alias settings: settings
+    QakObject {
+        id: settings
+
+        property alias output: settingsLogLevel
+        QtObject {
+            id: settingsLogLevel
+
+            property bool log: true
+            property bool info: true
+            property bool warn: true
+            property bool debug: true
+            property bool error: true
+        }
+
         property string prefix: ""
         property string logPrefix: ""
         property string errorPrefix: "ERROR"
@@ -25,7 +39,8 @@ QtObject {
         property string historyPrefix: "HISTORY"
     }
 
-    property QtObject internal: QtObject {
+    QtObject {
+        id: internal
         property var history: []
 
         function logGroup(logArgsArray) {
@@ -73,6 +88,9 @@ QtObject {
     }
 
     function log() {
+
+        if(!settingsLogLevel.log) return
+
         // Convert arguments to a normal array
         var args = Array.prototype.slice.call(arguments);
 
@@ -94,6 +112,8 @@ QtObject {
     }
 
     function error() {
+        if(!settingsLogLevel.error) return
+
         var args = Array.prototype.slice.call(arguments)
 
         if(!internal.logGroup(args))
@@ -113,6 +133,8 @@ QtObject {
     }
 
     function debug() {
+        if(!settingsLogLevel.debug) return
+
         var args = Array.prototype.slice.call(arguments)
 
         if(!internal.logGroup(args))
@@ -131,24 +153,28 @@ QtObject {
     }
 
     function warn() {
-            var args = Array.prototype.slice.call(arguments)
+        if(!settingsLogLevel.warn) return
 
-            if(!internal.logGroup(args))
-                return
+        var args = Array.prototype.slice.call(arguments)
 
-            if(settings.warnPrefix !== "")
-                args.unshift(settings.warnPrefix)
+        if(!internal.logGroup(args))
+            return
 
-            if(settings.prefix !== "")
-                args.unshift(settings.prefix)
+        if(settings.warnPrefix !== "")
+            args.unshift(settings.warnPrefix)
 
-            if(console && enabled)
-                console.warn.apply(console, args)
-            else if(history)
-                internal.history.push(args)
+        if(settings.prefix !== "")
+            args.unshift(settings.prefix)
+
+        if(console && enabled)
+            console.warn.apply(console, args)
+        else if(history)
+            internal.history.push(args)
     }
 
     function info() {
+        if(!settingsLogLevel.info) return
+
         var args = Array.prototype.slice.call(arguments)
 
         if(!internal.logGroup(args))

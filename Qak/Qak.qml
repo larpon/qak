@@ -19,7 +19,16 @@ QakObject {
     property QtObject platform: Qt.platform
 
     property alias logger: logger
-    Log { id: logger; enabled: doDebug }
+    Log {
+        id: logger
+
+        Binding {
+            when: ('output' in logger.settings)
+            target: logger.settings.output
+            property: 'debug'
+            value: doDebug
+        }
+    }
 
     property alias resource: resource
     Resource { id: resource }
