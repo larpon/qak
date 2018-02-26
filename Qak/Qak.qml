@@ -62,7 +62,8 @@ QakObject {
                 timer.stop()
                 timer.destroy()
                 timer = null
-                callback()
+                if(typeof callback === "function")
+                    callback()
             })
             timer.start()
             return timer
@@ -84,7 +85,8 @@ QakObject {
                 }
                 if(iloops > 0)
                     iloops--
-                callback()
+                if(typeof callback === "function")
+                    callback()
             })
             timer.start()
             return timer

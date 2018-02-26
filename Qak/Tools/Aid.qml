@@ -106,6 +106,14 @@ AidPrivate {
         // + start to reset back to start of original range
     }
 
+    function toDegrees(angle) {
+        return angle * (180 / __pi)
+    }
+
+    function toRadians(degree) {
+        return degree * (__pi / 180)
+    }
+
     function normalize0to360(degrees) {
         degrees = degrees % 360
         if (degrees < 0)
@@ -137,6 +145,15 @@ AidPrivate {
      */
     function randomRangeInt(min, max) {
         return __math_floor(__math_random() * (max - min + 1)) + min
+    }
+
+    function hasOneOf(haystack, arr) {
+        if(isArray(haystack) && isArray(arr)) {
+            return arr.some(function (v) {
+                return haystack.indexOf(v) >= 0
+            })
+        }
+        return false
     }
 
     function contains(haystack, needle) {
@@ -171,25 +188,17 @@ AidPrivate {
     function clean(v,cl) {
         cl = cl || undefined
         // TODO enable to use cl as a value you want to clean out
-        // so if undefined clean falsy vales else clean for user specified
+        // so if undefined clean falsy values else clean for user specified
         if(isArray(v)) {
             var newArray = []
             for (var i = 0; i < v.length; i++) {
-                if(v[i])
+                if(v[i] && v[i] !== cl)
                     newArray.push(v[i])
             }
             return newArray
         }
 
-        if(isObject(v)) {
-            var pruned = {}
-            for(var k in v) {
-                if(v[k])
-                    pruned[k] = pruneObject(v[k])
-            }
-            return pruned
-        }
-
+        return v
     }
 
     function equals(i1,i2) {
@@ -337,6 +346,17 @@ AidPrivate {
       return target
     }
 
+    function unique(array) {
+        var a = array.concat()
+        for(var i=0; i<a.length; ++i) {
+            for(var j=i+1; j<a.length; ++j) {
+                if(a[i] === a[j])
+                   a.splice(j--, 1)
+            }
+        }
+        return a
+    }
+
     function pad(number, digits, padChar) {
         padChar = padChar || 0
         return new Array(__math_max(digits + 1 - String(number).length + 1, 0)).join(padChar) + number
@@ -384,13 +404,7 @@ AidPrivate {
     }
 
     function angleBetween(x1,y1,x2,y2) {
-        if((x2 > x1) || y2 > y1) //above 0 to 180 degrees
-            return (__math_atan2((x2 - x1), (y1 - y1)) * 180 / __pi)
-        else if((x2 < x1) || y2 < y1) //above 180 degrees to 360/0
-            return 360 - (__math_atan2((x1 - x2), (y1 - y2)) * 180 / __pi)
-
-        return __math_atan2(0 ,0)
-
+        return toDegrees(__math_atan2(y1 - y2,x1 - x2))
     }
 
     function isObject(o) {
