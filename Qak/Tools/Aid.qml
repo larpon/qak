@@ -334,16 +334,23 @@ AidPrivate {
       return array
     }
 
-    function extend(target, source) {
-      target = target || {}
-      for (var prop in source) {
-        if (typeof source[prop] === 'object') {
-          target[prop] = extend(target[prop], source[prop])
-        } else {
-          target[prop] = source[prop]
+    function extend(target, source, maxLevel) {
+        target = target || {}
+
+        for (var prop in source) {
+            if (typeof source[prop] === 'object') {
+                if(isInteger(maxLevel)) {
+                    if(maxLevel > 1)
+                        target[prop] = extend(target[prop], source[prop],maxLevel--)
+                    else if(maxLevel === 1)
+                        target[prop] = source[prop]
+                } else
+                    target[prop] = extend(target[prop], source[prop])
+            } else {
+                target[prop] = source[prop]
+            }
         }
-      }
-      return target
+        return target
     }
 
     function unique(array) {
@@ -408,7 +415,7 @@ AidPrivate {
     }
 
     function isObject(o) {
-        return o !== null && typeof o === 'object' && !isArray(o)
+        return o !== undefined && o !== null && typeof o === 'object' && !isArray(o)
     }
 
     function hasStringProperty(o,prop) {
@@ -479,7 +486,7 @@ AidPrivate {
         return true
     }
 
-    // NOTE WARNING There is currently no official Qt way of getting the QML type of an object as a string - so this might break someday!
+    // NOTE WARNING There is currently no official Qt 5.6 way of getting the QML type of an object as a string - so this might break someday!
     // Further more this won't take QML inheritance into account :(
     function qtypeof(object) {
 
