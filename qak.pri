@@ -1,7 +1,7 @@
 QT += qml quick multimedia gui
 !no_desktop: QT += widgets
 
-QAK_VERSION = 1.3.2
+QAK_VERSION = 1.4.0
 include(gitversion.pri)
 message("Qak $$QAK_VERSION git $$QAK_GIT_VERSION/$$QAK_GIT_BRANCH_NAME")
 
