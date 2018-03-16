@@ -37,6 +37,41 @@ QtObject {
             timer.start()
             return timer
         }
+
+        function dump(arr,level,filters) {
+            filters = filters || []
+            var dumped_text = ""
+            if(!level) level = 0
+
+            //The padding given at the beginning of the line.
+            var level_padding = ""
+            for(var j=0;j<level+1;j++) level_padding += "    "
+
+            if(typeof(arr) == 'object') { //Array/Hashes/Objects
+                for(var item in arr) {
+                    var value = arr[item]
+
+                    var skip = false
+                    for(var fi in filters) {
+                        if(!filters[fi](item,value)) {
+                            skip = true
+                            break
+                        }
+                    }
+                    if(skip) continue
+
+                    if(typeof(value) == 'object') { //If it is an array,
+                        dumped_text += level_padding + "'" + item + "' ...\n"
+                        dumped_text += dump(value,level+1)
+                    } else {
+                        dumped_text += level_padding + "'" + item + "' => \"" + value + "\" "+'('+typeof value+')'+"\n"
+                    }
+                }
+            } else { //Stings/Chars/Numbers etc.
+                dumped_text = "===>"+arr+"<===("+typeof(arr)+")"
+            }
+            return dumped_text
+        }
     }
 
     function clear() {
@@ -168,7 +203,7 @@ QtObject {
                             incubator.__done(that.id)
                             //delete incubator.queue[that.id]
                         } else {
-                            console.error('Incubator',that,'id',that.id,'failed')
+                            console.error('Incubator',that,typeof that,'id',that.id,'failed','dump:',__private.dump(that,2))
                             if(status === Component.Null)
                                 console.error('Incubator','status',status,'(Null)',that.incubator.errorString)
                             if(status === Component.Error)
