@@ -9,6 +9,7 @@
 #include <QMoveEvent>
 #include <QWindow>
 #include <QApplication>
+#include <QResource>
 
 #include <QtGui/QGuiApplication>
 
@@ -19,6 +20,7 @@ class EnvPrivate : public QObject
 public:
     EnvPrivate(QObject* parent = 0);
 
+    Q_INVOKABLE static QString appPath();
     Q_INVOKABLE static QString dataPath();
     Q_INVOKABLE static QString cachePath();
     Q_INVOKABLE static QString configPath();
@@ -41,6 +43,9 @@ public:
     Q_INVOKABLE static bool exists(const QString &path);
     Q_INVOKABLE static bool isFile(const QString &path);
     Q_INVOKABLE static bool isDir(const QString &path);
+
+    Q_INVOKABLE static bool registerResource(const QString &rccFilename, const QString &resourceRoot=QString());
+    Q_INVOKABLE static bool unregisterResource(const QString &rccFilename, const QString &resourceRoot=QString());
 
     // TODO move to seperate type / remove ?
     Q_INVOKABLE static void click(const QPointF point);

@@ -6,6 +6,11 @@ EnvPrivate::EnvPrivate(QObject *parent)
 
 }
 
+QString EnvPrivate::appPath()
+{
+    return QCoreApplication::applicationDirPath();
+}
+
 QString EnvPrivate::dataPath()
 {
     return QStandardPaths::writableLocation(QStandardPaths::DataLocation)+QStringLiteral("/")+subEnvPath();
@@ -221,6 +226,16 @@ bool EnvPrivate::isDir(const QString &path)
 {
     QFileInfo check(path);
     return check.exists() && check.isDir();
+}
+
+bool EnvPrivate::registerResource(const QString &rccFilename, const QString &resourceRoot)
+{
+    return QResource::registerResource(rccFilename,resourceRoot);
+}
+
+bool EnvPrivate::unregisterResource(const QString &rccFilename, const QString &resourceRoot)
+{
+    return QResource::unregisterResource(rccFilename,resourceRoot);
 }
 
 void EnvPrivate::click(const QPointF point)
