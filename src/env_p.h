@@ -1,5 +1,5 @@
-#ifndef QAK_PATH_PRIVATE_H
-#define QAK_PATH_PRIVATE_H
+#ifndef QAK_ENV_PRIVATE_H
+#define QAK_ENV_PRIVATE_H
 
 #include <QDebug>
 #include <QStandardPaths>
@@ -49,4 +49,4 @@ private:
     static QString subEnvPath();
 };
 
-#endif // QAK_PATH_PRIVATE_H
+#endif // QAK_ENV_PRIVATE_H
