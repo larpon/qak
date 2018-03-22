@@ -5,8 +5,7 @@ import Qak.Tools 1.0
 QakObject {
     id: log
 
-    // TODO
-    //property var filter
+    // TODO filters
 
     property bool enabled: true
     property bool history: false

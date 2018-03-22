@@ -1,6 +1,6 @@
 import QtQuick 2.0
 
-//import Qak 1.0 //¤qakdbg
+import Qak 1.0
 import Qak.Tools 1.0
 
 MouseArea {
@@ -15,7 +15,7 @@ MouseArea {
     readonly property real cellWidth: columns > 0 ? (width/columns) : 0
     readonly property real cellHeight: rows > 0 ? (height/rows) : 0
 
-    readonly property bool validGrid: grid && Aid.isArray(grid) && Aid.isArray(grid[0])
+    readonly property bool validGrid: !Aid.undefinedOrNull(grid) && Aid.isArray(grid) && Aid.isArray(grid[0])
     // A 2D JavaScript Array of boolean values
     // Example 3x3 grid:
     // [
@@ -60,6 +60,11 @@ MouseArea {
             return false
         // NOTE the input grid is "row major" thus we need to look up as grid[y][x]
         var cellIdx = cellIndex(point)
+        if(Aid.undefinedOrNull(cellIdx)) {
+            Qak.warn(Qak.gid+'GridMouseArea','::pointInGrid','cell index for point',point.x,point.y,'invalid',cellIdx)
+            return false
+        }
+
         return grid[cellIdx.y][cellIdx.x]
     }
 
@@ -73,7 +78,7 @@ MouseArea {
         if(point.y < 0 || point.y > height)
             return null
         var p =  Qt.point(__math_ceil((point.x * columns) / width)-1,__math_ceil((point.y * rows) / height)-1)
-        if(grid && p.y < 0 || p.y > grid.length-1)
+        if(Aid.isArray(grid) && (p.y < 0 || p.y > grid.length-1))
             return false
         if(p.y < 0 || p.y > height)
             return false

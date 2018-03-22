@@ -128,6 +128,10 @@ AidPrivate {
         return min + __math_abs(((value + range) % (range * 2)) - range)
     }
 
+    function undefinedOrNull(value) {
+        return (value === undefined || value === null)
+    }
+
     function isBetween(value,min,max) {
         return value >= min && value <= max
     }
