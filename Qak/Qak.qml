@@ -4,7 +4,6 @@ import Qak 1.0
 
 pragma Singleton
 
-// TODO utilize QakObject - clean up messy code below
 QakObject {
     id : component
 
