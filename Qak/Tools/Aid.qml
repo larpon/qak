@@ -519,6 +519,15 @@ AidPrivate {
         return path.split(/[\\/]/).pop()
     }
 
+    function truncate(string, maxLength){
+       if (string.length > maxLength)
+          return string.substring(0,maxLength)+'...'
+       else
+          return string
+    }
+
+
+
     // TODO optimize and test
     // Dijkstra's algorithm
     // https://github.com/andrewhayward/dijkstra
