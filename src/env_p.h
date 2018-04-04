@@ -13,9 +13,37 @@
 
 #include <QtGui/QGuiApplication>
 
+#if defined(Q_OS_ANDROID)
+#include <QAndroidJniEnvironment>
+#include <QAndroidJniObject>
+#include <QtAndroid>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+#include "permissions.h"
+#endif
+
+#endif
+
+namespace Qak {
+    class AndroidEnv : public QObject
+    {
+        Q_OBJECT
+    public:
+        AndroidEnv(QObject *parent = 0);
+
+        Q_INVOKABLE static QString obbPath();
+
+        Q_INVOKABLE static bool checkPermission(const QString &permission);
+
+    private:
+
+    };
+}
+
 class EnvPrivate : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(Qak::AndroidEnv *android READ androidEnv)
 
 public:
     EnvPrivate(QObject* parent = 0);
@@ -50,8 +78,11 @@ public:
     // TODO move to seperate type / remove ?
     Q_INVOKABLE static void click(const QPointF point);
 
+    Qak::AndroidEnv *androidEnv();
+
 private:
     static QString subEnvPath();
+    Qak::AndroidEnv _androidEnv;
 };
 
 #endif // QAK_ENV_PRIVATE_H

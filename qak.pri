@@ -19,6 +19,19 @@ contains(QAK_CONFIG,"nowarnings") {
     message("Qak supressing warnings")
 }
 
+android {
+    QT += androidextras
+
+    # For Android 23 user permission requests
+    equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 10) {
+        message("Qak including Android permission fix for QTBUG-50759")
+        QT += core-private
+        HEADERS += $$PWD/src/permissions.h
+        SOURCES += $$PWD/src/permissions.cpp
+    }
+
+}
+
 INCLUDEPATH += \
     $$PWD \
     $$PWD/src

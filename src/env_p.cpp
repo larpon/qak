@@ -1,5 +1,46 @@
 #include "env_p.h"
 
+Qak::AndroidEnv::AndroidEnv(QObject *parent)
+    : QObject(parent)
+{
+
+}
+
+QString Qak::AndroidEnv::obbPath()
+{
+    #if defined(Q_OS_ANDROID)
+    QAndroidJniObject mediaDir = QAndroidJniObject::callStaticObjectMethod( "android/os/Environment", "getExternalStorageDirectory", "()Ljava/io/File;");
+    QAndroidJniObject mediaPath = mediaDir.callObjectMethod( "getAbsolutePath", "()Ljava/lang/String;" );
+    QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod( "org/qtproject/qt5/android/QtNative" , "activity", "()Landroid/app/Activity;");
+    QAndroidJniObject package = activity.callObjectMethod( "getPackageName", "()Ljava/lang/String;");
+
+    // If any exceptions occurred - just clear them and move on
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) { env->ExceptionClear(); }
+
+    return mediaPath.toString()+QStringLiteral("/Android/obb/")+package.toString();
+    #endif
+    return QStringLiteral("");
+}
+
+bool Qak::AndroidEnv::checkPermission(const QString &permission)
+{
+    #if defined(Q_OS_ANDROID)
+    QtAndroid::PermissionResult r = QtAndroid::checkPermission(permission);
+    if(r == QtAndroid::PermissionResult::Denied) {
+        QtAndroid::requestPermissionsSync( QStringList() << permission );
+        r = QtAndroid::checkPermission(permission);
+        if(r == QtAndroid::PermissionResult::Denied) {
+            return false;
+        }
+    }
+    #else
+    Q_UNUSED(permission);
+    return false;
+    #endif
+    return true;
+}
+
 EnvPrivate::EnvPrivate(QObject *parent)
     : QObject(parent)
 {
@@ -253,6 +294,11 @@ void EnvPrivate::click(const QPointF point)
     qDebug() << "Env::click" << point;
     qApp->postEvent(qApp->focusWindow(), pressEvent);
     qApp->postEvent(qApp->focusWindow(), releaseEvent);
+}
+
+Qak::AndroidEnv *EnvPrivate::androidEnv()
+{
+    return &_androidEnv;
 }
 
 QString EnvPrivate::subEnvPath()

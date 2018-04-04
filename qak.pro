@@ -2,7 +2,7 @@ TEMPLATE = lib
 
 TARGET = qak
 
-QT += qml quick widgets
+QT += qml quick widgets androidextras
 
 CONFIG += qt plugin c++11
 
