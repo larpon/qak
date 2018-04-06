@@ -161,11 +161,11 @@ AidPrivate {
     }
 
     function contains(haystack, needle) {
-        return haystack.indexOf(needle) !== -1;
+        return !undefinedOrNull(haystack) && haystack.indexOf(needle) !== -1;
     }
 
     function startsWith(haystack, needle) {
-        return haystack.lastIndexOf(needle, 0) === 0
+        return !undefinedOrNull(haystack) && haystack.lastIndexOf(needle, 0) === 0
     }
 
     function endsWith(haystack, needle) {
@@ -419,7 +419,7 @@ AidPrivate {
     }
 
     function isObject(o) {
-        return o !== undefined && o !== null && typeof o === 'object' && !isArray(o)
+        return !undefinedOrNull(o) && typeof o === 'object' && !isArray(o)
     }
 
     function hasStringProperty(o,prop) {
