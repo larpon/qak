@@ -67,6 +67,7 @@ class Store : public QObject
         void saving();
         void saved();
         void loaded();
+        void loading();
         void error(const QString& msg);
         void nameChanged();
         void onDiskChanged();

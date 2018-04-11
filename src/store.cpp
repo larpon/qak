@@ -251,6 +251,7 @@ void Store::load()
     file.setFileName(path);
     if(file.exists())
     {
+        emit loading();
         file.open(QIODevice::ReadOnly | QIODevice::Text);
         bJson = file.readAll();
         file.close();
