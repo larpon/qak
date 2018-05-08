@@ -14,7 +14,9 @@ Item {
 
     property point anchorPoint: Qt.point(0,0)
 
-    property real speedModifier: 1
+    property real speedModifier: 1 // Deprecated
+    property real speed: 1/speedModifier
+
     property int duration: 0
 
     property var moveQueue: []
@@ -201,7 +203,7 @@ Item {
 
         property real userDuration: 2000
         property real __duration: 0
-        duration: __duration > 0 ? __duration : userDuration * 2 * speedModifier
+        duration: __duration > 0 ? __duration : userDuration * 2 * (1/speed)
 
         target: mover.target
         anchorPoint: mover.anchorPoint
