@@ -16,6 +16,7 @@ GridMouseArea {
     property int __nextSolveId: 0
 
     signal sameCell
+    signal error
 
     onGridChanged: {
         if(validGrid) {
@@ -171,98 +172,17 @@ GridMouseArea {
 
     function findPath(startPoint, endPoint, onFound, onNotFound) {
 
-        /*
-        // Fix point extremes
-        if(startPoint.x <= 0) {
-            Qak.warn('Fixed start point.x 0')
-            startPoint.x = Number.MIN_VALUE
-        }
-        if(startPoint.y <= 0) {
-            Qak.warn('Fixed start point.y 0')
-            startPoint.y = Number.MIN_VALUE
-        }
-        if(endPoint.x <= 0) {
-            Qak.warn('Fixed end point.x 0')
-            endPoint.x = Number.MIN_VALUE
-        }
-        if(endPoint.y <= 0) {
-            Qak.warn('Fixed end point.y 0')
-            endPoint.y = Number.MIN_VALUE
-        }
+        var startPos = cellIndex(startPoint)
+        var endPos = cellIndex(endPoint)
 
-        if(startPoint.x >= walkMap.width) {
-            Qak.warn('Fixed start point.x',walkMap.width)
-            startPoint.x -= Number.MIN_VALUE
+        if(!Boolean(startPos) || !Boolean(endPos)) {
+            Qak.error(Qak.gid+'WalkMap','::findPath','start or end point(s) invalid','start:',startPos,'end:',endPos)
+            error()
+            return
         }
-        if(startPoint.y >= walkMap.height) {
-            Qak.warn('Fixed start point.y', walkMap.height)
-            startPoint.y -= Number.MIN_VALUE
-        }
-        if(endPoint.x >= walkMap.width) {
-            Qak.warn('Fixed end point.x',walkMap.width)
-            endPoint.x = Number.MIN_VALUE
-        }
-        if(endPoint.y >= walkMap.height) {
-            Qak.warn('Fixed end point.y', walkMap.height)
-            endPoint.y = Number.MIN_VALUE
-        }
-
-        if(walkMap.x > 0) {
-            startPoint.x = startPoint.x - walkMap.x
-            endPoint.x = endPoint.x - walkMap.x
-        }
-        if(walkMap.y > 0) {
-            startPoint.y = startPoint.y - walkMap.y
-            endPoint.y = endPoint.y - walkMap.y
-        }
-
-        */
-
-        /*
-        var child = grid.childAt(startPoint.x,startPoint.y)
-        child.show = true
-        var idx = child.idx
-        var times = Math.floor(idx/grid.columns)
-//        Qak.debug('start grid box',idx, times) //¤qakdbg
-        startPosition.x = idx-(times*grid.columns)
-        startPosition.y = times
-
-        child = grid.childAt(endPoint.x, endPoint.y)
-        child.show = true
-        idx = child.idx
-        times = Math.floor(idx/grid.columns)
-//        Qak.debug('end grid box',idx,times) //¤qakdbg
-        endPosition.x = idx-(times*grid.columns)
-        endPosition.y = times
-*/
-
-        /*
-        var cs = []
-        var rs = []
-        for(var i = 0; i < grid.children.length-1; i++) {
-            child = grid.children[i]
-
-
-
-            if(child.on) {
-//                Qak.debug('adding child at index',i,child.idx) //¤qakdbg
-                rs.push(0)
-            } else
-                rs.push(1)
-
-            if(rs.length % grid.columns === 0) {
-                var c = rs.slice()
-                cs.push(c)
-                rs = []
-            }
-        }
-*/
-
-        var startPos = cellIndex(startPoint) //{ 'x':startPosition.x, 'y': startPosition.y }
-        var endPos = cellIndex(endPoint) //{ 'x':endPosition.x, 'y': endPosition.y }
 
         if(startPos.x === endPos.x && startPos.y === endPos.y) {
-//                Qak.info(Qak.gid+'WalkMap','::findPath','start and end point are in same cell') //¤qakdbg
+            Qak.info(Qak.gid+'WalkMap','::findPath','start and end point are in same cell')
             sameCell()
             return
         }
