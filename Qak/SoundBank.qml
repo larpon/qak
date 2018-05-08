@@ -58,10 +58,10 @@ Item {
             var sound = bank[tag]
             if('source' in sound) {
                 if(sound.source === path) {
-                    Qak.info(Qak.gid+'SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
+//                    Qak.debug(Qak.gid+'SoundBank','Skipping',tag,'with sound',path,'it\'s already added') //¤qakdbg
                     return
-                } else
-                    Qak.info(Qak.gid+'SoundBank','Updating',tag,'from',sound.source,'to',path)
+                }
+//                else Qak.debug(Qak.gid+'SoundBank','Updating',tag,'from',sound.source,'to',path) //¤qakdbg
             }
         }
 
@@ -104,10 +104,10 @@ Item {
             var sound = groups[group][tag]
             if('source' in sound) {
                 if(sound.source === path) {
-                    Qak.info(Qak.gid+'SoundBank','Skipping',tag,'with sound',path,'it\'s already added')
+//                    Qak.debug(Qak.gid+'SoundBank','Skipping',tag,'with sound',path,'it\'s already added') //¤qakdbg
                     return
-                } else
-                    Qak.info(Qak.gid+'SoundBank','Updating',tag,'in group',group,'from',sound.source,'to',path)
+                }
+//                else Qak.debug(Qak.gid+'SoundBank','Updating',tag,'in group',group,'from',sound.source,'to',path) //¤qakdbg
             }
         }
 
@@ -176,7 +176,7 @@ Item {
         var tag
 
         if(group !== undefined && groupExists(group)) {
-            Qak.info(Qak.gid+'SoundBank','::clear','clearing group',group)
+//            Qak.debug(Qak.gid+'SoundBank','::clear','clearing group',group) //¤qakdbg
             for(tag in groups[group]) {
                 groups[group][tag].destroy()
             }
@@ -186,7 +186,7 @@ Item {
 
         tag = group
         if(tag in bank) { // See if group matches a tag
-            Qak.info(Qak.gid+'SoundBank','::clear','clearing tag',tag)
+//            Qak.debug(Qak.gid+'SoundBank','::clear','clearing tag',tag) //¤qakdbg
             bank[tag].destroy()
             bank[tag] = undefined
         }
@@ -194,7 +194,7 @@ Item {
         // If called without arguments
         if(group === undefined) {
 
-            Qak.info(Qak.gid+'SoundBank','::clear','clearing bank')
+//            Qak.debug(Qak.gid+'SoundBank','::clear','clearing bank') //¤qakdbg
 
             for(tag in bank) {
                 bank[tag].destroy()
@@ -221,11 +221,11 @@ Item {
             sound = bank[object.tag]
             if('source' in sound) {
                 if(sound.source === object.source) {
-                    Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Skipping',object.tag,'with sound',object.source,'it\'s already loaded')
+//                    Qak.debug(Qak.gid+'SoundBank','::registerSoundReady','Skipping',object.tag,'with sound',object.source,'it\'s already loaded') //¤qakdbg
                     object.destroy()
                     return
                 } else {
-                    Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Updating',object.tag,'from',sound.source,'to',object.source)
+//                    Qak.debug(Qak.gid+'SoundBank','::registerSoundReady','Updating',object.tag,'from',sound.source,'to',object.source) //¤qakdbg
                     sound.destroy()
                 }
             }
@@ -234,11 +234,11 @@ Item {
                 sound = groups[object.group][object.tag]
                 if('source' in sound) {
                     if(sound.source === object.source) {
-                        Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Skipping',object.tag,'in group',object.group,'with sound',object.source,'it\'s already loaded')
+//                        Qak.debug(Qak.gid+'SoundBank','::registerSoundReady','Skipping',object.tag,'in group',object.group,'with sound',object.source,'it\'s already loaded') //¤qakdbg
                         object.destroy()
                         return
                     } else {
-                        Qak.info(Qak.gid+'SoundBank','::registerSoundReady','Updating',object.tag,'in group',object.group,'from',sound.source,'to',object.source)
+//                        Qak.debug(Qak.gid+'SoundBank','::registerSoundReady','Updating',object.tag,'in group',object.group,'from',sound.source,'to',object.source) //¤qakdbg
                         sound.destroy()
                     }
                 }
