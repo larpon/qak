@@ -59,8 +59,8 @@ MouseArea {
 
     function calculateRotation(point) {
 
-        var rx = 0
-        var ry = 0
+        var rx = 0,
+            ry = 0
 
         var pto = target.transformOrigin
         if(pto == Item.Center) {
@@ -86,12 +86,11 @@ MouseArea {
         rx += rotator.target.x
         ry += rotator.target.y
 
-        var diffX = (point.x - rx)
-        var diffY = -1 * (point.y - ry)
-        var rad = Math.atan (diffY / diffX)
-        var deg = (rad * 180 / Math.PI)
-
-        var rotation = 0
+        var diffX = (point.x - rx),
+            diffY = -1 * (point.y - ry),
+            rad = Math.atan (diffY / diffX),
+            deg = (rad * 180 / Math.PI),
+            rotation = 0
 
         if (diffX > 0 && diffY > 0) {
             //rotation += 90 - Math.abs (deg)
@@ -116,9 +115,8 @@ MouseArea {
         if(!enabled || paused)
             return
 
-        var point = mapToItem(target.parent, mouse.x, mouse.y)
-
-        var rotation = calculateRotation(point)
+        var point = mapToItem(target.parent, mouse.x, mouse.y),
+            rotation = calculateRotation(point)
 
         internal.delta = 0
         internal.prevHandleRotation = rotation
@@ -129,11 +127,9 @@ MouseArea {
         if(!enabled || paused)
             return
 
-        var point = mapToItem(target.parent, mouse.x, mouse.y)
-
-        var rotation = calculateRotation(point)
-
-        var delta = rotation - internal.prevHandleRotation
+        var point = mapToItem(target.parent, mouse.x, mouse.y),
+            rotation = calculateRotation(point),
+            delta = rotation - internal.prevHandleRotation
         internal.prevHandleRotation = rotation
         if(continuous) {
             if(Math.abs(delta) > 180) // NOTE Safe-guard when the rotation calculation flips from 360 to 0

@@ -468,7 +468,7 @@ AidPrivate {
         if (obj === null) return true
         if (obj === undefined) return true
 
-        if (isString(obj) && obj === "") return true
+        if (isString(obj)) return (obj === "")
 
         // Assume if it has a length property with a non-zero value
         // that that property is correct.

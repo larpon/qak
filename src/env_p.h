@@ -52,6 +52,7 @@ public:
     Q_INVOKABLE static QString dataPath();
     Q_INVOKABLE static QString cachePath();
     Q_INVOKABLE static QString configPath();
+    Q_INVOKABLE static QString tempPath();
 
     Q_INVOKABLE static bool copy(const QString &src, const QString &dst);
     Q_INVOKABLE static bool copy(const QString &src, const QString &dst, bool recursively);

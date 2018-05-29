@@ -67,6 +67,11 @@ QString EnvPrivate::configPath()
     return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+QStringLiteral("/")+subEnvPath();
 }
 
+QString EnvPrivate::tempPath()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::TempLocation)+QStringLiteral("/")+subEnvPath();
+}
+
 bool EnvPrivate::copy(const QString &src, const QString &dst)
 {
     return copy(src, dst, true);
