@@ -38,7 +38,7 @@ ItemAnimationPrivate {
     readonly property alias sequence: p.activeSequence
     readonly property alias sequenceName: p.currentActiveSequence
 
-    readonly property bool __itemAnimationStable: balanced && count == model
+    readonly property bool __itemAnimationStable: loadFrames ? balanced && count == model : true
     readonly property bool stable: __itemAnimationStable
     readonly property alias balanced: _frames.balanced
     onStableChanged: {
