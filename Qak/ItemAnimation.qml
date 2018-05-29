@@ -74,6 +74,7 @@ ItemAnimationPrivate {
 //        Qak.debug(Qak.gid+'ItemAnimation','.loadFrames',loadFrames) //¤qakdbg
         if(model <= 0 || !delegate || !loadFrames)
             return
+
         p.spawnFrames()
     }
 
@@ -237,6 +238,10 @@ ItemAnimationPrivate {
         }
 
         function spawnFrames() {
+            if(!loadFrames) {
+                Qak.warn(Qak.gid+'ItemAnimation','loadFrames is false')
+                return
+            }
             if(spawningFrames) {
                 Qak.warn(Qak.gid+'ItemAnimation','already spawning frames')
                 return
