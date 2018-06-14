@@ -74,8 +74,10 @@ ItemAnimationPrivate {
 //        Qak.debug(Qak.gid+'ItemAnimation','.loadFrames',loadFrames) //¤qakdbg
         if(model <= 0 || !delegate || !loadFrames)
             return
-
-        p.spawnFrames()
+        if(loadFrames)
+            p.spawnFrames()
+        else
+            p.clearFrames()
     }
 
     Component.onDestruction: p.clearFrames()
@@ -206,7 +208,12 @@ ItemAnimationPrivate {
         frameTicker.ready = true
     }
 
-    QtObject {
+    Item {
+        id: junk
+        visible: false
+    }
+
+    QakObject {
         id: p
 
         property int sequenceFrameIndex: 0
@@ -228,13 +235,21 @@ ItemAnimationPrivate {
         property int totalAmountOfFramesSpawned: 0
 
         property bool spawningFrames: false
+        property bool clearingFrames: false
 
         function clearFrames() {
-            for(var i in frames) {
+            var i, f
+            clearingFrames = true
+            for(i in frames) {
                 totalAmountOfFramesSpawned--
-                frames[i].destroy()
+                f = frames[i]
+                f.parent = junk
+                if('deleteLater' in f && Aid.isFunction(f.deleteLater))
+                    f.deleteLater()
             }
             frames = {}
+            _frames.clear()
+            clearingFrames = false
         }
 
         function spawnFrames() {
@@ -244,6 +259,10 @@ ItemAnimationPrivate {
             }
             if(spawningFrames) {
                 Qak.warn(Qak.gid+'ItemAnimation','already spawning frames')
+                return
+            }
+            if(clearingFrames) {
+                Qak.warn(Qak.gid+'ItemAnimation','already clearing frames')
                 return
             }
             spawningFrames = true
@@ -512,6 +531,7 @@ ItemAnimationPrivate {
         id: _frames
         anchors { fill: parent }
 
+        //enabled: !p.clearingFrames && !p.spawningFrames
         property: "opacity"
         on: 1
         off: 0
@@ -519,7 +539,6 @@ ItemAnimationPrivate {
         property alias frame: r.frame
         toggle: _frames.frame
         property bool balanced: children.length > 0 && p.totalAmountOfFrames === children.length
-
     }
 
     // TODO weird BUG

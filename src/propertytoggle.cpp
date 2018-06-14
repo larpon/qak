@@ -3,12 +3,12 @@
 
 PropertyToggle::PropertyToggle(QQuickItem* parent) : QQuickItem(parent)
 {
+    _enabled = true;
     _toggle = 0;
     _lastToggled = 0;
     _children = childItems();
     setFlag(ItemHasContents);
 }
-
 
 void PropertyToggle::componentComplete()
 {
@@ -38,6 +38,19 @@ void PropertyToggle::itemChange(QQuickItem::ItemChange change, const QQuickItem:
         ensureProperty();
     }
     QQuickItem::itemChange(change, value);
+}
+
+bool PropertyToggle::enabled() const
+{
+    return _enabled;
+}
+
+void PropertyToggle::setEnabled(bool enabled)
+{
+    if(_enabled != enabled) {
+        _enabled = enabled;
+        emit enabledChanged();
+    }
 }
 
 QString PropertyToggle::property() const
@@ -98,9 +111,16 @@ void PropertyToggle::setToggle(int toggle)
     }
 }
 
+void PropertyToggle::clear()
+{
+    if(_lastToggled)
+        _lastToggled = 0;
+    _children.clear();
+}
+
 void PropertyToggle::ensureProperty()
 {
-    if(_toggle-1 < 0 || _toggle > _children.size()) {
+    if(!_enabled || _toggle-1 < 0 || _toggle > _children.size()) {
         //qDebug() << this << "::ensureProperty" << _toggle << _toggle-1 << "< 0 ||" << _toggle << ">" << _children.size();
         return;
     }
