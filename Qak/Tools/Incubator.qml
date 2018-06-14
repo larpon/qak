@@ -1,10 +1,12 @@
+pragma Singleton
+
 import QtQuick 2.0
 
-pragma Singleton
+import ".."
 
 // TODO make proper debug output and optimize
 // TODO fix ugly '__debugTag' solution in future rewrite
-QtObject {
+QakObject {
     id: incubator
 
     property int __batch: 0
@@ -15,7 +17,7 @@ QtObject {
     property bool debug: false
     property bool enabled: true
 
-    readonly property Item __private: Item {
+    QakObject {
         id: __private
         Component { id: timerComponent; Timer {} }
         function setTimeout(callback, timeout)
@@ -92,11 +94,13 @@ QtObject {
     }
 
     function incubate() {
-        for(var qid in queue) {
-            if(queue[qid]) {
-                running.push(queue[qid])
+        var qo
+        while (queue.length) {
+            qo = queue.pop()
+            if(qo) {
+                running.push(qo)
                 if(asynchronous)
-                    queue[qid].go()
+                    qo.go()
             }
         }
 
