@@ -95,14 +95,24 @@ QakObject {
 
     function incubate() {
         var qo
-        while (queue.length) {
-            qo = queue.pop()
+        while (queue.length > 0) {
+            qo = queue.shift()
             if(qo) {
                 running.push(qo)
                 if(asynchronous)
                     qo.go()
             }
         }
+
+        /*
+        var qid
+        for(qid in queue) {
+            if(queue[qid]) {
+                running.push(queue[qid])
+                if(asynchronous)
+                    queue[qid].go()
+            }
+        }*/
 
         if(!asynchronous && running.length > 0) {
             // NOTE nasty hack to avoid "QQmlComponent: Cannot create new component instance before completing the previous" error messages - when things get hot.
