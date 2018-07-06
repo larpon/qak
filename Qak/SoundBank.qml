@@ -127,23 +127,47 @@ Item {
 
     }
 
-    function get(tag) {
-        var sound
-        if(tag in bank) {
-            sound = bank[tag]
-            if(sound)
-                return sound
+    function get(tag,group) {
+        var i, sound, sounds = []
+
+        // Get default all of bank
+        if(tag === undefined && group === undefined) {
+            for(i in bank) {
+                sound = bank[i]
+                sounds.push(sound)
+            }
+            return sounds
         }
 
-        for(var group in groups) {
-            if(groupExists(group) && tag in groups[group]) {
-                sound = groups[group][tag]
-                if(sound)
-                    return sound
+        // Get default all of group
+        if(tag === undefined && group && groupExists(group)) {
+            for(i in groups[group]) {
+                sound = groups[group][i]
+                sounds.push(sound)
+            }
+            return sounds
+        }
+
+        // Get tag from group specific
+        if(tag && group && groupExists(group) && tag in groups[group]) {
+            return groups[group][tag]
+        }
+
+        // Get tag from bank
+        if(tag in bank) {
+            return bank[tag]
+        }
+
+        // Get tag from group if found
+        if(tag && group === undefined) {
+            for(group in groups) {
+                if(groups[group] && tag in groups[group]) {
+                    return groups[group][tag]
+                }
             }
         }
 
-        return sound
+        Qak.error(Qak.gid+'SoundBank','::get','no valid combinations of arguments',tag,group)
     }
 
     function isGrouped(tag) {
