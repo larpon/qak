@@ -527,9 +527,11 @@ Item {
         SoundEffect {
             id: soundEffect
             muted: false
-            volume: soundBank.volume
+            volume: soundBank.volume * mixVolume
 
             category: group !== "" ? group : "SoundEffects"
+
+            property real mixVolume: 1.0
 
             property string tag: ""
             property string group: ""
