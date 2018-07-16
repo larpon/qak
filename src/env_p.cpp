@@ -41,6 +41,46 @@ bool Qak::AndroidEnv::checkPermission(const QString &permission)
     return true;
 }
 
+
+Qak::MouseEnv::MouseEnv(QObject *parent)
+    : QObject(parent)
+{
+
+}
+
+void Qak::MouseEnv::press(const QPointF point)
+{
+    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, point,
+            Qt::LeftButton,
+            Qt::LeftButton,
+            Qt::NoModifier );
+
+    qDebug() << "Env.mouse::press" << point;
+    qApp->postEvent(qApp->focusWindow(), pressEvent);
+}
+
+void Qak::MouseEnv::release(const QPointF point)
+{
+    QMouseEvent *releaseEvent = new QMouseEvent(QEvent::MouseButtonRelease, point,
+            Qt::LeftButton,
+            Qt::LeftButton,
+            Qt::NoModifier );
+
+    qDebug() << "Env.mouse::release" << point;
+    qApp->postEvent(qApp->focusWindow(), releaseEvent);
+}
+
+void Qak::MouseEnv::move(const QPointF point)
+{
+    QMouseEvent *moveEvent = new QMouseEvent(QEvent::MouseMove, point,
+            Qt::LeftButton,
+            Qt::LeftButton,
+            Qt::NoModifier );
+
+    qDebug() << "Env.mouse::move" << point;
+    qApp->postEvent(qApp->focusWindow(), moveEvent);
+}
+
 EnvPrivate::EnvPrivate(QObject *parent)
     : QObject(parent)
 {
@@ -284,26 +324,14 @@ bool EnvPrivate::unregisterResource(const QString &rccFilename, const QString &r
     return QResource::unregisterResource(rccFilename,resourceRoot);
 }
 
-void EnvPrivate::click(const QPointF point)
-{
-    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, point,
-            Qt::LeftButton,
-            Qt::LeftButton,
-            Qt::NoModifier );
-
-    QMouseEvent *releaseEvent = new QMouseEvent(QEvent::MouseButtonRelease, point,
-            Qt::LeftButton,
-            Qt::LeftButton,
-            Qt::NoModifier );
-
-    qDebug() << "Env::click" << point;
-    qApp->postEvent(qApp->focusWindow(), pressEvent);
-    qApp->postEvent(qApp->focusWindow(), releaseEvent);
-}
-
 Qak::AndroidEnv *EnvPrivate::androidEnv()
 {
     return &_androidEnv;
+}
+
+Qak::MouseEnv *EnvPrivate::mouseEnv()
+{
+    return &_mouseEnv;
 }
 
 QString EnvPrivate::subEnvPath()

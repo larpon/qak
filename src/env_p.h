@@ -40,10 +40,27 @@ namespace Qak {
     };
 }
 
+namespace Qak {
+    class MouseEnv : public QObject
+    {
+        Q_OBJECT
+    public:
+        MouseEnv(QObject *parent = 0);
+
+        Q_INVOKABLE static void press(const QPointF point);
+        Q_INVOKABLE static void release(const QPointF point);
+        Q_INVOKABLE static void move(const QPointF point);
+
+    private:
+
+    };
+}
+
 class EnvPrivate : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Qak::AndroidEnv *android READ androidEnv)
+    Q_PROPERTY(Qak::MouseEnv *mouse READ mouseEnv)
 
 public:
     EnvPrivate(QObject* parent = 0);
@@ -77,13 +94,15 @@ public:
     Q_INVOKABLE static bool unregisterResource(const QString &rccFilename, const QString &resourceRoot=QString());
 
     // TODO move to seperate type / remove ?
-    Q_INVOKABLE static void click(const QPointF point);
+    //Q_INVOKABLE static void click(const QPointF point);
 
     Qak::AndroidEnv *androidEnv();
+    Qak::MouseEnv *mouseEnv();
 
 private:
     static QString subEnvPath();
     Qak::AndroidEnv _androidEnv;
+    Qak::MouseEnv _mouseEnv;
 };
 
 #endif // QAK_ENV_PRIVATE_H
