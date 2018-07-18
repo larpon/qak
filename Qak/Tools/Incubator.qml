@@ -115,11 +115,12 @@ QakObject {
         }*/
 
         if(!asynchronous && running.length > 0) {
-            // NOTE nasty hack to avoid "QQmlComponent: Cannot create new component instance before completing the previous" error messages - when things get hot.
-            __private.setTimeout(function(){
+            // NOTE nasty hack to avoid "QQmlComponent: Cannot create new component instance before completing the previous" error messages
+            // - when things get hot this was in Qt 5.9.x.
+            //__private.setTimeout(function(){
                 if(incubator.running.length > 0)
                     incubator.running.pop().go()
-            },1)
+            //},1)
         }
 
         queue = []

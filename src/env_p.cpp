@@ -48,37 +48,43 @@ Qak::MouseEnv::MouseEnv(QObject *parent)
 
 }
 
-void Qak::MouseEnv::press(const QPointF point)
+void Qak::MouseEnv::press(QObject *target, const QPointF &point)
 {
-    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, point,
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, point,
             Qt::LeftButton,
             Qt::LeftButton,
             Qt::NoModifier );
 
-    qDebug() << "Env.mouse::press" << point;
-    qApp->postEvent(qApp->focusWindow(), pressEvent);
+    if(target == nullptr)
+        target = qApp->focusWindow();
+    qDebug() << "Env.mouse::press" << target << point;
+    qApp->postEvent(target, event);
 }
 
-void Qak::MouseEnv::release(const QPointF point)
+void Qak::MouseEnv::release(QObject *target, const QPointF &point)
 {
-    QMouseEvent *releaseEvent = new QMouseEvent(QEvent::MouseButtonRelease, point,
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, point,
             Qt::LeftButton,
             Qt::LeftButton,
             Qt::NoModifier );
 
-    qDebug() << "Env.mouse::release" << point;
-    qApp->postEvent(qApp->focusWindow(), releaseEvent);
+    if(target == nullptr)
+        target = qApp->focusWindow();
+    qDebug() << "Env.mouse::release" << target << point;
+    qApp->postEvent(target, event);
 }
 
-void Qak::MouseEnv::move(const QPointF point)
+void Qak::MouseEnv::move(QObject *target, const QPointF &point)
 {
-    QMouseEvent *moveEvent = new QMouseEvent(QEvent::MouseMove, point,
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, point,
             Qt::LeftButton,
             Qt::LeftButton,
             Qt::NoModifier );
 
-    qDebug() << "Env.mouse::move" << point;
-    qApp->postEvent(qApp->focusWindow(), moveEvent);
+    if(target == nullptr)
+        target = qApp->focusWindow();
+    qDebug() << "Env.mouse::move" << target << point;
+    qApp->postEvent(target, event);
 }
 
 EnvPrivate::EnvPrivate(QObject *parent)

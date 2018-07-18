@@ -10,6 +10,7 @@
 #include <QWindow>
 #include <QApplication>
 #include <QResource>
+#include <QQuickItem>
 
 #include <QtGui/QGuiApplication>
 
@@ -44,12 +45,13 @@ namespace Qak {
     class MouseEnv : public QObject
     {
         Q_OBJECT
+
     public:
         MouseEnv(QObject *parent = 0);
 
-        Q_INVOKABLE static void press(const QPointF point);
-        Q_INVOKABLE static void release(const QPointF point);
-        Q_INVOKABLE static void move(const QPointF point);
+        Q_INVOKABLE static void press(QObject *target, const QPointF &point);
+        Q_INVOKABLE static void release(QObject *target, const QPointF &point);
+        Q_INVOKABLE static void move(QObject *target, const QPointF &point);
 
     private:
 
