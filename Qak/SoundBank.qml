@@ -31,11 +31,11 @@ Item {
 
     Component.onDestruction: clear()
 
-    function add(group, tag, path) {
+    function add(group, tag, path, onReady) {
 
         var pathExists = Qak.resource.exists(path)
         if(group && tag && pathExists) {
-            addGroup(group,tag,path)
+            addGroup(group,tag,path,onReady)
             return
         }
 
@@ -73,6 +73,8 @@ Item {
         try {
             Incubate.now(soundEffectComponent, soundBank, attributes, function(obj){
                 registerSoundReady(obj)
+                if(Aid.isFunction(onReady))
+                    onReady(tag,group,soundBank.get(tag,group))
             })
         } catch(e) {
             error(e)
@@ -80,7 +82,7 @@ Item {
 
     }
 
-    function addGroup(group, tag, path) {
+    function addGroup(group, tag, path, onReady) {
 
         if(!Qak.resource.exists(path)) {
             Qak.warn(Qak.gid+'SoundBank','Seems like',path,'sound file doesn\'t exist? Not added...')
@@ -120,6 +122,8 @@ Item {
         try {
             Incubate.now(soundEffectComponent, soundBank, attributes, function(obj){
                 registerSoundReady(obj)
+                if(Aid.isFunction(onReady))
+                    onReady(tag,group,soundBank.get(tag,group))
             })
         } catch(e) {
             error(e)
@@ -192,7 +196,7 @@ Item {
     }
 
     function groupExists(group) {
-        return (group in groups && groups[group])
+        return (Boolean(group) && group in groups && groups[group])
     }
 
     function clear(group) {
@@ -455,9 +459,71 @@ Item {
     }
 
     // BUG TODO Ugly horrible fix to let buzzer fix it's windows only sound stutter bug
-    // TODO add group parameter in the small corner case where we have same name tags in different groups
-    property var stop: function (tag) {
+    property var stop: function (tag, group) {
 
+        var i, gg
+
+        // Stop everything, also the world from spinning
+        if(!Boolean(tag) && !Boolean(group)) {
+            for(i in bank) {
+                if(bank[i].playing)
+                    bank[i].stop()
+            }
+
+            for(group in groups) {
+                gg = groups[group]
+                if(gg) {
+                    for(i in gg) {
+                        if(gg[i].playing)
+                            gg[i].stop()
+                    }
+                }
+            }
+            return
+        }
+
+        // Stop whole specific group
+        if(!Boolean(tag) && groupExists(group)) {
+            for(i in groups[group]) {
+                groups[group][i].stop()
+            }
+            return
+        }
+
+        // Stop tag from group specific
+        if(Boolean(tag) && groupExists(group) && tag in groups[group]) {
+            groups[group][tag].stop()
+            return
+        }
+
+        // Stop group
+        if(Boolean(tag) && tag in groups) {
+            for(i in groups[tag]) {
+                if(groups[tag][i].playing)
+                    groups[tag][i].stop()
+            }
+            return
+        }
+
+        // Stop tag from bank
+        if(Boolean(tag) && tag in bank) {
+            bank[tag].stop()
+            return
+        }
+
+        // Stop tag from group if found
+        if(Boolean(tag) && group === undefined) {
+            for(group in groups) {
+                gg = groups[group]
+                if(gg && tag in gg) {
+                    gg[tag].stop()
+                    return
+                }
+            }
+        }
+
+        Qak.error(Qak.gid+'SoundBank','::stop','no valid combinations of arguments',tag,group)
+        /*
         var i, group
 
         // Stop everything, also the world from spinning
@@ -500,6 +566,7 @@ Item {
             if(bank[tag].playing)
                 bank[tag].stop()
         }
+        */
     }
 
     function stopOther(tag) {
