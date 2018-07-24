@@ -16,6 +16,7 @@ ItemAnimationPrivate {
     readonly property real halfHeight: height*0.5
 
     default property alias content: _frames.data
+    property alias it: r
 
     //property bool enabled: true
     property bool paused: false
@@ -357,6 +358,11 @@ ItemAnimationPrivate {
             // So if anything changes the animation must be restarted
             if(p.frameDelay !== __activeSequence.duration)
                 p.frameDelay = __activeSequence.duration
+        } else if('delay' in __activeSequence) {
+            // NOTE TODO TIMER? once the animation is started parameters can't be changed on it
+            // So if anything changes the animation must be restarted
+            if(p.frameDelay !== __activeSequence.delay)
+                p.frameDelay = __activeSequence.delay
         } else {
             if(p.frameDelay != defaultFrameDelay)
                 p.frameDelay = defaultFrameDelay
