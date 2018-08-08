@@ -6,7 +6,7 @@ import Qak.Tools 1.0
 
 import "."
 
-Item {
+QakObject {
     id: soundBank
 
     property var bank: ({})
@@ -14,7 +14,7 @@ Item {
 
     readonly property int infinite: SoundEffect.Infinite
     property int loops: 0
-    //property int count: 0
+    readonly property int count: internal.count
 
     property bool muted: false
     property real volume: 1
@@ -30,6 +30,12 @@ Item {
     onMutedChanged: mute(muted)
 
     Component.onDestruction: clear()
+
+    QtObject {
+        id: internal
+
+        property int count: 0
+    }
 
     function add(group, tag, path, onReady) {
 
@@ -621,6 +627,9 @@ Item {
                     soundBank.error("SoundEffect error",group,tag)
                 }
             }
+
+            Component.onCompleted: internal.count++
+            Component.onDestruction: internal.count--
         }
     }
 }
