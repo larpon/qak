@@ -43,10 +43,24 @@ ApplicationWindow {
         }
     }
 
+    signal blockedScreenModeChange
     signal beforeScreenModeChange
 
     onScreenModeChanged: {
-        if(allowFullscreen && screenMode == "full") {
+
+        if(internal.screenModeSysChange !== "") {
+            internal.screenModeSysChange = ""
+            return
+        }
+
+        if(!allowFullscreen && screenMode === "full") {
+            blockedScreenModeChange()
+            internal.screenModeSysChange = "windowed"
+            screenMode = "windowed"
+            return
+        }
+
+        if(allowFullscreen && screenMode === "full") {
             beforeScreenModeChange()
             showFullScreen()
         } else {
@@ -64,4 +78,11 @@ ApplicationWindow {
     }
 
     //onScreenChanged: Qak.debug("ApplicationWindow","onScreenChanged",screen) //-¤qakdbg (only available from Qt 5.9)
+
+    QakObject {
+        id: internal
+
+        property string screenModeSysChange: ""
+    }
+
 }
