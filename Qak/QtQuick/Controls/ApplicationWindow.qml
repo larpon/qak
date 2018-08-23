@@ -24,6 +24,7 @@ ApplicationWindow {
     readonly property bool multiMonitorVertical: Screen.desktopAvailableHeight > Screen.height
 
     property string screenMode: "windowed"
+    property bool allowFullscreen: true
 
     property bool resizable: true
     onResizableChanged: {
@@ -45,13 +46,13 @@ ApplicationWindow {
     signal beforeScreenModeChange
 
     onScreenModeChanged: {
-        beforeScreenModeChange()
-        if(screenMode == "full")
+        if(allowFullscreen && screenMode == "full") {
+            beforeScreenModeChange()
             showFullScreen()
-        else if(screenMode == "windowed")
+        } else {
+            beforeScreenModeChange()
             showNormal()
-        else
-            showNormal()
+        }
 //        Qak.debug("ApplicationWindow","onScreenModeChanged",screenMode) //¤qakdbg
     }
 
