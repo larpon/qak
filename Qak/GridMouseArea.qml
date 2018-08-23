@@ -71,17 +71,21 @@ MouseArea {
     function cellIndex(point) {
         if(!validGrid)
             return null
-        if(!(point))
+        if(!Boolean(point))
             return null
+        // Corner case fix (we substract 1 from the grid point)
+        if(point.x === 0) point.x++
+        if(point.y === 0) point.y++
+
         if(point.x < 0 || point.x > width)
             return null
         if(point.y < 0 || point.y > height)
             return null
         var p =  Qt.point(__math_ceil((point.x * columns) / width)-1,__math_ceil((point.y * rows) / height)-1)
         if(Aid.isArray(grid) && (p.y < 0 || p.y > grid.length-1))
-            return false
+            return null
         if(p.y < 0 || p.y > height)
-            return false
+            return null
         return p
     }
 
