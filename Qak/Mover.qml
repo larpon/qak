@@ -5,6 +5,9 @@ import Qak.Tools 1.0
 
 Item {
     id: mover
+
+    visible: (opacity > 0 && scale !== 0 && width > 0 && height > 0)
+
     property Item target: parent
 
     property bool locked: false

@@ -510,6 +510,8 @@ AidPrivate {
                     type = type.replace(/\(0x.*\)$/i,'')
                     type = type.replace(/_QML_\d+$/i,'')
                 //}
+                type = type.replace(/QPoint.*/i,'QPoint')
+                type = type.replace(/QRect.*/i,'QRect')
             }
         }
         return type

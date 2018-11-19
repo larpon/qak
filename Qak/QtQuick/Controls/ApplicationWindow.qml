@@ -43,8 +43,8 @@ ApplicationWindow {
         }
     }
 
-    signal blockedScreenModeChange
-    signal beforeScreenModeChange
+    signal blockedScreenModeChange(string from, string to)
+    signal beforeScreenModeChange(string from, string to)
 
     onScreenModeChanged: {
 
@@ -54,17 +54,17 @@ ApplicationWindow {
         }
 
         if(!allowFullscreen && screenMode === "full") {
-            blockedScreenModeChange()
+            blockedScreenModeChange("windowed", "full")
             internal.screenModeSysChange = "windowed"
             screenMode = "windowed"
             return
         }
 
         if(allowFullscreen && screenMode === "full") {
-            beforeScreenModeChange()
+            beforeScreenModeChange("windowed", "full")
             showFullScreen()
         } else {
-            beforeScreenModeChange()
+            beforeScreenModeChange("full","windowed")
             showNormal()
         }
 //        Qak.debug("ApplicationWindow","onScreenModeChanged",screenMode) //¤qakdbg
@@ -83,6 +83,8 @@ ApplicationWindow {
         id: internal
 
         property string screenModeSysChange: ""
+
+        Component.onCompleted: { var t = qsTr("windowed"); t = qsTr("full") }
     }
 
 }
