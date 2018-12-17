@@ -161,11 +161,14 @@ AidPrivate {
     }
 
     function hasAllOf(haystack, needle) {
-        for(var i = 0; i < needle.length; i++){
-            if(haystack.indexOf(needle[i]) === -1)
-                return false
+        if(isArray(haystack) && isArray(arr)) {
+            for(var i = 0; i < needle.length; i++){
+                if(haystack.indexOf(needle[i]) === -1)
+                    return false
+            }
+            return true
         }
-        return true
+        return false
     }
 
     function contains(haystack, needle) {
