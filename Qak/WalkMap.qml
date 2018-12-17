@@ -1,6 +1,7 @@
 import QtQuick 2.0
 
 import Qak 1.0
+import Qak.Tools 1.0
 
 GridMouseArea {
 
@@ -170,7 +171,7 @@ GridMouseArea {
         return points
     }
 
-    function findPath(startPoint, endPoint, onFound, onNotFound) {
+    function findPath(startPoint, endPoint, onFound, onNotFound, onInSameCell) {
 
         var startPos = cellIndex(startPoint)
         var endPos = cellIndex(endPoint)
@@ -183,6 +184,7 @@ GridMouseArea {
 
         if(startPos.x === endPos.x && startPos.y === endPos.y) {
             Qak.info(Qak.gid+'WalkMap','::findPath','start and end point are in same cell')
+            if(Aid.isFunction(onInSameCell)) onInSameCell()
             sameCell()
             return
         }
