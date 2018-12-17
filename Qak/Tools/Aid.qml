@@ -160,6 +160,14 @@ AidPrivate {
         return false
     }
 
+    function hasAllOf(haystack, needle) {
+        for(var i = 0; i < needle.length; i++){
+            if(haystack.indexOf(needle[i]) === -1)
+                return false
+        }
+        return true
+    }
+
     function contains(haystack, needle) {
         return !undefinedOrNull(haystack) && haystack.indexOf(needle) !== -1;
     }
