@@ -16,7 +16,7 @@
 #include "src/mouserotate_p.h"
 #include "src/maskedmousearea.h"
 
-static void registerQak() {
+static void qmlRegisterTypesQak() {
     qmlRegisterType<MaskedMouseArea>("Qak", 1, 0, "MaskedMouseArea");
     qmlRegisterType<Resource>("Qak", 1, 0, "Resource");
     qmlRegisterType<Store>("Qak", 1, 0, "Store");
@@ -32,6 +32,6 @@ static void registerQak() {
     //qmlRegisterSingletonType<Resource>("Qak", 1, 0, "Resources", ResourceQmlInstance);
 }
 
-Q_COREAPP_STARTUP_FUNCTION(registerQak)
+Q_COREAPP_STARTUP_FUNCTION(qmlRegisterTypesQak)
 
 #endif // REGISTER_QAK_H
