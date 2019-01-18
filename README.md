@@ -16,3 +16,18 @@ It's also poorly documented - sorry, I need more spare time :)
 Currently used in these games
 * [Dead Ascend](http://games.blackgrain.dk/deadascend) (Open source)
 * [Hammer Bees](http://games.blackgrain.dk/hammerbees)
+
+## Experimental CMake support
+Include Qak in your CMakeLists.txt like this:
+```
+add_subdirectory(vendor/qak)
+add_definitions( ${QAK_DEFINITIONS} )
+...
+qt5_add_resources( QT_RESOURCES ${QAK_RESOURCES} )
+...
+target_link_libraries(<bin name>
+    <Propably your Qt libs here>
+    ...
+    qak
+)
+```
