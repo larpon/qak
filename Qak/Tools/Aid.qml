@@ -78,6 +78,7 @@ AidPrivate {
         return ((__math_random() * 100) < percent)
     }
 
+    /* Moved to C++ implementation
     function interpolate(x0, x1, alpha) {
         return (x0 * (1 - alpha) + alpha * x1)
     }
@@ -85,6 +86,7 @@ AidPrivate {
     function lerp(x0, x1, alpha) {
         return interpolate(x0,x1,alpha)
     }
+    */
 
     function roundTo(n, digits) {
         if (digits === undefined)
@@ -128,9 +130,10 @@ AidPrivate {
         return min + __math_abs(((value + range) % (range * 2)) - range)
     }
 
+    /* Moved to C++ implementation
     function undefinedOrNull(value) {
         return (value === undefined || value === null)
-    }
+    }*/
 
     function isBetween(value,min,max) {
         return value >= min && value <= max
@@ -429,18 +432,20 @@ AidPrivate {
         return toDegrees(__math_atan2(y1 - y2,x1 - x2))
     }
 
+    /* Moved to C++ implementation
     function isObject(o) {
         return !undefinedOrNull(o) && typeof o === 'object' && !isArray(o)
     }
+    */
 
     function hasStringProperty(o,prop) {
         return hasProperty(o,prop) && isString(prop)
     }
-
+/*
     function hasProperty(o,prop) {
         return isObject(o) && (prop in o)
     }
-
+*/
     function hasPropertyWithValue(o,prop,value) {
         return isObject(o) && (prop in o) && o[prop] === value
     }
@@ -465,13 +470,16 @@ AidPrivate {
         return (typeof v === "function")
     }
 
+    /* Moved to C++ implementaion
     function isArray(a) {
         return (a instanceof Array)
     }
+    */
 
+    /* Moved to C++ implementaion
     function isString(v) {
         return (typeof v === 'string' || v instanceof String)
-    }
+    }*/
 
     function isEmpty(obj) {
 
