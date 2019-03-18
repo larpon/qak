@@ -176,7 +176,7 @@ GridMouseArea {
         var startPos = cellIndex(startPoint)
         var endPos = cellIndex(endPoint)
 
-        if(!Boolean(startPos) || !Boolean(endPos)) {
+        if(Aid.undefinedOrNull(startPos) || Aid.undefinedOrNull(endPos)) {
             Qak.error(Qak.gid+'WalkMap','::findPath','start or end point(s) invalid','start:',startPos,'end:',endPos)
             error()
             return

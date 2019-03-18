@@ -447,7 +447,7 @@ AidPrivate {
     }
 */
     function hasPropertyWithValue(o,prop,value) {
-        return isObject(o) && (prop in o) && o[prop] === value
+        return hasProperty(o,prop) && o[prop] === value
     }
 
     function isInteger(value) {

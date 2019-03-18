@@ -71,7 +71,7 @@ MouseArea {
     function cellIndex(point) {
         if(!validGrid)
             return null
-        if(!Boolean(point))
+        if(Aid.undefinedOrNull(point))
             return null
         // Corner case fix (we substract 1 from the grid point)
         if(point.x === 0) point.x++

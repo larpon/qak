@@ -202,7 +202,7 @@ QakObject {
     }
 
     function groupExists(group) {
-        return (Boolean(group) && group in groups && groups[group])
+        return (!Aid.undefinedOrNull(group) && group in groups && groups[group])
     }
 
     function clear(group) {
@@ -470,7 +470,7 @@ QakObject {
         var i, gg
 
         // Stop everything, also the world from spinning
-        if(!Boolean(tag) && !Boolean(group)) {
+        if(Aid.undefinedOrNull(tag) && Aid.undefinedOrNull(group)) {
             for(i in bank) {
                 if(bank[i].playing)
                     bank[i].stop()
@@ -489,7 +489,7 @@ QakObject {
         }
 
         // Stop whole specific group
-        if(!Boolean(tag) && groupExists(group)) {
+        if(Aid.undefinedOrNull(tag) && groupExists(group)) {
             for(i in groups[group]) {
                 groups[group][i].stop()
             }
@@ -497,13 +497,13 @@ QakObject {
         }
 
         // Stop tag from group specific
-        if(Boolean(tag) && groupExists(group) && tag in groups[group]) {
+        if(!Aid.undefinedOrNull(tag) && groupExists(group) && tag in groups[group]) {
             groups[group][tag].stop()
             return
         }
 
         // Stop group
-        if(Boolean(tag) && tag in groups) {
+        if(!Aid.undefinedOrNull(tag) && tag in groups) {
             for(i in groups[tag]) {
                 if(groups[tag][i].playing)
                     groups[tag][i].stop()
@@ -512,13 +512,13 @@ QakObject {
         }
 
         // Stop tag from bank
-        if(Boolean(tag) && tag in bank) {
+        if(!Aid.undefinedOrNull(tag) && tag in bank) {
             bank[tag].stop()
             return
         }
 
         // Stop tag from group if found
-        if(Boolean(tag) && group === undefined) {
+        if(!Aid.undefinedOrNull(tag) && group === undefined) {
             for(group in groups) {
                 gg = groups[group]
                 if(gg && tag in gg) {
