@@ -93,8 +93,9 @@ qreal AidPrivate::normalize0to360(qreal degrees)
 bool AidPrivate::hasProperty(QVariant o, QString p)
 {
     if(isObject(o)) {
-        if(QString::fromUtf8(o.typeName()) == "QObject*")
-            return o.value<QObject*>()->property(p.toLocal8Bit().data()).isValid();
+        QObject *supposedQObject = o.value<QObject*>();
+        if(supposedQObject != nullptr)
+            return supposedQObject->property(p.toLocal8Bit().data()).isValid();
         if(o.canConvert<QJSValue>())
             return o.value<QJSValue>().hasProperty(p);
     }
