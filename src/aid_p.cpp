@@ -41,7 +41,13 @@ bool AidPrivate::isString(QVariant o)
 
 void AidPrivate::inspect(QVariant o)
 {
-    qDebug() << "INSPECT" << o.typeName() << "cc" << o.canConvert<QJSValue>();
+    qDebug() << "INSPECT" << o.typeName();
+    if(o.canConvert<QRect>() || o.canConvert<QRectF>())
+        qDebug() << "QRect";
+    if(o.canConvert<QPoint>() || o.canConvert<QPointF>())
+        qDebug() << "QPoint";
+    if(o.canConvert<QSize>() || o.canConvert<QSizeF>())
+        qDebug() << "QSize";
     if(o.canConvert<QJSValue>()) {
         QJSValue jsv = o.value<QJSValue>();
         qDebug() << (jsv.isNull() ? "null" : "") <<
@@ -94,8 +100,9 @@ bool AidPrivate::hasProperty(QVariant o, QString p)
 {
     if(isObject(o)) {
         QObject *supposedQObject = o.value<QObject*>();
-        if(supposedQObject != nullptr)
+        if(supposedQObject != nullptr) {
             return supposedQObject->property(p.toLocal8Bit().data()).isValid();
+        }
         if(o.canConvert<QJSValue>())
             return o.value<QJSValue>().hasProperty(p);
     }
