@@ -1,3 +1,4 @@
 module Qak.QtQuick.Controls
 ApplicationWindow 1.0 ApplicationWindow.qml
+ApplicationWindow 2.0 ApplicationWindow_2_0.qml
 depends Qak 1.0
