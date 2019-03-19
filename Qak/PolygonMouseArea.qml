@@ -36,7 +36,7 @@ MouseArea {
         if(!enabled)
             return false
         if(normalWhenEmpty && !validPolygon)
-            return contains(mouse)
+            return contains(Qt.point(mouse.x,mouse.y))
         return pointInPolygon(mouse,polygon)
     }
 
