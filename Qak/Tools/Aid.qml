@@ -441,11 +441,11 @@ AidPrivate {
     function hasStringProperty(o,prop) {
         return hasProperty(o,prop) && isString(prop)
     }
-/*
+
     function hasProperty(o,prop) {
         return isObject(o) && (prop in o)
     }
-*/
+
     function hasPropertyWithValue(o,prop,value) {
         return hasProperty(o,prop) && o[prop] === value
     }

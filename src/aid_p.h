@@ -18,7 +18,7 @@ public:
     Q_INVOKABLE bool isString(QVariant o);
 
     Q_INVOKABLE void inspect(QVariant o);
-    Q_INVOKABLE bool hasProperty(QVariant o, QString p);
+    //Q_INVOKABLE bool hasProperty(QVariant o, QString p);
 
     Q_INVOKABLE bool undefinedOrNull(QVariant o);
 

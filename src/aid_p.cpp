@@ -96,6 +96,7 @@ qreal AidPrivate::normalize0to360(qreal degrees)
     return degrees;
 }*/
 
+/*
 bool AidPrivate::hasProperty(QVariant o, QString p)
 {
     if(isObject(o)) {
@@ -108,3 +109,4 @@ bool AidPrivate::hasProperty(QVariant o, QString p)
     }
     return false;
 }
+*/
