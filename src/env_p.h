@@ -65,7 +65,7 @@ class EnvPrivate : public QObject
     Q_PROPERTY(Qak::MouseEnv *mouse READ mouseEnv)
 
 public:
-    EnvPrivate(QObject* parent = 0);
+    EnvPrivate(QObject* parent = nullptr);
 
     Q_INVOKABLE static QString appPath();
     Q_INVOKABLE static QString dataPath();
