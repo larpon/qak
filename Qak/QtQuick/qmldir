@@ -3,6 +3,8 @@ Image 2.0 Image.qml
 Image 2.1 Image_2_1.qml
 Image 2.2 Image_2_2.qml
 Image 2.3 Image_2_3.qml
+Image 2.4 Image_2_4.qml
+Image 2.5 Image_2_5.qml
 Item 2.0 Item.qml
 Rectangle 2.0 Rectangle.qml
 depends Qak 1.0
