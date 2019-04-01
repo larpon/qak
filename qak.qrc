@@ -49,5 +49,7 @@
         <file>Qak/Tools/Env.qml</file>
         <file>Qak/QakObject.qml</file>
         <file>Qak/QtQuick/Controls/ApplicationWindow_2_0.qml</file>
+        <file>Qak/QtQuick/Image_2_4.qml</file>
+        <file>Qak/QtQuick/Image_2_5.qml</file>
     </qresource>
 </RCC>
