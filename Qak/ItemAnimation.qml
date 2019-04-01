@@ -238,15 +238,21 @@ ItemAnimationPrivate {
         property bool spawningFrames: false
         property bool clearingFrames: false
 
-        function clearFrames() {
+        function clearFrames(now) {
+            now = now
             var i, f
             clearingFrames = true
             for(i in frames) {
                 totalAmountOfFramesSpawned--
                 f = frames[i]
-                f.parent = junk
-                if('deleteLater' in f && Aid.isFunction(f.deleteLater))
-                    f.deleteLater()
+                if(Boolean(now)) {
+                    if('destroy' in f && Aid.isFunction(f.destroy))
+                        f.destroy()
+                } else {
+                    f.parent = junk
+                    if('deleteLater' in f && Aid.isFunction(f.deleteLater))
+                        f.deleteLater()
+                }
             }
             frames = {}
             _frames.clear()
