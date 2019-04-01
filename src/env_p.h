@@ -92,6 +92,8 @@ public:
     Q_INVOKABLE static bool isFile(const QString &path);
     Q_INVOKABLE static bool isDir(const QString &path);
 
+    Q_INVOKABLE static qint64 size(const QString &path);
+
     Q_INVOKABLE static bool registerResource(const QString &rccFilename, const QString &resourceRoot=QString());
     Q_INVOKABLE static bool unregisterResource(const QString &rccFilename, const QString &resourceRoot=QString());
 

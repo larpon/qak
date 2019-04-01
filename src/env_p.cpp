@@ -320,6 +320,12 @@ bool EnvPrivate::isDir(const QString &path)
     return check.exists() && check.isDir();
 }
 
+qint64 EnvPrivate::size(const QString &path)
+{
+    QFileInfo check(path);
+    return check.size();
+}
+
 bool EnvPrivate::registerResource(const QString &rccFilename, const QString &resourceRoot)
 {
     return QResource::registerResource(rccFilename,resourceRoot);
