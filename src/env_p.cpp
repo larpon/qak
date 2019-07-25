@@ -16,7 +16,10 @@ QString Qak::AndroidEnv::obbPath()
 
     // If any exceptions occurred - just clear them and move on
     QAndroidJniEnvironment env;
-    if (env->ExceptionCheck()) { env->ExceptionClear(); }
+    if (env->ExceptionCheck()) {
+        qWarning() << "Qak" << "Env::obbPath" << "Exception occurred"; // << env->ExceptionDescribe();
+        env->ExceptionClear();
+    }
 
     return mediaPath.toString()+QStringLiteral("/Android/obb/")+package.toString();
     #endif
