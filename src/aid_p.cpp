@@ -27,10 +27,14 @@ bool AidPrivate::isObject(QVariant o)
     if(QString::fromUtf8(o.typeName()) == "QUrl")
         return true;
 
+    if(QString::fromUtf8(o.typeName()) == "QPointF" || QString::fromUtf8(o.typeName()) == "QPoint")
+        return true;
+
     if(o.canConvert<QJSValue>()) {
         QJSValue jsv = o.value<QJSValue>();
         return  jsv.isObject() && !jsv.isArray() && !undefinedOrNull(o);
     }
+    //qDebug() << "Couldn't recognize " << o.typeName() << " as object";
     return false;
 }
 
