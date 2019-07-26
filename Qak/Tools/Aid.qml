@@ -222,7 +222,7 @@ AidPrivate {
     function equals(i1,i2) {
         // TODO support other types
         // Compare two arrays
-        if (isArray(i1) && isArray(i2)) {
+        if(isArray(i1) && isArray(i2)) {
             // From https://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript
             // if the other array is a falsy value, return
             if (!i2)
@@ -246,6 +246,11 @@ AidPrivate {
             }
             return true
         }
+
+        if(isObject(i1) && isObject(i2))
+            return JSON.stringify(i1) === JSON.stringify(i2)
+
+        return false
     }
 
     function clone(obj) {
