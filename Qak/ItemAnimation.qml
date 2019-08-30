@@ -33,6 +33,7 @@ ItemAnimationPrivate {
     property alias off: _frames.off
 
     property int defaultFrameDelay: 60
+    readonly property alias frameDelay: p.frameDelay
 
     property var sequences: []
     property var __validSequences: []
@@ -299,7 +300,7 @@ ItemAnimationPrivate {
         function reset() {
 //            Qak.debug(Qak.gid+'ItemAnimation','p::reset') //¤qakdbg
             sequenceFrameIndex = 0
-            frameDelay = defaultFrameDelay
+            p.frameDelay = defaultFrameDelay
             activeSequenceIndex = 0
             activeSequence = undefined
             currentActiveSequence = ""
