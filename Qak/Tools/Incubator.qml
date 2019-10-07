@@ -4,8 +4,7 @@ import QtQuick 2.0
 
 import ".."
 
-// TODO make proper debug output and optimize
-// TODO fix ugly '__debugTag' solution in future rewrite
+// TODO make proper debug output and optimize. Fix ugly '__debugTag' solution in future rewrite
 QakObject {
     id: incubator
 
