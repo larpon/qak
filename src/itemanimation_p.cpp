@@ -28,7 +28,7 @@ void ItemAnimationPrivate::setRunning(bool running)
     }
 }
 
-/* TODO
+/* TODO NICE TO HAVE
 void ItemAnimationPrivate::setDynamicProperty(QObject *object, const QString &name, const QVariant &value)
 {
     object->setProperty(name.toLatin1().constData(),value);
