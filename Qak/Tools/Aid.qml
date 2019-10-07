@@ -514,7 +514,7 @@ AidPrivate {
         return true
     }
 
-    // NOTE WARNING There is currently no official Qt 5.6 way of getting the QML type of an object as a string - so this might break someday!
+    // WARNING There is currently no official Qt 5.6 way of getting the QML type of an object as a string - so this might break someday!
     // Further more this won't take QML inheritance into account :(
     function qtypeof(object) {
 
