@@ -474,7 +474,12 @@ ItemAnimationPrivate {
                 __nextActiveSequence = ""
             }
 
-            __activeFrame = __activeSequence.frames[p.sequenceFrameIndex]
+            try {
+                __activeFrame = __activeSequence.frames[p.sequenceFrameIndex]
+            } catch(e) {
+                Qak.error(Qak.gid+'ItemAnimation','::tick','setting active frame failed',p.sequenceFrameIndex)
+                //return
+            }
 
             // Show the active frame
             if(r.frame === __activeFrame) // NOTE Hack (again) to work around of variable user assignment
