@@ -7,8 +7,8 @@ AidPrivate::AidPrivate(QObject *parent) : QObject(parent)
 
 qreal AidPrivate::remap(qreal oldValue, qreal oldMin, qreal oldMax, qreal newMin, qreal newMax)
 {
-    if(oldMin == newMin && oldMax == newMax)
-        return oldValue;
+    //if(oldMin == newMin && oldMax == newMax)
+    //    return oldValue;
     // Linear conversion
     // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
     return (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
@@ -40,6 +40,9 @@ bool AidPrivate::isObject(QVariant o)
 
 bool AidPrivate::isString(QVariant o)
 {
+    /*if(o.canConvert<QJSValue>()) {
+        return o.value<QJSValue>().isString();
+    }*/
     return QString::fromUtf8(o.typeName()) == "QString";
 }
 
@@ -100,12 +103,31 @@ qreal AidPrivate::normalize0to360(qreal degrees)
     return degrees;
 }*/
 
-/*
 bool AidPrivate::hasProperty(QVariant o, QString p)
 {
     if(isObject(o)) {
         QObject *supposedQObject = o.value<QObject*>();
         if(supposedQObject != nullptr) {
+            //inspect(o);
+            //qDebug() << supposedQObject->metaObject()->className() << supposedQObject->inherits("QQuickItem");
+            //qDebug() << "QMLProp" << QQmlProperty::read(supposedQObject, p).isValid();
+
+            if(supposedQObject->inherits("QQuickItem")) {
+                QList<QString> list = {
+                    "childAt", "contains", "forceActiveFocus","forceActiveFocus","grabToImage",
+                    "mapFromGlobal","mapFromItem","mapToGlobal","mapToItem",
+                    "nextItemInFocusChain"
+                };
+                if(list.indexOf(p) != -1) {
+                    return true;
+                }
+
+                if(supposedQObject->metaObject()->indexOfMethod(p.toLocal8Bit().data()) > -1) {
+                    //qDebug() << p.toLocal8Bit().data() << "is a method at";
+                    return true;
+                }
+                //qDebug() << supposedQObject->metaObject()->indexOfMethod(p.toLocal8Bit().data());
+            }
             return supposedQObject->property(p.toLocal8Bit().data()).isValid();
         }
         if(o.canConvert<QJSValue>())
@@ -113,4 +135,4 @@ bool AidPrivate::hasProperty(QVariant o, QString p)
     }
     return false;
 }
-*/
+

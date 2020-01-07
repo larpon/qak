@@ -2,6 +2,7 @@
 #define QAK_AID_PRIVATE_H
 
 #include <QJSValue>
+//#include <QQmlProperty>
 #include <QDebug>
 
 class AidPrivate : public QObject
@@ -18,7 +19,7 @@ public:
     Q_INVOKABLE bool isString(QVariant o);
 
     Q_INVOKABLE void inspect(QVariant o);
-    //Q_INVOKABLE bool hasProperty(QVariant o, QString p);
+    Q_INVOKABLE bool hasProperty(QVariant o, QString p);
 
     Q_INVOKABLE bool undefinedOrNull(QVariant o);
 
