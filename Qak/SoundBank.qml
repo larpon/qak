@@ -371,10 +371,12 @@ QakObject {
                 sound.loops = soundBank.loops
 
             if(!safePlay && sound.playing) {
-                sound.stop()
-                sound.play()
+                sound.bugFixedStop() //.stop()
+                //sound.play()
+                sound.bugFixedPlay()
             } else if(!sound.playing) {
-                sound.play()
+                //sound.play()
+                sound.bugFixedPlay()
             }
         }
     }
@@ -473,7 +475,7 @@ QakObject {
         if(Aid.undefinedOrNull(tag) && Aid.undefinedOrNull(group)) {
             for(i in bank) {
                 if(bank[i].playing)
-                    bank[i].stop()
+                    bank[i].bugFixedStop() //.stop()
             }
 
             for(group in groups) {
@@ -481,7 +483,7 @@ QakObject {
                 if(gg) {
                     for(i in gg) {
                         if(gg[i].playing)
-                            gg[i].stop()
+                            gg[i].bugFixedStop() //.stop()
                     }
                 }
             }
@@ -491,14 +493,14 @@ QakObject {
         // Stop whole specific group
         if(Aid.undefinedOrNull(tag) && groupExists(group)) {
             for(i in groups[group]) {
-                groups[group][i].stop()
+                groups[group][i].bugFixedStop() //.stop()
             }
             return
         }
 
         // Stop tag from group specific
         if(!Aid.undefinedOrNull(tag) && groupExists(group) && tag in groups[group]) {
-            groups[group][tag].stop()
+            groups[group][tag].bugFixedStop() //.stop()
             return
         }
 
@@ -506,14 +508,14 @@ QakObject {
         if(!Aid.undefinedOrNull(tag) && tag in groups) {
             for(i in groups[tag]) {
                 if(groups[tag][i].playing)
-                    groups[tag][i].stop()
+                    groups[tag][i].bugFixedStop() //.stop()
             }
             return
         }
 
         // Stop tag from bank
         if(!Aid.undefinedOrNull(tag) && tag in bank) {
-            bank[tag].stop()
+            bank[tag].bugFixedStop() //.stop()
             return
         }
 
@@ -522,7 +524,7 @@ QakObject {
             for(group in groups) {
                 gg = groups[group]
                 if(gg && tag in gg) {
-                    gg[tag].stop()
+                    gg[tag].bugFixedStop() //.stop()
                     return
                 }
             }
@@ -580,7 +582,7 @@ QakObject {
         for(i in bank) {
             if(i !== tag) {
                 if(bank[i].playing)
-                    bank[i].stop()
+                    bank[i].bugFixedStop() //.stop()
             }
         }
 
@@ -589,7 +591,7 @@ QakObject {
             for(i in g) {
                 if(i !== tag) {
                     if(g[i].playing)
-                        g[i].stop()
+                        g[i].bugFixedStop() //.stop()
                 }
             }
         }
@@ -600,11 +602,12 @@ QakObject {
         SoundEffect {
             id: soundEffect
             muted: false
-            volume: soundBank.volume * mixVolume
+            volume: soundBank.volume * mixVolume * windowsStopBugFixVolume
 
             category: group !== "" ? group : "SoundEffects"
 
             property real mixVolume: 1.0
+            property real windowsStopBugFixVolume: 1.0
 
             property string tag: ""
             property string group: ""
@@ -614,6 +617,21 @@ QakObject {
                     soundBank.playing(tag,soundEffect)
                 else
                     soundBank.stopped(tag,soundEffect)
+            }
+
+            function bugFixedPlay() {
+                if(Qak.platform.os === "windows") {
+                    windowsStopBugFixVolume = 1
+                }
+                play()
+            }
+
+            function bugFixedStop() {
+                if(Qak.platform.os === "windows") {
+                    windowsStopBugFixVolume = 0
+                } else {
+                    stop()
+                }
             }
 
             /*
