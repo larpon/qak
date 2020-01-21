@@ -602,12 +602,12 @@ QakObject {
         SoundEffect {
             id: soundEffect
             muted: false
-            volume: soundBank.volume * mixVolume * windowsStopBugFixVolume
+            volume: soundBank.volume * mixVolume * bugFixVolume
 
             category: group !== "" ? group : "SoundEffects"
 
             property real mixVolume: 1.0
-            property real windowsStopBugFixVolume: 1.0
+            property real bugFixVolume: 1.0
 
             property string tag: ""
             property string group: ""
@@ -620,15 +620,15 @@ QakObject {
             }
 
             function bugFixedPlay() {
-                if(Qak.platform.os === "windows") {
-                    windowsStopBugFixVolume = 1
+                if(safePlay) {
+                    bugFixVolume = 1
                 }
                 play()
             }
 
             function bugFixedStop() {
-                if(Qak.platform.os === "windows") {
-                    windowsStopBugFixVolume = 0
+                if(safePlay) {
+                    bugFixVolume = 0
                 } else {
                     stop()
                 }
