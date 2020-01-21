@@ -449,6 +449,10 @@ AidPrivate {
 
     /*
     function hasProperty(o,prop) {
+        var resNative = tmpHasProperty(o, prop)
+        var resJS = isObject(o) && (prop in o)
+        if(resNative !== resNative)
+            console.error('Aid::hasProperty','native differ from JS result on',o,prop) //¤
         return isObject(o) && (prop in o)
     }*/
 
