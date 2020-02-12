@@ -621,14 +621,14 @@ QakObject {
 
             function bugFixedPlay() {
                 if(safePlay) {
-                    bugFixVolume = 1
+                    bugFixVolume = 1.0
                 }
                 play()
             }
 
             function bugFixedStop() {
                 if(safePlay) {
-                    bugFixVolume = 0
+                    bugFixVolume = 0.0
                 } else {
                     stop()
                 }
