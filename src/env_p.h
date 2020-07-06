@@ -10,7 +10,10 @@
 #include <QWindow>
 #include <QApplication>
 #include <QResource>
+#include <QTranslator>
 #include <QQuickItem>
+#include <QQmlEngine>
+#include <QQmlContext>
 
 #include <QtGui/QGuiApplication>
 
@@ -97,6 +100,7 @@ public:
     Q_INVOKABLE static bool registerResource(const QString &rccFilename, const QString &resourceRoot=QString());
     Q_INVOKABLE static bool unregisterResource(const QString &rccFilename, const QString &resourceRoot=QString());
 
+    Q_INVOKABLE void setLanguage(const QString &languageCode);
     // TODO move to seperate type / remove ?
     //Q_INVOKABLE static void click(const QPointF point);
 
@@ -107,6 +111,8 @@ private:
     static QString subEnvPath();
     Qak::AndroidEnv _androidEnv;
     Qak::MouseEnv _mouseEnv;
+
+    QTranslator m_translator;
 };
 
 #endif // QAK_ENV_PRIVATE_H

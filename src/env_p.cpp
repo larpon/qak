@@ -1,5 +1,6 @@
 #include "env_p.h"
 
+
 Qak::AndroidEnv::AndroidEnv(QObject *parent)
     : QObject(parent)
 {
@@ -337,6 +338,24 @@ bool EnvPrivate::registerResource(const QString &rccFilename, const QString &res
 bool EnvPrivate::unregisterResource(const QString &rccFilename, const QString &resourceRoot)
 {
     return QResource::unregisterResource(rccFilename,resourceRoot);
+}
+
+void EnvPrivate::setLanguage(const QString &languageCode)
+{
+
+    /*
+     * // https://stackoverflow.com/questions/15355156/is-it-possible-to-change-language-on-qt-at-runtime/48719049#48719049
+     */
+
+    //if (translator.load(QLocale(), QLatin1String("myapp"), QLatin1String("_"), QLatin1String(":/translations")))
+    //          app.installTranslator(&translator);
+
+    if (!m_translator.isEmpty())
+            QCoreApplication::removeTranslator(&m_translator);
+    m_translator.load(QStringLiteral(":/translations/non_") + languageCode);
+    QCoreApplication::installTranslator(&m_translator);
+    QQmlEngine::contextForObject(qApp->topLevelWindows()[0])->engine()->retranslate();
+
 }
 
 Qak::AndroidEnv *EnvPrivate::androidEnv()
