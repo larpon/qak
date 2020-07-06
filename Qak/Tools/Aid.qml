@@ -101,8 +101,8 @@ AidPrivate {
     //by assuming the range wraps around when going below min or above max
     function normalize( value, start, end )
     {
-        var width       = end - start
-        var offsetValue = value - start // value relative to 0
+        var width       = end - start,
+            offsetValue = value - start // value relative to 0
 
         return ( offsetValue - ( __math_floor( offsetValue / width ) * width ) ) + start
         // + start to reset back to start of original range
