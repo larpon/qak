@@ -604,7 +604,7 @@ QakObject {
             muted: false
             volume: soundBank.volume * mixVolume * bugFixVolume
 
-            category: group !== "" ? group : "SoundEffects"
+            //category: group !== "" ? group : "SoundEffects"
 
             property real mixVolume: 1.0
             property real bugFixVolume: 1.0
