@@ -370,14 +370,16 @@ QakObject {
             else
                 sound.loops = soundBank.loops
 
-            if(!safePlay && sound.playing) {
+            sound.bugFixedPlay()
+            /*
+            if(sound.playing) {
                 sound.bugFixedStop() //.stop()
                 //sound.play()
                 sound.bugFixedPlay()
-            } else if(!sound.playing) {
+            } else {
                 //sound.play()
                 sound.bugFixedPlay()
-            }
+            }*/
         }
     }
 
