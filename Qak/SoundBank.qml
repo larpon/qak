@@ -35,6 +35,7 @@ QakObject {
         id: internal
 
         property int count: 0
+        property var queue: []
     }
 
     function add(group, tag, path, onReady) {
@@ -128,8 +129,9 @@ QakObject {
         try {
             Incubate.now(soundEffectComponent, soundBank, attributes, function(obj){
                 registerSoundReady(obj)
-                if(Aid.isFunction(onReady))
+                if(Aid.isFunction(onReady)) {
                     onReady(tag,group,soundBank.get(tag,group))
+                }
             })
         } catch(e) {
             error(e)
@@ -370,7 +372,20 @@ QakObject {
             else
                 sound.loops = soundBank.loops
 
-            sound.bugFixedPlay()
+            if(sound.loops !== soundBank.infinite && Qak.platform.os === "windows") {
+                var queue = internal.queue,
+                    next = function(){
+                        if(queue.length > 0) {
+                            var s = queue.pop()
+                            s.bugFixedPlay()
+                            s.onPlayingChanged.connect(next)
+                        }
+                    }
+                queue.push(sound)
+                next()
+            } else {
+                sound.bugFixedPlay()
+            }
             /*
             if(sound.playing) {
                 sound.bugFixedStop() //.stop()
@@ -615,10 +630,11 @@ QakObject {
             property string group: ""
 
             onPlayingChanged: {
-                if(playing)
+                if(playing) {
                     soundBank.playing(tag,soundEffect)
-                else
+                } else {
                     soundBank.stopped(tag,soundEffect)
+                }
             }
 
             function bugFixedPlay() {
